@@ -1,1355 +1,1555 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#17202a">
 
-  <title>Mijn Nederlands</title>
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-    :root {
-      --ink: #17202a;
-      --muted: #667085;
-      --border: #e4e7ec;
-      --background: #f5f5f2;
-      --soft: #f8f9fa;
-      --success: #ecfdf3;
-      --warning: #fff8ed;
-    }
+<meta
+  name="theme-color"
+  content="#17202a"
+>
 
-    body {
-      margin: 0;
-      background: var(--background);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--ink);
-    }
+<title>Mijn Nederlands</title>
 
-    .app {
-      max-width: 500px;
-      min-height: 100vh;
-      margin: auto;
-      background: white;
-    }
 
-    header {
-      padding: 26px 22px 18px;
-      border-bottom: 1px solid #eee;
-    }
+<style>
 
-    .logo {
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    main {
-      padding: 22px;
-    }
+:root {
+  --ink: #17202a;
+  --muted: #667085;
+  --border: #e4e7ec;
+  --background: #f5f5f2;
+  --soft: #f8f9fa;
+  --success: #ecfdf3;
+}
 
-    h1 {
-      margin: 8px 0 10px;
-      font-size: 32px;
-      line-height: 1.15;
-    }
+body {
+  margin: 0;
+  background: var(--background);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: var(--ink);
+}
 
-    h2 {
-      margin: 0 0 12px;
-      font-size: 21px;
-    }
+.app {
+  max-width: 500px;
+  min-height: 100vh;
+  margin: auto;
+  background: white;
+}
 
-    h3 {
-      margin: 0 0 8px;
-    }
+header {
+  padding: 26px 22px 18px;
+  border-bottom: 1px solid #eee;
+}
 
-    p {
-      line-height: 1.55;
-    }
+.logo {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
 
-    .subtitle {
-      color: var(--muted);
-    }
+main {
+  padding: 22px;
+}
 
-    .small {
-      font-size: 13px;
-      color: var(--muted);
-    }
+h1 {
+  margin: 8px 0 10px;
+  font-size: 32px;
+  line-height: 1.15;
+}
 
-    .card {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 20px;
-      margin: 16px 0;
-      background: white;
-    }
+h2 {
+  margin: 0 0 12px;
+}
 
-    .soft-card {
-      background: var(--soft);
-      border: none;
-    }
+p {
+  line-height: 1.55;
+}
 
-    .success-card {
-      background: var(--success);
-      border: none;
-    }
+.subtitle {
+  color: var(--muted);
+}
 
-    .warning-card {
-      background: var(--warning);
-      border: none;
-    }
+.small {
+  font-size: 13px;
+  color: var(--muted);
+}
 
-    button {
-      width: 100%;
-      border: 1px solid #d0d5dd;
-      background: white;
-      color: var(--ink);
-      padding: 15px;
-      border-radius: 13px;
-      margin-top: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      text-align: left;
-      transition: 0.15s;
-    }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin: 16px 0;
+}
 
-    button:hover {
-      background: var(--soft);
-    }
+.soft-card {
+  background: var(--soft);
+  border: none;
+}
 
-    button:active {
-      transform: scale(0.99);
-    }
+.success-card {
+  background: var(--success);
+  border: none;
+}
 
-    .primary {
-      background: var(--ink);
-      color: white;
-      border: none;
-      text-align: center;
-      font-weight: 700;
-    }
+button {
+  width: 100%;
+  border: 1px solid #d0d5dd;
+  background: white;
+  color: var(--ink);
+  padding: 15px;
+  border-radius: 13px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: left;
+}
 
-    .primary:hover {
-      background: #25334d;
-    }
+.primary {
+  background: var(--ink);
+  color: white;
+  border: none;
+  text-align: center;
+  font-weight: 700;
+}
 
-    .secondary {
-      text-align: center;
-      font-weight: 600;
-    }
+.audio-button {
+  text-align: center;
+  font-weight: 700;
+  padding: 18px;
+}
 
-    .hidden {
-      display: none !important;
-    }
+.hidden {
+  display: none !important;
+}
 
-    .progress {
-      height: 7px;
-      background: #eaecf0;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 18px;
-    }
+.progress {
+  height: 7px;
+  background: #eaecf0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
 
-    .progress-bar {
-      height: 100%;
-      background: var(--ink);
-      transition: width 0.3s ease;
-    }
+.progress-bar {
+  height: 100%;
+  background: var(--ink);
+}
 
-    .assessment-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+.assessment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    .badge {
-      display: inline-block;
-      background: #f2f4f7;
-      padding: 6px 10px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 700;
-    }
+.badge {
+  background: #f2f4f7;
+  padding: 6px 10px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+}
 
-    .skill-label {
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      color: var(--muted);
-    }
+.skill-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 
-    .reading-text {
-      background: var(--soft);
-      border-radius: 14px;
-      padding: 17px;
-      margin: 18px 0;
-      line-height: 1.65;
-    }
+.reading-text {
+  background: var(--soft);
+  border-radius: 14px;
+  padding: 17px;
+  margin: 18px 0;
+  line-height: 1.65;
+}
 
-    .question {
-      font-size: 24px;
-      line-height: 1.3;
-      margin: 20px 0 14px;
-    }
+.audio-card {
+  background: var(--soft);
+  border-radius: 16px;
+  padding: 18px;
+  margin: 20px 0;
+  text-align: center;
+}
 
-    .skill-result {
-      margin: 18px 0 28px;
-    }
+.audio-icon {
+  font-size: 38px;
+  margin-bottom: 6px;
+}
 
-    .skill-result-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
+.question {
+  font-size: 24px;
+  line-height: 1.3;
+  margin: 20px 0 14px;
+}
 
-    .estimated-level {
-      font-size: 25px;
-      font-weight: 800;
-    }
+.skill-result {
+  margin: 20px 0 30px;
+}
 
-    .level-row {
-      display: grid;
-      grid-template-columns: 48px 1fr 68px;
-      gap: 10px;
-      align-items: center;
-      padding: 10px 0;
-      border-top: 1px solid #eee;
-    }
+.skill-result-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
 
-    .level-name {
-      font-weight: 700;
-    }
+.estimated-level {
+  font-size: 27px;
+  font-weight: 800;
+}
 
-    .bar {
-      height: 8px;
-      border-radius: 10px;
-      background: #eaecf0;
-      overflow: hidden;
-    }
+.level-row {
+  display: grid;
+  grid-template-columns:
+    48px 1fr 68px;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 0;
+  border-top: 1px solid #eee;
+}
 
-    .bar-fill {
-      height: 100%;
-      background: var(--ink);
-      border-radius: 10px;
-    }
+.level-name {
+  font-weight: 700;
+}
 
-    .score {
-      text-align: right;
-      font-size: 14px;
-      font-weight: 600;
-    }
+.bar {
+  height: 8px;
+  border-radius: 10px;
+  background: #eaecf0;
+  overflow: hidden;
+}
 
-    .passed {
-      font-size: 12px;
-      color: #027a48;
-      margin-left: 4px;
-    }
+.bar-fill {
+  height: 100%;
+  background: var(--ink);
+}
 
-    .not-tested {
-      color: var(--muted);
-    }
+.score {
+  text-align: right;
+  font-weight: 600;
+}
 
-    .weak-item {
-      padding: 13px 0;
-      border-bottom: 1px solid #eee;
-    }
+.passed {
+  color: #027a48;
+}
 
-    .weak-item:last-child {
-      border-bottom: none;
-    }
+.weak-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
 
-    .test-roadmap {
-      margin: 20px 0;
-    }
+</style>
 
-    .roadmap-item {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 11px 0;
-    }
-
-    .roadmap-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: #f2f4f7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-  </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
-  <header>
-    <div class="logo">MIJN NEDERLANDS</div>
-  </header>
+<header>
+  <div class="logo">
+    MIJN NEDERLANDS
+  </div>
+</header>
 
-  <main>
 
-    <!-- INTRO -->
+<main>
 
-    <section id="intro">
 
-      <h1>Let's find your Dutch level</h1>
+<!-- INTRO -->
 
-      <p class="subtitle">
-        We'll assess each skill independently so that strong vocabulary,
-        for example, doesn't hide weaker grammar or reading.
-      </p>
+<section id="intro">
 
-      <div class="card">
+<h1>
+  Let's complete your Dutch profile
+</h1>
 
-        <h2>Placement assessment</h2>
+<p class="subtitle">
+  We'll now include listening alongside
+  grammar, vocabulary and reading.
+</p>
 
-        <div class="test-roadmap">
 
-          <div class="roadmap-item">
-            <div class="roadmap-icon">📚</div>
-            <div>
-              <strong>Grammar</strong>
-              <div class="small">A1 → A2 → B1</div>
-            </div>
-          </div>
+<div class="card">
 
-          <div class="roadmap-item">
-            <div class="roadmap-icon">🧠</div>
-            <div>
-              <strong>Vocabulary</strong>
-              <div class="small">A1 → A2 → B1</div>
-            </div>
-          </div>
+<h2>
+  Placement assessment
+</h2>
 
-          <div class="roadmap-item">
-            <div class="roadmap-icon">📖</div>
-            <div>
-              <strong>Reading</strong>
-              <div class="small">A1 → A2 → B1</div>
-            </div>
-          </div>
+<p>📚 Grammar</p>
+<p>🧠 Vocabulary</p>
+<p>📖 Reading</p>
+<p>🎧 Listening</p>
 
-        </div>
+<p class="small">
+  Each skill is assessed independently
+  from A1 through B1.
+</p>
 
-        <p class="small">
-          You won't necessarily see every level. If the assessment finds
-          your current ceiling, it moves to the next skill.
-        </p>
+<button
+  class="primary"
+  onclick="startAssessment()"
+>
+  Start assessment
+</button>
 
-        <button class="primary" onclick="startAssessment()">
-          Start assessment
-        </button>
+</div>
 
-      </div>
 
-      <div class="card soft-card">
+<div class="card soft-card">
 
-        <strong>This is only Part 1</strong>
+<strong>
+  Listening tip
+</strong>
 
-        <p class="small">
-          Listening, writing and speaking will be added as separate
-          assessments before Mijn Nederlands creates your final
-          personalised learning plan.
-        </p>
+<p class="small">
+  Use headphones if possible. The
+  transcript is hidden during the
+  assessment.
+</p>
 
-      </div>
+</div>
 
-    </section>
+</section>
 
 
-    <!-- ASSESSMENT -->
 
-    <section id="assessment" class="hidden">
+<!-- ASSESSMENT -->
 
-      <div class="progress">
-        <div id="progressBar" class="progress-bar"></div>
-      </div>
+<section
+  id="assessment"
+  class="hidden"
+>
 
-      <div class="assessment-header">
+<div class="progress">
 
-        <div>
-          <div id="skillLabel" class="skill-label">
-            Grammar
-          </div>
+  <div
+    id="progressBar"
+    class="progress-bar"
+  ></div>
 
-          <div id="questionCounter" class="small"></div>
-        </div>
+</div>
 
-        <div id="levelBadge" class="badge">
-          A1
-        </div>
 
-      </div>
+<div class="assessment-header">
 
-      <div id="readingContainer"></div>
+<div>
 
-      <h1 id="questionText" class="question"></h1>
+  <div
+    id="skillLabel"
+    class="skill-label"
+  ></div>
 
-      <div id="answerContainer"></div>
+  <div
+    id="questionCounter"
+    class="small"
+  ></div>
 
-    </section>
+</div>
 
+<div
+  id="levelBadge"
+  class="badge"
+></div>
 
-    <!-- BETWEEN SKILLS -->
+</div>
 
-    <section id="skillComplete" class="hidden">
 
-      <div class="card success-card">
+<div id="mediaContainer"></div>
 
-        <h2 id="completedSkillTitle">
-          Grammar complete
-        </h2>
 
-        <p id="completedSkillMessage">
-          We'll move to vocabulary next.
-        </p>
+<h1
+  id="questionText"
+  class="question"
+></h1>
 
-      </div>
 
-      <button class="primary" onclick="continueToNextSkill()">
-        Continue
-      </button>
+<div id="answerContainer"></div>
 
-    </section>
+</section>
 
 
-    <!-- RESULTS -->
 
-    <section id="results" class="hidden">
+<!-- SKILL COMPLETE -->
 
-      <h1>Your Dutch profile</h1>
+<section
+  id="skillComplete"
+  class="hidden"
+>
 
-      <p class="subtitle">
-        These estimates are based on the skills assessed so far.
-        They are not an official CEFR certification.
-      </p>
+<div class="card success-card">
 
-      <div class="card success-card">
-        <strong>Part 1 complete</strong>
-        <p class="small">
-          Grammar, vocabulary and reading have been assessed independently.
-        </p>
-      </div>
+<h2 id="completedSkillTitle"></h2>
 
+<p id="completedSkillMessage"></p>
 
-      <div class="card">
+</div>
 
-        <h2>Skill profile</h2>
 
-        <div id="skillResults"></div>
+<button
+  class="primary"
+  onclick="continueToNextSkill()"
+>
+  Continue
+</button>
 
-      </div>
+</section>
 
 
-      <div id="weakConceptsCard" class="card">
 
-        <h2>Areas to work on</h2>
+<!-- RESULTS -->
 
-        <p class="small">
-          These are concepts where your answers suggest additional
-          practice may be useful.
-        </p>
+<section
+  id="results"
+  class="hidden"
+>
 
-        <div id="weakConcepts"></div>
+<h1>
+  Your Dutch profile
+</h1>
 
-      </div>
+<p class="subtitle">
+  Your four assessed skills are shown
+  separately below.
+</p>
 
 
-      <div class="card soft-card">
+<div class="card success-card">
 
-        <h2>Still to assess</h2>
+<strong>
+  Placement assessment progress
+</strong>
 
-        <p>🎧 Listening</p>
-        <p>✍️ Writing</p>
-        <p>🗣️ Speaking</p>
+<p class="small">
+  Grammar, vocabulary, reading and
+  listening are now assessed.
+</p>
 
-        <p class="small">
-          We won't create your final learning plan until these skills
-          are assessed too.
-        </p>
+</div>
 
-      </div>
 
+<div class="card">
 
-      <button class="primary" onclick="restartAssessment()">
-        Retake Part 1
-      </button>
+<h2>
+  Skill profile
+</h2>
 
-    </section>
+<div id="skillResults"></div>
 
-  </main>
+</div>
+
+
+<div
+  id="weakConceptsCard"
+  class="card"
+>
+
+<h2>
+  Areas to work on
+</h2>
+
+<div id="weakConcepts"></div>
+
+</div>
+
+
+<div class="card soft-card">
+
+<h2>
+  Remaining skills
+</h2>
+
+<p>✍️ Writing</p>
+<p>🗣️ Speaking</p>
+
+<p class="small">
+  These require a different assessment
+  method and will be added next.
+</p>
+
+</div>
+
+
+<button
+  class="primary"
+  onclick="restartAssessment()"
+>
+  Retake assessment
+</button>
+
+</section>
+
+
+</main>
 
 </div>
 
 
 <script src="data/placement-questions.js"></script>
+
+<script src="data/listening-questions.js"></script>
+
 <script src="js/storage.js"></script>
+
 <script src="js/assessment-engine.js"></script>
 
 
 <script>
 
-  const skills = [
-    "grammar",
-    "vocabulary",
-    "reading"
-  ];
-
-  const levels = [
-    "A1",
-    "A2",
-    "B1"
-  ];
-
-  const skillNames = {
-    grammar: "Grammar",
-    vocabulary: "Vocabulary",
-    reading: "Reading"
-  };
-
-  const skillIcons = {
-    grammar: "📚",
-    vocabulary: "🧠",
-    reading: "📖"
-  };
+const skills = [
+  "grammar",
+  "vocabulary",
+  "reading",
+  "listening"
+];
 
 
-  let responses = [];
-
-  let currentSkillIndex = 0;
-  let currentLevelIndex = 0;
-  let currentQuestionIndex = 0;
-
-  let currentQuestions = [];
+const levels = [
+  "A1",
+  "A2",
+  "B1"
+];
 
 
-  function startAssessment() {
+const skillNames = {
 
-    responses = [];
+  grammar:
+    "Grammar",
 
-    currentSkillIndex = 0;
-    currentLevelIndex = 0;
-    currentQuestionIndex = 0;
+  vocabulary:
+    "Vocabulary",
 
-    hideAllSections();
+  reading:
+    "Reading",
 
-    document
-      .getElementById("assessment")
-      .classList.remove("hidden");
+  listening:
+    "Listening"
 
-    loadCurrentQuestionSet();
+};
 
+
+const skillIcons = {
+
+  grammar: "📚",
+
+  vocabulary: "🧠",
+
+  reading: "📖",
+
+  listening: "🎧"
+
+};
+
+
+let responses = [];
+
+let currentSkillIndex = 0;
+
+let currentLevelIndex = 0;
+
+let currentQuestionIndex = 0;
+
+let currentQuestions = [];
+
+let dutchVoice = null;
+
+
+
+/*
+========================================
+SPEECH
+========================================
+*/
+
+
+function findDutchVoice() {
+
+  const voices =
+    speechSynthesis
+      .getVoices();
+
+
+  dutchVoice =
+    voices.find(
+      voice =>
+        voice.lang
+          .toLowerCase()
+          .startsWith("nl")
+    ) || null;
+
+}
+
+
+if (
+  "speechSynthesis" in window
+) {
+
+  findDutchVoice();
+
+  speechSynthesis
+    .addEventListener(
+      "voiceschanged",
+      findDutchVoice
+    );
+
+}
+
+
+function playCurrentAudio() {
+
+  if (
+    !(
+      "speechSynthesis"
+      in window
+    )
+  ) {
+
+    alert(
+      "Speech playback is not supported by this browser."
+    );
+
+    return;
   }
 
 
-  function getCurrentSkill() {
-
-    return skills[
-      currentSkillIndex
+  const question =
+    currentQuestions[
+      currentQuestionIndex
     ];
 
-  }
 
-
-  function getCurrentLevel() {
-
-    return levels[
-      currentLevelIndex
-    ];
-
-  }
-
-
-  function loadCurrentQuestionSet() {
-
-    const skill =
-      getCurrentSkill();
-
-    const level =
-      getCurrentLevel();
-
-
-    currentQuestions =
-      placementQuestions.filter(
-        question =>
-          question.skill === skill &&
-          question.level === level
-      );
-
-
-    currentQuestionIndex = 0;
-
-
-    if (
-      currentQuestions.length === 0
-    ) {
-
-      console.error(
-        "No questions found:",
-        skill,
-        level
-      );
-
-      return;
-    }
-
-
-    showQuestion();
-
-  }
-
-
-  function showQuestion() {
-
-    const question =
-      currentQuestions[
-        currentQuestionIndex
-      ];
-
-
-    const skill =
-      getCurrentSkill();
-
-    const level =
-      getCurrentLevel();
-
-
-    document
-      .getElementById(
-        "skillLabel"
-      )
-      .textContent =
-      `${skillIcons[skill]} ${skillNames[skill]}`;
-
-
-    document
-      .getElementById(
-        "levelBadge"
-      )
-      .textContent =
-      level;
-
-
-    document
-      .getElementById(
-        "questionCounter"
-      )
-      .textContent =
-      `Question ${
-        currentQuestionIndex + 1
-      } of ${currentQuestions.length}`;
-
-
-    const progress =
-      (
-        (
-          currentQuestionIndex + 1
-        ) /
-        currentQuestions.length
-      ) * 100;
-
-
-    document
-      .getElementById(
-        "progressBar"
-      )
-      .style.width =
-      `${progress}%`;
-
-
-    const readingContainer =
-      document.getElementById(
-        "readingContainer"
-      );
-
-
-    if (question.text) {
-
-      readingContainer.innerHTML =
-        `
-        <div class="reading-text">
-          ${escapeHTML(question.text)}
-        </div>
-        `;
-
-    } else {
-
-      readingContainer.innerHTML =
-        "";
-
-    }
-
-
-    document
-      .getElementById(
-        "questionText"
-      )
-      .textContent =
-      question.question;
-
-
-    const answerContainer =
-      document.getElementById(
-        "answerContainer"
-      );
-
-
-    answerContainer.innerHTML = "";
-
-
-    question.answers.forEach(
-      (answer, index) => {
-
-        const button =
-          document.createElement(
-            "button"
-          );
-
-
-        button.textContent =
-          answer;
-
-
-        button.onclick =
-          () =>
-            answerQuestion(
-              index
-            );
-
-
-        answerContainer.appendChild(
-          button
-        );
-
-      }
-    );
-
-
-    window.scrollTo(
-      0,
-      0
-    );
-
-  }
-
-
-  function answerQuestion(
-    selectedAnswer
+  if (
+    !question.audio
   ) {
-
-    const question =
-      currentQuestions[
-        currentQuestionIndex
-      ];
-
-
-    responses.push({
-
-      id:
-        question.id,
-
-      skill:
-        question.skill,
-
-      level:
-        question.level,
-
-      category:
-        question.category,
-
-      topic:
-        question.topic,
-
-      concept:
-        question.concept,
-
-      correct:
-        selectedAnswer ===
-        question.correct
-
-    });
-
-
-    currentQuestionIndex++;
-
-
-    if (
-      currentQuestionIndex <
-      currentQuestions.length
-    ) {
-
-      showQuestion();
-
-      return;
-    }
-
-
-    finishCurrentLevel();
-
+    return;
   }
 
 
-  function finishCurrentLevel() {
+  speechSynthesis.cancel();
 
-    const skill =
-      getCurrentSkill();
 
-    const level =
-      getCurrentLevel();
-
-
-    const passed =
-      AssessmentEngine
-        .passedLevel(
-          responses,
-          skill,
-          level
-        );
-
-
-    const nextLevelExists =
-      currentLevelIndex <
-      levels.length - 1;
-
-
-    /*
-      If the learner passed this level,
-      continue upward in the SAME skill.
-    */
-
-    if (
-      passed &&
-      nextLevelExists
-    ) {
-
-      currentLevelIndex++;
-
-      loadCurrentQuestionSet();
-
-      return;
-
-    }
-
-
-    /*
-      Otherwise we have found the current
-      ceiling for this skill.
-
-      Move to the next skill.
-    */
-
-    finishCurrentSkill();
-
-  }
-
-
-  function finishCurrentSkill() {
-
-    const completedSkill =
-      getCurrentSkill();
-
-
-    const result =
-      AssessmentEngine
-        .buildSkillResult(
-          responses,
-          completedSkill
-        );
-
-
-    hideAllSections();
-
-
-    document
-      .getElementById(
-        "skillComplete"
-      )
-      .classList.remove(
-        "hidden"
-      );
-
-
-    document
-      .getElementById(
-        "completedSkillTitle"
-      )
-      .textContent =
-      `${skillIcons[completedSkill]} ${
-        skillNames[completedSkill]
-      } complete`;
-
-
-    const nextSkill =
-      skills[
-        currentSkillIndex + 1
-      ];
-
-
-    let message =
-      `Current estimate: ${result.estimate.level}.`;
-
-
-    if (nextSkill) {
-
-      message +=
-        ` Next we'll assess ${
-          skillNames[nextSkill]
-        }.`;
-
-    } else {
-
-      message +=
-        " You've completed Part 1 of the placement assessment.";
-
-    }
-
-
-    document
-      .getElementById(
-        "completedSkillMessage"
-      )
-      .textContent =
-      message;
-
-
-    window.scrollTo(
-      0,
-      0
-    );
-
-  }
-
-
-  function continueToNextSkill() {
-
-    currentSkillIndex++;
-
-
-    if (
-      currentSkillIndex >=
-      skills.length
-    ) {
-
-      showResults();
-
-      return;
-
-    }
-
-
-    currentLevelIndex = 0;
-    currentQuestionIndex = 0;
-
-
-    hideAllSections();
-
-
-    document
-      .getElementById(
-        "assessment"
-      )
-      .classList.remove(
-        "hidden"
-      );
-
-
-    loadCurrentQuestionSet();
-
-  }
-
-
-  function showResults() {
-
-    hideAllSections();
-
-
-    document
-      .getElementById(
-        "results"
-      )
-      .classList.remove(
-        "hidden"
-      );
-
-
-    const result =
-      AssessmentEngine
-        .generateResult(
-          responses
-        );
-
-
-    renderSkillResults(
-      result.skills
+  const utterance =
+    new SpeechSynthesisUtterance(
+      question.audio
     );
 
 
-    renderWeakConcepts(
-      result.weakConcepts
-    );
+  utterance.lang =
+    "nl-NL";
 
 
-    Storage
-      .savePlacementResult(
-        result
-      );
+  utterance.rate =
+    0.9;
 
 
-    window.scrollTo(
-      0,
-      0
-    );
+  if (dutchVoice) {
+
+    utterance.voice =
+      dutchVoice;
 
   }
 
 
-  function renderSkillResults(
-    skillResults
-  ) {
+  speechSynthesis.speak(
+    utterance
+  );
 
-    const container =
-      document.getElementById(
-        "skillResults"
-      );
+}
 
 
-    container.innerHTML = "";
 
+/*
+========================================
+ASSESSMENT
+========================================
+*/
 
-    skills.forEach(
-      skill => {
 
-        const result =
-          skillResults[
-            skill
-          ];
+function startAssessment() {
 
+  speechSynthesis.cancel();
 
-        const section =
-          document.createElement(
-            "div"
-          );
+  responses = [];
 
+  currentSkillIndex = 0;
 
-        section.className =
-          "skill-result";
+  currentLevelIndex = 0;
 
+  currentQuestionIndex = 0;
 
-        section.innerHTML =
-          `
-          <div class="skill-result-header">
 
-            <div>
+  hideAllSections();
 
-              <div class="skill-label">
-                ${skillIcons[skill]}
-                ${skillNames[skill]}
-              </div>
 
-              <div class="estimated-level">
-                ${escapeHTML(
-                  result.estimate.level
-                )}
-              </div>
-
-            </div>
-
-            <div class="small">
-              ${escapeHTML(
-                result.estimate.status
-              )}
-            </div>
-
-          </div>
-
-          ${createLevelRows(
-            result.levels
-          )}
-          `;
-
-
-        container.appendChild(
-          section
-        );
-
-      }
-    );
-
-  }
-
-
-  function createLevelRows(
-    levelResults
-  ) {
-
-    return levels
-      .map(
-        level => {
-
-          const data =
-            levelResults[
-              level
-            ];
-
-
-          if (
-            !data ||
-            data.total === 0
-          ) {
-
-            return `
-              <div class="level-row">
-
-                <div class="level-name">
-                  ${level}
-                </div>
-
-                <div class="bar">
-                  <div
-                    class="bar-fill"
-                    style="width: 0%"
-                  ></div>
-                </div>
-
-                <div class="score not-tested">
-                  —
-                </div>
-
-              </div>
-            `;
-
-          }
-
-
-          const passed =
-            data.accuracy >= 75;
-
-
-          return `
-            <div class="level-row">
-
-              <div class="level-name">
-                ${level}
-              </div>
-
-              <div class="bar">
-
-                <div
-                  class="bar-fill"
-                  style="
-                    width:
-                    ${data.accuracy}%
-                  "
-                ></div>
-
-              </div>
-
-              <div class="score">
-
-                ${data.correct}/${data.total}
-
-                ${
-                  passed
-                    ? `<span class="passed">✓</span>`
-                    : ""
-                }
-
-              </div>
-
-            </div>
-          `;
-
-        }
-      )
-      .join("");
-
-  }
-
-
-  function renderWeakConcepts(
-    weakConcepts
-  ) {
-
-    const card =
-      document.getElementById(
-        "weakConceptsCard"
-      );
-
-
-    const container =
-      document.getElementById(
-        "weakConcepts"
-      );
-
-
-    container.innerHTML = "";
-
-
-    if (
-      !weakConcepts ||
-      weakConcepts.length === 0
-    ) {
-
-      card.classList.add(
-        "hidden"
-      );
-
-      return;
-
-    }
-
-
-    card.classList.remove(
+  document
+    .getElementById(
+      "assessment"
+    )
+    .classList.remove(
       "hidden"
     );
 
 
-    weakConcepts.forEach(
-      item => {
+  loadQuestionSet();
 
-        const div =
-          document.createElement(
-            "div"
-          );
+}
 
 
-        div.className =
-          "weak-item";
+
+function currentSkill() {
+
+  return skills[
+    currentSkillIndex
+  ];
+
+}
 
 
-        div.innerHTML =
-          `
-          <strong>
-            ${escapeHTML(
-              formatConcept(
-                item.concept
-              )
-            )}
-          </strong>
 
-          <div class="small">
+function currentLevel() {
 
-            ${
-              skillIcons[
-                item.skill
-              ]
-            }
+  return levels[
+    currentLevelIndex
+  ];
 
-            ${
-              skillNames[
-                item.skill
-              ]
-            }
-
-            · ${item.level}
-
-          </div>
-          `;
+}
 
 
-        container.appendChild(
-          div
+
+function loadQuestionSet() {
+
+  const skill =
+    currentSkill();
+
+  const level =
+    currentLevel();
+
+
+  const source =
+    skill === "listening"
+      ? listeningQuestions
+      : placementQuestions;
+
+
+  currentQuestions =
+    source.filter(
+      question =>
+        question.skill === skill &&
+        question.level === level
+    );
+
+
+  currentQuestionIndex = 0;
+
+
+  if (
+    currentQuestions.length === 0
+  ) {
+
+    console.error(
+      "No questions found",
+      skill,
+      level
+    );
+
+    return;
+  }
+
+
+  showQuestion();
+
+}
+
+
+
+function showQuestion() {
+
+  speechSynthesis.cancel();
+
+
+  const question =
+    currentQuestions[
+      currentQuestionIndex
+    ];
+
+
+  const skill =
+    currentSkill();
+
+
+  document
+    .getElementById(
+      "skillLabel"
+    )
+    .textContent =
+    `${skillIcons[skill]} ${skillNames[skill]}`;
+
+
+  document
+    .getElementById(
+      "levelBadge"
+    )
+    .textContent =
+    currentLevel();
+
+
+  document
+    .getElementById(
+      "questionCounter"
+    )
+    .textContent =
+    `Question ${
+      currentQuestionIndex + 1
+    } of ${
+      currentQuestions.length
+    }`;
+
+
+  const progress =
+    (
+      (
+        currentQuestionIndex + 1
+      ) /
+      currentQuestions.length
+    ) * 100;
+
+
+  document
+    .getElementById(
+      "progressBar"
+    )
+    .style.width =
+    `${progress}%`;
+
+
+  renderQuestionMedia(
+    question
+  );
+
+
+  document
+    .getElementById(
+      "questionText"
+    )
+    .textContent =
+    question.question;
+
+
+  const container =
+    document.getElementById(
+      "answerContainer"
+    );
+
+
+  container.innerHTML = "";
+
+
+  question.answers.forEach(
+    (answer, index) => {
+
+      const button =
+        document.createElement(
+          "button"
         );
 
-      }
-    );
 
-  }
-
-
-  function restartAssessment() {
-
-    responses = [];
-
-    hideAllSections();
+      button.textContent =
+        answer;
 
 
-    document
-      .getElementById(
-        "intro"
-      )
-      .classList.remove(
-        "hidden"
-      );
-
-
-    window.scrollTo(
-      0,
-      0
-    );
-
-  }
-
-
-  function hideAllSections() {
-
-    [
-      "intro",
-      "assessment",
-      "skillComplete",
-      "results"
-    ].forEach(
-      id => {
-
-        document
-          .getElementById(id)
-          .classList.add(
-            "hidden"
+      button.onclick =
+        () =>
+          answerQuestion(
+            index
           );
 
-      }
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+
+function renderQuestionMedia(
+  question
+) {
+
+  const container =
+    document.getElementById(
+      "mediaContainer"
     );
 
+
+  container.innerHTML = "";
+
+
+  if (
+    question.skill ===
+    "listening"
+  ) {
+
+    container.innerHTML =
+      `
+      <div class="audio-card">
+
+        <div class="audio-icon">
+          🎧
+        </div>
+
+        <strong>
+          Listen carefully
+        </strong>
+
+        <p class="small">
+          The transcript is hidden.
+        </p>
+
+        <button
+          class="audio-button"
+          onclick="playCurrentAudio()"
+        >
+          🔊 Play audio
+        </button>
+
+      </div>
+      `;
+
+
+    return;
   }
 
 
-  function formatConcept(
-    concept
-  ) {
-
-    return concept
-      .replaceAll("_", " ")
-      .split(" ")
-      .map(
-        word =>
-          word.charAt(0)
-            .toUpperCase() +
-          word.slice(1)
-      )
-      .join(" ");
-
-  }
-
-
-  function escapeHTML(
-    value
-  ) {
+  if (question.text) {
 
     const div =
       document.createElement(
         "div"
       );
 
-    div.textContent =
-      String(value);
 
-    return div.innerHTML;
+    div.className =
+      "reading-text";
+
+
+    div.textContent =
+      question.text;
+
+
+    container.appendChild(
+      div
+    );
 
   }
 
+}
+
+
+
+function answerQuestion(
+  selectedAnswer
+) {
+
+  speechSynthesis.cancel();
+
+
+  const question =
+    currentQuestions[
+      currentQuestionIndex
+    ];
+
+
+  responses.push({
+
+    id:
+      question.id,
+
+    skill:
+      question.skill,
+
+    level:
+      question.level,
+
+    category:
+      question.category,
+
+    topic:
+      question.topic,
+
+    concept:
+      question.concept,
+
+    correct:
+      selectedAnswer ===
+      question.correct
+
+  });
+
+
+  currentQuestionIndex++;
+
+
+  if (
+    currentQuestionIndex <
+    currentQuestions.length
+  ) {
+
+    showQuestion();
+
+    return;
+  }
+
+
+  finishLevel();
+
+}
+
+
+
+function finishLevel() {
+
+  const skill =
+    currentSkill();
+
+  const level =
+    currentLevel();
+
+
+  const passed =
+    AssessmentEngine
+      .passedLevel(
+        responses,
+        skill,
+        level
+      );
+
+
+  const nextLevelExists =
+    currentLevelIndex <
+    levels.length - 1;
+
+
+  if (
+    passed &&
+    nextLevelExists
+  ) {
+
+    currentLevelIndex++;
+
+    loadQuestionSet();
+
+    return;
+  }
+
+
+  finishSkill();
+
+}
+
+
+
+function finishSkill() {
+
+  speechSynthesis.cancel();
+
+
+  const skill =
+    currentSkill();
+
+
+  const result =
+    AssessmentEngine
+      .buildSkillResult(
+        responses,
+        skill
+      );
+
+
+  hideAllSections();
+
+
+  document
+    .getElementById(
+      "skillComplete"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "completedSkillTitle"
+    )
+    .textContent =
+    `${skillIcons[skill]} ${skillNames[skill]} complete`;
+
+
+  const next =
+    skills[
+      currentSkillIndex + 1
+    ];
+
+
+  let message =
+    `Current estimate: ${result.estimate.level}.`;
+
+
+  if (next) {
+
+    message +=
+      ` Next: ${skillNames[next]}.`;
+
+  } else {
+
+    message +=
+      " Part 1 is complete.";
+
+  }
+
+
+  document
+    .getElementById(
+      "completedSkillMessage"
+    )
+    .textContent =
+    message;
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+
+function continueToNextSkill() {
+
+  currentSkillIndex++;
+
+
+  if (
+    currentSkillIndex >=
+    skills.length
+  ) {
+
+    showResults();
+
+    return;
+  }
+
+
+  currentLevelIndex = 0;
+
+  currentQuestionIndex = 0;
+
+
+  hideAllSections();
+
+
+  document
+    .getElementById(
+      "assessment"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+
+  loadQuestionSet();
+
+}
+
+
+
+function showResults() {
+
+  speechSynthesis.cancel();
+
+
+  hideAllSections();
+
+
+  document
+    .getElementById(
+      "results"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+
+  const result =
+    AssessmentEngine
+      .generateResult(
+        responses
+      );
+
+
+  renderSkillResults(
+    result.skills
+  );
+
+
+  renderWeakConcepts(
+    result.weakConcepts
+  );
+
+
+  Storage
+    .savePlacementResult(
+      result
+    );
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+
+/*
+========================================
+RESULTS
+========================================
+*/
+
+
+function renderSkillResults(
+  results
+) {
+
+  const container =
+    document.getElementById(
+      "skillResults"
+    );
+
+
+  container.innerHTML = "";
+
+
+  skills.forEach(skill => {
+
+    const result =
+      results[skill];
+
+
+    const section =
+      document.createElement(
+        "div"
+      );
+
+
+    section.className =
+      "skill-result";
+
+
+    section.innerHTML =
+      `
+      <div class="skill-result-header">
+
+        <div>
+
+          <div class="skill-label">
+            ${skillIcons[skill]}
+            ${skillNames[skill]}
+          </div>
+
+          <div class="estimated-level">
+            ${result.estimate.level}
+          </div>
+
+        </div>
+
+        <div class="small">
+          ${result.estimate.status}
+        </div>
+
+      </div>
+
+      ${createLevelRows(
+        result.levels
+      )}
+      `;
+
+
+    container.appendChild(
+      section
+    );
+
+  });
+
+}
+
+
+
+function createLevelRows(
+  levelResults
+) {
+
+  return levels
+    .map(level => {
+
+      const data =
+        levelResults[level];
+
+
+      if (
+        !data ||
+        data.total === 0
+      ) {
+
+        return `
+          <div class="level-row">
+
+            <div class="level-name">
+              ${level}
+            </div>
+
+            <div class="bar"></div>
+
+            <div class="score">
+              —
+            </div>
+
+          </div>
+        `;
+
+      }
+
+
+      const passed =
+        data.accuracy >= 75;
+
+
+      return `
+        <div class="level-row">
+
+          <div class="level-name">
+            ${level}
+          </div>
+
+          <div class="bar">
+
+            <div
+              class="bar-fill"
+              style="
+                width:
+                ${data.accuracy}%
+              "
+            ></div>
+
+          </div>
+
+          <div class="score">
+
+            ${data.correct}/${data.total}
+
+            ${
+              passed
+                ? `<span class="passed">✓</span>`
+                : ""
+            }
+
+          </div>
+
+        </div>
+      `;
+
+    })
+    .join("");
+
+}
+
+
+
+function renderWeakConcepts(
+  weakConcepts
+) {
+
+  const card =
+    document.getElementById(
+      "weakConceptsCard"
+    );
+
+
+  const container =
+    document.getElementById(
+      "weakConcepts"
+    );
+
+
+  container.innerHTML = "";
+
+
+  if (
+    !weakConcepts ||
+    weakConcepts.length === 0
+  ) {
+
+    card.classList.add(
+      "hidden"
+    );
+
+    return;
+  }
+
+
+  card.classList.remove(
+    "hidden"
+  );
+
+
+  weakConcepts.forEach(
+    item => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "weak-item";
+
+
+      div.innerHTML =
+        `
+        <strong>
+          ${formatConcept(
+            item.concept
+          )}
+        </strong>
+
+        <div class="small">
+
+          ${skillIcons[item.skill]}
+
+          ${skillNames[item.skill]}
+
+          · ${item.level}
+
+        </div>
+        `;
+
+
+      container.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
+
+
+
+/*
+========================================
+UTILITIES
+========================================
+*/
+
+
+function formatConcept(
+  concept
+) {
+
+  return concept
+    .replaceAll("_", " ")
+    .split(" ")
+    .map(
+      word =>
+        word.charAt(0)
+          .toUpperCase() +
+        word.slice(1)
+    )
+    .join(" ");
+
+}
+
+
+
+function restartAssessment() {
+
+  speechSynthesis.cancel();
+
+  responses = [];
+
+  hideAllSections();
+
+
+  document
+    .getElementById(
+      "intro"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+
+function hideAllSections() {
+
+  [
+    "intro",
+    "assessment",
+    "skillComplete",
+    "results"
+  ]
+  .forEach(id => {
+
+    document
+      .getElementById(id)
+      .classList.add(
+        "hidden"
+      );
+
+  });
+
+}
+
 </script>
+
 
 </body>
 </html>

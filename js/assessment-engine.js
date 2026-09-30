@@ -1,10 +1,6 @@
 const AssessmentEngine = {
 
-  levelOrder: [
-    "A1",
-    "A2",
-    "B1"
-  ],
+  levelOrder: ["A1", "A2", "B1"],
 
 
   getAccuracy(responses) {
@@ -14,13 +10,9 @@ const AssessmentEngine = {
     }
 
     const correct =
-      responses.filter(
-        response =>
-          response.correct
-      ).length;
+      responses.filter(r => r.correct).length;
 
-    return correct /
-      responses.length;
+    return correct / responses.length;
   },
 
 
@@ -52,19 +44,15 @@ const AssessmentEngine = {
       );
 
     const accuracy =
-      this.getAccuracy(
-        answers
-      );
+      this.getAccuracy(answers);
 
     return {
 
-      total:
-        answers.length,
+      total: answers.length,
 
       correct:
         answers.filter(
-          answer =>
-            answer.correct
+          answer => answer.correct
         ).length,
 
       accuracy:
@@ -75,7 +63,6 @@ const AssessmentEngine = {
             )
 
     };
-
   },
 
 
@@ -92,27 +79,11 @@ const AssessmentEngine = {
         level
       );
 
-    /*
-      We currently require all four
-      questions to be answered.
-
-      75% = 3 out of 4 correct.
-
-      Later we can replace this with
-      a more sophisticated adaptive
-      confidence model.
-    */
-
-    if (
-      performance.total < 4
-    ) {
+    if (performance.total < 4) {
       return false;
     }
 
-    return (
-      performance.accuracy >= 75
-    );
-
+    return performance.accuracy >= 75;
   },
 
 
@@ -120,13 +91,6 @@ const AssessmentEngine = {
     responses,
     skill
   ) {
-
-    const a1 =
-      this.getLevelPerformance(
-        responses,
-        skill,
-        "A1"
-      );
 
     const a2 =
       this.getLevelPerformance(
@@ -150,14 +114,12 @@ const AssessmentEngine = {
         "A1"
       );
 
-
     const passedA2 =
       this.passedLevel(
         responses,
         skill,
         "A2"
       );
-
 
     const passedB1 =
       this.passedLevel(
@@ -174,11 +136,10 @@ const AssessmentEngine = {
     ) {
 
       return {
-        level: "B1+",
+        level: "B1",
         status:
-          "B1 demonstrated"
+          "B1 demonstrated · upper boundary not tested"
       };
-
     }
 
 
@@ -194,18 +155,14 @@ const AssessmentEngine = {
 
         return {
           level: "A2+",
-          status:
-            "Developing B1"
+          status: "Developing B1"
         };
-
       }
 
       return {
         level: "A2",
-        status:
-          "A2 demonstrated"
+        status: "A2 demonstrated"
       };
-
     }
 
 
@@ -218,18 +175,14 @@ const AssessmentEngine = {
 
         return {
           level: "A1+",
-          status:
-            "Developing A2"
+          status: "Developing A2"
         };
-
       }
 
       return {
         level: "A1",
-        status:
-          "A1 demonstrated"
+        status: "A1 demonstrated"
       };
-
     }
 
 
@@ -238,123 +191,67 @@ const AssessmentEngine = {
       status:
         "A1 not yet demonstrated"
     };
-
   },
 
 
-  getOverallSkillAccuracy(
-    responses,
-    skill
-  ) {
-
-    const answers =
-      responses.filter(
-        response =>
-          response.skill === skill
-      );
-
-    const accuracy =
-      this.getAccuracy(
-        answers
-      );
-
-    if (
-      accuracy === null
-    ) {
-      return null;
-    }
-
-    return Math.round(
-      accuracy * 100
-    );
-
-  },
-
-
-  findWeakConcepts(
-    responses
-  ) {
+  findWeakConcepts(responses) {
 
     const concepts = {};
 
 
-    responses.forEach(
-      response => {
+    responses.forEach(response => {
 
-        if (
-          !concepts[
-            response.concept
-          ]
-        ) {
-
-          concepts[
-            response.concept
-          ] = {
-
-            concept:
-              response.concept,
-
-            topic:
-              response.topic,
-
-            skill:
-              response.skill,
-
-            level:
-              response.level,
-
-            total: 0,
-
-            correct: 0
-
-          };
-
-        }
-
-
-        concepts[
-          response.concept
-        ].total++;
-
-
-        if (
-          response.correct
-        ) {
-
-          concepts[
-            response.concept
-          ].correct++;
-
-        }
-
+      if (!response.concept) {
+        return;
       }
-    );
+
+
+      if (!concepts[response.concept]) {
+
+        concepts[response.concept] = {
+
+          concept: response.concept,
+          topic: response.topic,
+          skill: response.skill,
+          level: response.level,
+          total: 0,
+          correct: 0
+
+        };
+      }
+
+
+      concepts[response.concept].total++;
+
+
+      if (response.correct) {
+        concepts[response.concept].correct++;
+      }
+
+    });
 
 
     return Object
       .values(concepts)
 
-      .map(
-        concept => ({
+      .map(concept => ({
 
-          ...concept,
+        ...concept,
 
-          accuracy:
-            Math.round(
-              (
-                concept.correct /
-                concept.total
-              ) * 100
-            )
+        accuracy:
+          Math.round(
+            (
+              concept.correct /
+              concept.total
+            ) * 100
+          )
 
-        })
-      )
+      }))
 
       .filter(
         concept =>
           concept.accuracy < 70
       );
-
   },
 
 
@@ -367,12 +264,6 @@ const AssessmentEngine = {
 
       estimate:
         this.estimateSkillLevel(
-          responses,
-          skill
-        ),
-
-      overallAccuracy:
-        this.getOverallSkillAccuracy(
           responses,
           skill
         ),
@@ -403,41 +294,38 @@ const AssessmentEngine = {
       }
 
     };
-
   },
 
 
-  generateResult(
-    responses
-  ) {
+  generateResult(responses) {
+
+    const skills = [
+      "grammar",
+      "vocabulary",
+      "reading",
+      "listening"
+    ];
+
+    const results = {};
+
+
+    skills.forEach(skill => {
+
+      results[skill] =
+        this.buildSkillResult(
+          responses,
+          skill
+        );
+
+    });
+
 
     return {
 
       completedAt:
-        new Date()
-          .toISOString(),
+        new Date().toISOString(),
 
-      skills: {
-
-        grammar:
-          this.buildSkillResult(
-            responses,
-            "grammar"
-          ),
-
-        vocabulary:
-          this.buildSkillResult(
-            responses,
-            "vocabulary"
-          ),
-
-        reading:
-          this.buildSkillResult(
-            responses,
-            "reading"
-          )
-
-      },
+      skills: results,
 
       weakConcepts:
         this.findWeakConcepts(
@@ -447,7 +335,6 @@ const AssessmentEngine = {
       responses
 
     };
-
   }
 
 };
