@@ -1603,6 +1603,9 @@ function hideAllSections() {
     "writingIntro",
     "writingAssessment",
     "writingSelfCheck",
+    "writingLoading",
+    "writingFeedback",
+    "writingError",
     "writingComplete",
     "results"
   ]

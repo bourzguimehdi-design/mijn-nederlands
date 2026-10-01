@@ -190,13 +190,9 @@
 
   <div class="card success-card">
 
-    <h2
-      id="completedSkillTitle"
-    ></h2>
+    <h2 id="completedSkillTitle"></h2>
 
-    <p
-      id="completedSkillMessage"
-    ></p>
+    <p id="completedSkillMessage"></p>
 
   </div>
 
@@ -228,28 +224,23 @@
   </h1>
 
   <p class="subtitle">
-    These tasks test your ability to communicate
-    in real situations rather than choose
-    an answer from a list.
+    You'll receive feedback after each task.
+    Your mistakes will also help Mijn Nederlands
+    identify what you should practise next.
   </p>
 
 
   <div class="card soft-card">
 
     <strong>
-      Important
+      How this works
     </strong>
 
     <p class="small">
-      For this version, Mijn Nederlands will
-      save and analyse objective information
-      about your writing, but it will not assign
-      you a CEFR writing level yet.
-    </p>
-
-    <p class="small">
-      Proper language evaluation will be added
-      with the scoring system later.
+      Write naturally without translation tools.
+      Your answer will be evaluated for task
+      completion, comprehensibility, grammar,
+      vocabulary and coherence.
     </p>
 
   </div>
@@ -263,9 +254,7 @@
   </button>
 
 
-  <button
-    onclick="returnHome()"
-  >
+  <button onclick="returnHome()">
     Back
   </button>
 
@@ -331,9 +320,7 @@
   </strong>
 
 
-  <p
-    id="writingInstruction"
-  ></p>
+  <p id="writingInstruction"></p>
 
 
   <ul
@@ -377,7 +364,6 @@
 
 
   <button
-    id="writingContinueButton"
     class="primary"
     onclick="openWritingSelfCheck()"
   >
@@ -399,11 +385,9 @@
     ✍️ Writing · self-check
   </div>
 
-
   <h1>
     Check your answer
   </h1>
-
 
   <p class="subtitle">
     Before submitting, confirm which parts
@@ -418,16 +402,200 @@
 
 
   <button
+    id="submitWritingButton"
     class="primary"
     onclick="submitWritingTask()"
   >
-    Submit answer
+    Submit for evaluation
   </button>
 
 
-  <button
-    onclick="editWritingAnswer()"
+  <button onclick="editWritingAnswer()">
+    Edit answer
+  </button>
+
+</section>
+
+
+
+<!-- WRITING LOADING -->
+
+<section
+  id="writingLoading"
+  class="hidden"
+>
+
+  <div class="evaluation-loading">
+
+    <div class="loading-spinner"></div>
+
+    <h2>
+      Evaluating your Dutch…
+    </h2>
+
+    <p class="subtitle">
+      Checking your grammar, vocabulary,
+      task completion and sentence structure.
+    </p>
+
+  </div>
+
+</section>
+
+
+
+<!-- WRITING FEEDBACK -->
+
+<section
+  id="writingFeedback"
+  class="hidden"
+>
+
+  <div class="skill-label">
+    ✍️ Writing feedback
+  </div>
+
+
+  <div class="feedback-heading">
+
+    <div>
+
+      <h1 id="feedbackPerformance">
+        Your result
+      </h1>
+
+      <p
+        id="feedbackLevel"
+        class="subtitle"
+      ></p>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="feedbackScores"
+    class="card"
+  ></div>
+
+
+  <div
+    id="feedbackStrengthsCard"
+    class="card success-card"
   >
+
+    <h2>
+      ✓ What you did well
+    </h2>
+
+    <div id="feedbackStrengths"></div>
+
+  </div>
+
+
+  <div
+    id="feedbackErrorsCard"
+    class="card"
+  >
+
+    <h2>
+      ⚠ Important corrections
+    </h2>
+
+    <div id="feedbackErrors"></div>
+
+  </div>
+
+
+  <div
+    id="feedbackSuggestionsCard"
+    class="card soft-card"
+  >
+
+    <h2>
+      💡 Make it more natural
+    </h2>
+
+    <div id="feedbackSuggestions"></div>
+
+  </div>
+
+
+  <div
+    id="feedbackPriorityCard"
+    class="card"
+  >
+
+    <h2>
+      🎯 Practice next
+    </h2>
+
+    <div id="feedbackPriority"></div>
+
+  </div>
+
+
+  <div class="card soft-card">
+
+    <strong>
+      Overall feedback
+    </strong>
+
+    <p id="feedbackOverall"></p>
+
+    <strong>
+      Next step
+    </strong>
+
+    <p id="feedbackNextStep"></p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="continueAfterWritingFeedback()"
+  >
+    Continue
+  </button>
+
+</section>
+
+
+
+<!-- WRITING API ERROR -->
+
+<section
+  id="writingError"
+  class="hidden"
+>
+
+  <div class="card">
+
+    <h2>
+      Evaluation couldn't be completed
+    </h2>
+
+    <p id="writingErrorMessage"></p>
+
+    <p class="small">
+      Your answer is still available.
+      You can try again without rewriting it.
+    </p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="retryWritingEvaluation()"
+  >
+    Try again
+  </button>
+
+
+  <button onclick="editWritingAnswer()">
     Edit answer
   </button>
 
@@ -449,7 +617,8 @@
     </h2>
 
     <p>
-      Your responses have been saved.
+      Your answers and evaluations
+      have been saved.
     </p>
 
   </div>
@@ -461,28 +630,7 @@
       Writing summary
     </h2>
 
-    <div
-      id="writingSummary"
-    ></div>
-
-  </div>
-
-
-  <div class="card soft-card">
-
-    <strong>
-      CEFR evaluation
-    </strong>
-
-    <p class="small">
-      Awaiting evaluation.
-    </p>
-
-    <p class="small">
-      Word count and self-checks are useful
-      information, but they are not enough
-      to determine your Dutch writing level.
-    </p>
+    <div id="writingSummary"></div>
 
   </div>
 
@@ -536,9 +684,7 @@
       Skill profile
     </h2>
 
-    <div
-      id="skillResults"
-    ></div>
+    <div id="skillResults"></div>
 
   </div>
 
@@ -552,9 +698,7 @@
       Areas to work on
     </h2>
 
-    <div
-      id="weakConcepts"
-    ></div>
+    <div id="weakConcepts"></div>
 
   </div>
 
@@ -566,7 +710,7 @@
     </h2>
 
     <p>
-      ✍️ Writing — separate assessment
+      ✍️ Writing — AI-assisted assessment
     </p>
 
     <p>
@@ -584,9 +728,7 @@
   </button>
 
 
-  <button
-    onclick="restartAssessment()"
-  >
+  <button onclick="restartAssessment()">
     Retake objective assessment
   </button>
 
@@ -602,28 +744,26 @@
 <!-- DATA -->
 
 <script src="data/placement-questions.js"></script>
-
 <script src="data/listening-questions.js"></script>
-
 <script src="data/writing-tasks.js"></script>
-
 
 
 <!-- ENGINES -->
 
 <script src="js/storage.js"></script>
-
 <script src="js/assessment-engine.js"></script>
-
 <script src="js/writing-engine.js"></script>
 
 
+<!-- API -->
+
+<script src="js/api.js"></script>
 
 <!-- APP -->
-
 <script src="js/app.js"></script>
 
+<!-- AI WRITING CONTROLLER -->
+<script src="js/writing-ai.js"></script>
 
 </body>
-
 </html>
