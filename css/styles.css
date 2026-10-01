@@ -262,4 +262,120 @@ button:active {
   h1 {
     font-size: 29px;
   }
+}/* ==================================================
+   WRITING
+   ================================================== */
+
+.writing-situation {
+  background: var(--soft);
+  border-radius: 16px;
+  padding: 18px;
+  margin: 18px 0;
+  line-height: 1.6;
+}
+
+.requirements {
+  margin: 18px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.requirements li {
+  margin: 10px 0;
+  padding-left: 26px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.requirements li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  font-weight: 800;
+}
+
+.writing-area {
+  width: 100%;
+  min-height: 220px;
+  border: 1px solid #d0d5dd;
+  border-radius: 15px;
+  padding: 16px;
+  font-family: inherit;
+  font-size: 17px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+}
+
+.writing-area:focus {
+  border-color: var(--ink);
+}
+
+.writing-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.minimum-met {
+  color: #027a48;
+}
+
+.minimum-not-met {
+  color: #b54708;
+}
+
+.self-check {
+  margin: 20px 0;
+}
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.check-row input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.writing-review {
+  white-space: pre-wrap;
+  background: var(--soft);
+  padding: 16px;
+  border-radius: 14px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.dev-card {
+  border: 1px dashed #98a2b3;
+  background: #fcfcfd;
+}
+
+.dev-button {
+  text-align: center;
+  font-size: 14px;
+  padding: 12px;
+}
+
+.dev-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dev-grid button {
+  margin-top: 0;
+  text-align: center;
+  font-size: 14px;
+}
+
+.warning-text {
+  color: #b54708;
 }

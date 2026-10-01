@@ -29,315 +29,599 @@
 
 <div class="app">
 
+<header>
 
-  <!-- HEADER -->
+  <div class="logo">
+    MIJN NEDERLANDS
+  </div>
 
-  <header>
+</header>
 
-    <div class="logo">
-      MIJN NEDERLANDS
+
+<main>
+
+
+<!-- INTRO -->
+
+<section id="intro">
+
+  <h1>
+    Let's complete your Dutch profile
+  </h1>
+
+  <p class="subtitle">
+    Mijn Nederlands assesses your skills
+    separately so your learning plan can
+    focus on what you actually need.
+  </p>
+
+
+  <div class="card">
+
+    <h2>
+      Placement assessment
+    </h2>
+
+    <p>📚 Grammar</p>
+    <p>🧠 Vocabulary</p>
+    <p>📖 Reading</p>
+    <p>🎧 Listening</p>
+    <p>✍️ Writing</p>
+
+    <p class="small">
+      Speaking will be added after
+      the writing assessment.
+    </p>
+
+    <button
+      class="primary"
+      onclick="startAssessment()"
+    >
+      Start assessment
+    </button>
+
+  </div>
+
+
+  <div class="card dev-card">
+
+    <strong>
+      🛠 Developer tools
+    </strong>
+
+    <p class="small">
+      Temporary shortcuts while we build
+      and test Mijn Nederlands.
+    </p>
+
+    <div class="dev-grid">
+
+      <button onclick="developerStartSkill('grammar')">
+        Grammar
+      </button>
+
+      <button onclick="developerStartSkill('vocabulary')">
+        Vocabulary
+      </button>
+
+      <button onclick="developerStartSkill('reading')">
+        Reading
+      </button>
+
+      <button onclick="developerStartSkill('listening')">
+        Listening
+      </button>
+
+      <button onclick="startWritingAssessment()">
+        Writing
+      </button>
+
     </div>
 
-  </header>
+  </div>
 
+</section>
 
-  <main>
 
 
-    <!-- INTRO -->
+<!-- OBJECTIVE ASSESSMENT -->
 
-    <section id="intro">
+<section
+  id="assessment"
+  class="hidden"
+>
 
-      <h1>
-        Let's complete your Dutch profile
-      </h1>
+  <div class="progress">
 
-      <p class="subtitle">
-        We'll assess each skill independently
-        so Mijn Nederlands can understand
-        where you actually need practice.
-      </p>
+    <div
+      id="progressBar"
+      class="progress-bar"
+    ></div>
 
+  </div>
 
-      <div class="card">
 
-        <h2>
-          Placement assessment
-        </h2>
+  <div class="assessment-header">
 
-        <p>📚 Grammar</p>
-
-        <p>🧠 Vocabulary</p>
-
-        <p>📖 Reading</p>
-
-        <p>🎧 Listening</p>
-
-
-        <p class="small">
-          Each skill is assessed independently
-          from A1 through B1.
-        </p>
-
-
-        <button
-          class="primary"
-          onclick="startAssessment()"
-        >
-          Start assessment
-        </button>
-
-      </div>
-
-
-      <div class="card soft-card">
-
-        <strong>
-          Listening tip
-        </strong>
-
-        <p class="small">
-          Use headphones if possible.
-          The transcript stays hidden
-          during listening questions.
-        </p>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ASSESSMENT -->
-
-    <section
-      id="assessment"
-      class="hidden"
-    >
-
-
-      <div class="progress">
-
-        <div
-          id="progressBar"
-          class="progress-bar"
-        ></div>
-
-      </div>
-
-
-      <div class="assessment-header">
-
-
-        <div>
-
-          <div
-            id="skillLabel"
-            class="skill-label"
-          ></div>
-
-          <div
-            id="questionCounter"
-            class="small"
-          ></div>
-
-        </div>
-
-
-        <div
-          id="levelBadge"
-          class="badge"
-        ></div>
-
-
-      </div>
-
-
-      <div id="mediaContainer"></div>
-
-
-      <h1
-        id="questionText"
-        class="question"
-      ></h1>
-
-
-      <div id="answerContainer"></div>
-
-
-    </section>
-
-
-
-    <!-- SKILL COMPLETE -->
-
-    <section
-      id="skillComplete"
-      class="hidden"
-    >
-
-
-      <div class="card success-card">
-
-        <h2
-          id="completedSkillTitle"
-        ></h2>
-
-        <p
-          id="completedSkillMessage"
-        ></p>
-
-      </div>
-
-
-      <button
-        class="primary"
-        onclick="continueToNextSkill()"
-      >
-        Continue
-      </button>
-
-
-    </section>
-
-
-
-    <!-- RESULTS -->
-
-    <section
-      id="results"
-      class="hidden"
-    >
-
-
-      <h1>
-        Your Dutch profile
-      </h1>
-
-
-      <p class="subtitle">
-        Your assessed skills are shown
-        separately below.
-      </p>
-
-
-      <div class="card success-card">
-
-        <strong>
-          Placement assessment progress
-        </strong>
-
-        <p class="small">
-          Grammar, vocabulary, reading
-          and listening are now assessed.
-        </p>
-
-      </div>
-
-
-
-      <div class="card">
-
-        <h2>
-          Skill profile
-        </h2>
-
-        <div
-          id="skillResults"
-        ></div>
-
-      </div>
-
-
+    <div>
 
       <div
-        id="weakConceptsCard"
-        class="card"
-      >
+        id="skillLabel"
+        class="skill-label"
+      ></div>
 
-        <h2>
-          Areas to work on
-        </h2>
+      <div
+        id="questionCounter"
+        class="small"
+      ></div>
 
-        <div
-          id="weakConcepts"
-        ></div>
+    </div>
 
+
+    <div
+      id="levelBadge"
+      class="badge"
+    ></div>
+
+  </div>
+
+
+  <div id="mediaContainer"></div>
+
+
+  <h1
+    id="questionText"
+    class="question"
+  ></h1>
+
+
+  <div id="answerContainer"></div>
+
+</section>
+
+
+
+<!-- OBJECTIVE SKILL COMPLETE -->
+
+<section
+  id="skillComplete"
+  class="hidden"
+>
+
+  <div class="card success-card">
+
+    <h2
+      id="completedSkillTitle"
+    ></h2>
+
+    <p
+      id="completedSkillMessage"
+    ></p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="continueToNextSkill()"
+  >
+    Continue
+  </button>
+
+</section>
+
+
+
+<!-- WRITING INTRO -->
+
+<section
+  id="writingIntro"
+  class="hidden"
+>
+
+  <div class="skill-label">
+    ✍️ Writing assessment
+  </div>
+
+  <h1>
+    Now write in Dutch
+  </h1>
+
+  <p class="subtitle">
+    These tasks test your ability to communicate
+    in real situations rather than choose
+    an answer from a list.
+  </p>
+
+
+  <div class="card soft-card">
+
+    <strong>
+      Important
+    </strong>
+
+    <p class="small">
+      For this version, Mijn Nederlands will
+      save and analyse objective information
+      about your writing, but it will not assign
+      you a CEFR writing level yet.
+    </p>
+
+    <p class="small">
+      Proper language evaluation will be added
+      with the scoring system later.
+    </p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="beginWritingTasks()"
+  >
+    Start writing assessment
+  </button>
+
+
+  <button
+    onclick="returnHome()"
+  >
+    Back
+  </button>
+
+</section>
+
+
+
+<!-- WRITING TASK -->
+
+<section
+  id="writingAssessment"
+  class="hidden"
+>
+
+  <div class="progress">
+
+    <div
+      id="writingProgressBar"
+      class="progress-bar"
+    ></div>
+
+  </div>
+
+
+  <div class="assessment-header">
+
+    <div>
+
+      <div class="skill-label">
+        ✍️ Writing
       </div>
 
+      <div
+        id="writingTaskCounter"
+        class="small"
+      ></div>
+
+    </div>
 
 
-      <div class="card soft-card">
+    <div
+      id="writingLevelBadge"
+      class="badge"
+    ></div>
 
-        <h2>
-          Remaining skills
-        </h2>
-
-        <p>
-          ✍️ Writing
-        </p>
-
-        <p>
-          🗣️ Speaking
-        </p>
-
-        <p class="small">
-          These require different
-          assessment methods and
-          will be added next.
-        </p>
-
-      </div>
+  </div>
 
 
-
-      <button
-        class="primary"
-        onclick="restartAssessment()"
-      >
-        Retake assessment
-      </button>
+  <h1
+    id="writingTaskTitle"
+    class="question"
+  ></h1>
 
 
-    </section>
+  <div
+    id="writingSituation"
+    class="writing-situation"
+  ></div>
 
 
-  </main>
+  <strong>
+    Your task
+  </strong>
 
+
+  <p
+    id="writingInstruction"
+  ></p>
+
+
+  <ul
+    id="writingRequirements"
+    class="requirements"
+  ></ul>
+
+
+  <label
+    for="writingAnswer"
+    class="small"
+  >
+    Your answer in Dutch
+  </label>
+
+
+  <textarea
+    id="writingAnswer"
+    class="writing-area"
+    autocomplete="off"
+    autocorrect="on"
+    spellcheck="true"
+  ></textarea>
+
+
+  <div class="writing-meta">
+
+    <span
+      id="wordCount"
+      class="small"
+    >
+      0 words
+    </span>
+
+    <span
+      id="minimumWords"
+      class="small"
+    ></span>
+
+  </div>
+
+
+  <button
+    id="writingContinueButton"
+    class="primary"
+    onclick="openWritingSelfCheck()"
+  >
+    Continue
+  </button>
+
+</section>
+
+
+
+<!-- WRITING SELF CHECK -->
+
+<section
+  id="writingSelfCheck"
+  class="hidden"
+>
+
+  <div class="skill-label">
+    ✍️ Writing · self-check
+  </div>
+
+
+  <h1>
+    Check your answer
+  </h1>
+
+
+  <p class="subtitle">
+    Before submitting, confirm which parts
+    of the task you included.
+  </p>
+
+
+  <div
+    id="writingSelfCheckItems"
+    class="card self-check"
+  ></div>
+
+
+  <button
+    class="primary"
+    onclick="submitWritingTask()"
+  >
+    Submit answer
+  </button>
+
+
+  <button
+    onclick="editWritingAnswer()"
+  >
+    Edit answer
+  </button>
+
+</section>
+
+
+
+<!-- WRITING COMPLETE -->
+
+<section
+  id="writingComplete"
+  class="hidden"
+>
+
+  <div class="card success-card">
+
+    <h2>
+      ✍️ Writing assessment complete
+    </h2>
+
+    <p>
+      Your responses have been saved.
+    </p>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      Writing summary
+    </h2>
+
+    <div
+      id="writingSummary"
+    ></div>
+
+  </div>
+
+
+  <div class="card soft-card">
+
+    <strong>
+      CEFR evaluation
+    </strong>
+
+    <p class="small">
+      Awaiting evaluation.
+    </p>
+
+    <p class="small">
+      Word count and self-checks are useful
+      information, but they are not enough
+      to determine your Dutch writing level.
+    </p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="returnHome()"
+  >
+    Return home
+  </button>
+
+</section>
+
+
+
+<!-- RESULTS -->
+
+<section
+  id="results"
+  class="hidden"
+>
+
+  <h1>
+    Your Dutch profile
+  </h1>
+
+
+  <p class="subtitle">
+    Your assessed skills are shown
+    separately below.
+  </p>
+
+
+  <div class="card success-card">
+
+    <strong>
+      Placement assessment progress
+    </strong>
+
+    <p class="small">
+      Grammar, vocabulary, reading
+      and listening have objective scores.
+    </p>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      Skill profile
+    </h2>
+
+    <div
+      id="skillResults"
+    ></div>
+
+  </div>
+
+
+  <div
+    id="weakConceptsCard"
+    class="card"
+  >
+
+    <h2>
+      Areas to work on
+    </h2>
+
+    <div
+      id="weakConcepts"
+    ></div>
+
+  </div>
+
+
+  <div class="card soft-card">
+
+    <h2>
+      Remaining assessments
+    </h2>
+
+    <p>
+      ✍️ Writing — separate assessment
+    </p>
+
+    <p>
+      🗣️ Speaking — coming next
+    </p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="startWritingAssessment()"
+  >
+    Start writing assessment
+  </button>
+
+
+  <button
+    onclick="restartAssessment()"
+  >
+    Retake objective assessment
+  </button>
+
+</section>
+
+
+</main>
 
 </div>
 
 
 
-<!-- QUESTION DATA -->
+<!-- DATA -->
 
-<script
-  src="data/placement-questions.js"
-></script>
+<script src="data/placement-questions.js"></script>
 
-<script
-  src="data/listening-questions.js"
-></script>
+<script src="data/listening-questions.js"></script>
+
+<script src="data/writing-tasks.js"></script>
 
 
 
-<!-- CORE SYSTEMS -->
+<!-- ENGINES -->
 
-<script
-  src="js/storage.js"
-></script>
+<script src="js/storage.js"></script>
 
-<script
-  src="js/assessment-engine.js"
-></script>
+<script src="js/assessment-engine.js"></script>
+
+<script src="js/writing-engine.js"></script>
 
 
 
-<!-- APPLICATION -->
+<!-- APP -->
 
-<script
-  src="js/app.js"
-></script>
+<script src="js/app.js"></script>
 
 
 </body>

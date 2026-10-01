@@ -26,6 +26,12 @@ const skillIcons = {
 };
 
 
+/*
+==================================================
+STATE
+==================================================
+*/
+
 let responses = [];
 
 let currentSkillIndex = 0;
@@ -34,7 +40,22 @@ let currentQuestionIndex = 0;
 
 let currentQuestions = [];
 
+let developerSingleSkillMode = false;
+
 let dutchVoice = null;
+
+
+/*
+Writing state
+*/
+
+let writingResponses = [];
+
+let currentWritingTaskIndex = 0;
+
+let writingTaskStartedAt = null;
+
+let pendingWritingText = "";
 
 
 /*
@@ -51,6 +72,7 @@ function findDutchVoice() {
 
   const voices =
     speechSynthesis.getVoices();
+
 
   dutchVoice =
     voices.find(
@@ -131,7 +153,7 @@ function playCurrentAudio() {
 
 /*
 ==================================================
-ASSESSMENT
+OBJECTIVE ASSESSMENT
 ==================================================
 */
 
@@ -141,15 +163,59 @@ function startAssessment() {
 
   responses = [];
 
+  developerSingleSkillMode = false;
+
   currentSkillIndex = 0;
   currentLevelIndex = 0;
   currentQuestionIndex = 0;
 
   hideAllSections();
 
-  document
-    .getElementById("assessment")
-    .classList.remove("hidden");
+  showSection(
+    "assessment"
+  );
+
+  loadQuestionSet();
+}
+
+
+function developerStartSkill(
+  skill
+) {
+
+  stopSpeech();
+
+  responses = [];
+
+  developerSingleSkillMode = true;
+
+  currentSkillIndex =
+    skills.indexOf(
+      skill
+    );
+
+
+  if (currentSkillIndex === -1) {
+
+    alert(
+      "Unknown skill."
+    );
+
+    return;
+  }
+
+
+  currentLevelIndex = 0;
+
+  currentQuestionIndex = 0;
+
+
+  hideAllSections();
+
+  showSection(
+    "assessment"
+  );
+
 
   loadQuestionSet();
 }
@@ -197,7 +263,9 @@ function loadQuestionSet() {
   currentQuestionIndex = 0;
 
 
-  if (currentQuestions.length === 0) {
+  if (
+    currentQuestions.length === 0
+  ) {
 
     console.error(
       "No questions found:",
@@ -243,23 +311,31 @@ function showQuestion() {
 
 
   document
-    .getElementById("skillLabel")
+    .getElementById(
+      "skillLabel"
+    )
     .textContent =
     `${skillIcons[skill]} ${skillNames[skill]}`;
 
 
   document
-    .getElementById("levelBadge")
+    .getElementById(
+      "levelBadge"
+    )
     .textContent =
     currentLevel();
 
 
   document
-    .getElementById("questionCounter")
+    .getElementById(
+      "questionCounter"
+    )
     .textContent =
     `Question ${
       currentQuestionIndex + 1
-    } of ${currentQuestions.length}`;
+    } of ${
+      currentQuestions.length
+    }`;
 
 
   const progress =
@@ -272,7 +348,9 @@ function showQuestion() {
 
 
   document
-    .getElementById("progressBar")
+    .getElementById(
+      "progressBar"
+    )
     .style.width =
     `${progress}%`;
 
@@ -283,7 +361,9 @@ function showQuestion() {
 
 
   document
-    .getElementById("questionText")
+    .getElementById(
+      "questionText"
+    )
     .textContent =
     question.question;
 
@@ -519,13 +599,9 @@ function finishSkill() {
   hideAllSections();
 
 
-  document
-    .getElementById(
-      "skillComplete"
-    )
-    .classList.remove(
-      "hidden"
-    );
+  showSection(
+    "skillComplete"
+  );
 
 
   document
@@ -534,6 +610,21 @@ function finishSkill() {
     )
     .textContent =
     `${skillIcons[skill]} ${skillNames[skill]} complete`;
+
+
+  if (
+    developerSingleSkillMode
+  ) {
+
+    document
+      .getElementById(
+        "completedSkillMessage"
+      )
+      .textContent =
+      `Developer test complete. Estimated level: ${result.estimate.level}.`;
+
+    return;
+  }
 
 
   const next =
@@ -554,7 +645,7 @@ function finishSkill() {
   } else {
 
     message +=
-      " Part 1 is complete.";
+      " The objective assessment is complete.";
   }
 
 
@@ -575,6 +666,18 @@ function finishSkill() {
 
 function continueToNextSkill() {
 
+  if (
+    developerSingleSkillMode
+  ) {
+
+    developerSingleSkillMode = false;
+
+    returnHome();
+
+    return;
+  }
+
+
   currentSkillIndex++;
 
 
@@ -590,22 +693,574 @@ function continueToNextSkill() {
 
 
   currentLevelIndex = 0;
+
   currentQuestionIndex = 0;
 
 
   hideAllSections();
 
-
-  document
-    .getElementById(
-      "assessment"
-    )
-    .classList.remove(
-      "hidden"
-    );
+  showSection(
+    "assessment"
+  );
 
 
   loadQuestionSet();
+}
+
+
+/*
+==================================================
+WRITING ASSESSMENT
+==================================================
+*/
+
+function startWritingAssessment() {
+
+  stopSpeech();
+
+  writingResponses = [];
+
+  currentWritingTaskIndex = 0;
+
+  pendingWritingText = "";
+
+  hideAllSections();
+
+  showSection(
+    "writingIntro"
+  );
+
+  window.scrollTo(
+    0,
+    0
+  );
+}
+
+
+function beginWritingTasks() {
+
+  writingResponses = [];
+
+  currentWritingTaskIndex = 0;
+
+  showWritingTask();
+}
+
+
+function showWritingTask() {
+
+  const task =
+    writingTasks[
+      currentWritingTaskIndex
+    ];
+
+
+  if (!task) {
+
+    finishWritingAssessment();
+
+    return;
+  }
+
+
+  writingTaskStartedAt =
+    new Date();
+
+
+  pendingWritingText = "";
+
+
+  hideAllSections();
+
+  showSection(
+    "writingAssessment"
+  );
+
+
+  document
+    .getElementById(
+      "writingTaskCounter"
+    )
+    .textContent =
+    `Task ${
+      currentWritingTaskIndex + 1
+    } of ${
+      writingTasks.length
+    }`;
+
+
+  document
+    .getElementById(
+      "writingLevelBadge"
+    )
+    .textContent =
+    task.level;
+
+
+  document
+    .getElementById(
+      "writingTaskTitle"
+    )
+    .textContent =
+    task.title;
+
+
+  document
+    .getElementById(
+      "writingSituation"
+    )
+    .textContent =
+    task.situation;
+
+
+  document
+    .getElementById(
+      "writingInstruction"
+    )
+    .textContent =
+    task.instruction;
+
+
+  const requirements =
+    document.getElementById(
+      "writingRequirements"
+    );
+
+
+  requirements.innerHTML = "";
+
+
+  task.requirements.forEach(
+    requirement => {
+
+      const li =
+        document.createElement(
+          "li"
+        );
+
+
+      li.textContent =
+        requirement;
+
+
+      requirements.appendChild(
+        li
+      );
+    }
+  );
+
+
+  const answer =
+    document.getElementById(
+      "writingAnswer"
+    );
+
+
+  answer.value = "";
+
+
+  answer.placeholder =
+    task.example;
+
+
+  answer.oninput =
+    updateWritingWordCount;
+
+
+  updateWritingWordCount();
+
+
+  const progress =
+    (
+      (
+        currentWritingTaskIndex + 1
+      ) /
+      writingTasks.length
+    ) * 100;
+
+
+  document
+    .getElementById(
+      "writingProgressBar"
+    )
+    .style.width =
+    `${progress}%`;
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+}
+
+
+function updateWritingWordCount() {
+
+  const task =
+    writingTasks[
+      currentWritingTaskIndex
+    ];
+
+
+  if (!task) {
+    return;
+  }
+
+
+  const text =
+    document
+      .getElementById(
+        "writingAnswer"
+      )
+      .value;
+
+
+  const count =
+    WritingEngine
+      .countWords(
+        text
+      );
+
+
+  document
+    .getElementById(
+      "wordCount"
+    )
+    .textContent =
+    `${count} ${
+      count === 1
+        ? "word"
+        : "words"
+    }`;
+
+
+  const minimum =
+    document.getElementById(
+      "minimumWords"
+    );
+
+
+  minimum.textContent =
+    `Minimum ${task.minWords}`;
+
+
+  minimum.className =
+    count >= task.minWords
+      ? "small minimum-met"
+      : "small minimum-not-met";
+}
+
+
+function openWritingSelfCheck() {
+
+  const task =
+    writingTasks[
+      currentWritingTaskIndex
+    ];
+
+
+  const textarea =
+    document.getElementById(
+      "writingAnswer"
+    );
+
+
+  const text =
+    textarea.value.trim();
+
+
+  const wordCount =
+    WritingEngine
+      .countWords(
+        text
+      );
+
+
+  if (!text) {
+
+    alert(
+      "Write your answer before continuing."
+    );
+
+    textarea.focus();
+
+    return;
+  }
+
+
+  if (
+    wordCount <
+    task.minWords
+  ) {
+
+    const continueAnyway =
+      confirm(
+        `Your answer has ${wordCount} words. ` +
+        `The suggested minimum is ${task.minWords}. ` +
+        `Do you want to continue anyway?`
+      );
+
+
+    if (!continueAnyway) {
+      return;
+    }
+  }
+
+
+  pendingWritingText =
+    text;
+
+
+  hideAllSections();
+
+  showSection(
+    "writingSelfCheck"
+  );
+
+
+  const container =
+    document.getElementById(
+      "writingSelfCheckItems"
+    );
+
+
+  container.innerHTML = "";
+
+
+  task.requirements.forEach(
+    (requirement, index) => {
+
+      const row =
+        document.createElement(
+          "label"
+        );
+
+
+      row.className =
+        "check-row";
+
+
+      row.innerHTML = `
+        <input
+          type="checkbox"
+          id="requirement-${index}"
+        >
+
+        <span>
+          ${escapeHTML(requirement)}
+        </span>
+      `;
+
+
+      container.appendChild(
+        row
+      );
+    }
+  );
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+}
+
+
+function editWritingAnswer() {
+
+  hideAllSections();
+
+  showSection(
+    "writingAssessment"
+  );
+
+
+  document
+    .getElementById(
+      "writingAnswer"
+    )
+    .value =
+    pendingWritingText;
+
+
+  updateWritingWordCount();
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+}
+
+
+function submitWritingTask() {
+
+  const task =
+    writingTasks[
+      currentWritingTaskIndex
+    ];
+
+
+  const checks =
+    task.requirements.map(
+      (requirement, index) => ({
+
+        requirement,
+
+        checked:
+          document
+            .getElementById(
+              `requirement-${index}`
+            )
+            .checked
+
+      })
+    );
+
+
+  const response =
+    WritingEngine
+      .createResponse(
+
+        task,
+
+        pendingWritingText,
+
+        checks,
+
+        writingTaskStartedAt
+
+      );
+
+
+  writingResponses.push(
+    response
+  );
+
+
+  currentWritingTaskIndex++;
+
+
+  if (
+    currentWritingTaskIndex >=
+    writingTasks.length
+  ) {
+
+    finishWritingAssessment();
+
+    return;
+  }
+
+
+  showWritingTask();
+}
+
+
+function finishWritingAssessment() {
+
+  hideAllSections();
+
+  showSection(
+    "writingComplete"
+  );
+
+
+  renderWritingSummary();
+
+
+  try {
+
+    localStorage.setItem(
+      "mijnNederlandsWritingAssessment",
+      JSON.stringify({
+        completedAt:
+          new Date().toISOString(),
+
+        responses:
+          writingResponses
+      })
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Could not save writing assessment.",
+      error
+    );
+  }
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+}
+
+
+function renderWritingSummary() {
+
+  const container =
+    document.getElementById(
+      "writingSummary"
+    );
+
+
+  container.innerHTML = "";
+
+
+  writingResponses.forEach(
+    (response, index) => {
+
+      const task =
+        writingTasks.find(
+          item =>
+            item.id ===
+            response.id
+        );
+
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "skill-result";
+
+
+      div.innerHTML = `
+        <div class="skill-label">
+          ${escapeHTML(response.level)}
+          · Task ${index + 1}
+        </div>
+
+        <h3>
+          ${escapeHTML(
+            task
+              ? task.title
+              : response.id
+          )}
+        </h3>
+
+        <p class="small">
+          ${response.wordCount} words
+          ·
+          ${response.selfReportedRequirementsMet}/${response.totalRequirements}
+          task points self-checked
+        </p>
+
+        <div class="writing-review">${escapeHTML(
+          response.text
+        )}</div>
+      `;
+
+
+      container.appendChild(
+        div
+      );
+    }
+  );
 }
 
 
@@ -621,14 +1276,9 @@ function showResults() {
 
   hideAllSections();
 
-
-  document
-    .getElementById(
-      "results"
-    )
-    .classList.remove(
-      "hidden"
-    );
+  showSection(
+    "results"
+  );
 
 
   const result =
@@ -673,54 +1323,60 @@ function renderSkillResults(
   container.innerHTML = "";
 
 
-  skills.forEach(skill => {
+  skills.forEach(
+    skill => {
 
-    const result =
-      results[skill];
+      const result =
+        results[skill];
 
 
-    const section =
-      document.createElement(
-        "div"
+      const section =
+        document.createElement(
+          "div"
+        );
+
+
+      section.className =
+        "skill-result";
+
+
+      section.innerHTML = `
+        <div class="skill-result-header">
+
+          <div>
+
+            <div class="skill-label">
+              ${skillIcons[skill]}
+              ${skillNames[skill]}
+            </div>
+
+            <div class="estimated-level">
+              ${escapeHTML(
+                result.estimate.level
+              )}
+            </div>
+
+          </div>
+
+          <div class="small">
+            ${escapeHTML(
+              result.estimate.status
+            )}
+          </div>
+
+        </div>
+
+        ${createLevelRows(
+          result.levels
+        )}
+      `;
+
+
+      container.appendChild(
+        section
       );
-
-
-    section.className =
-      "skill-result";
-
-
-    section.innerHTML = `
-      <div class="skill-result-header">
-
-        <div>
-
-          <div class="skill-label">
-            ${skillIcons[skill]}
-            ${skillNames[skill]}
-          </div>
-
-          <div class="estimated-level">
-            ${result.estimate.level}
-          </div>
-
-        </div>
-
-        <div class="small">
-          ${result.estimate.status}
-        </div>
-
-      </div>
-
-      ${createLevelRows(
-        result.levels
-      )}
-    `;
-
-
-    container.appendChild(
-      section
-    );
-  });
+    }
+  );
 }
 
 
@@ -729,16 +1385,39 @@ function createLevelRows(
 ) {
 
   return levels
-    .map(level => {
+    .map(
+      level => {
 
-      const data =
-        levelResults[level];
+        const data =
+          levelResults[level];
 
 
-      if (
-        !data ||
-        data.total === 0
-      ) {
+        if (
+          !data ||
+          data.total === 0
+        ) {
+
+          return `
+            <div class="level-row">
+
+              <div class="level-name">
+                ${level}
+              </div>
+
+              <div class="bar"></div>
+
+              <div class="score">
+                —
+              </div>
+
+            </div>
+          `;
+        }
+
+
+        const passed =
+          data.accuracy >= 75;
+
 
         return `
           <div class="level-row">
@@ -747,52 +1426,31 @@ function createLevelRows(
               ${level}
             </div>
 
-            <div class="bar"></div>
+            <div class="bar">
+
+              <div
+                class="bar-fill"
+                style="width: ${data.accuracy}%"
+              ></div>
+
+            </div>
 
             <div class="score">
-              —
+
+              ${data.correct}/${data.total}
+
+              ${
+                passed
+                  ? `<span class="passed">✓</span>`
+                  : ""
+              }
+
             </div>
 
           </div>
         `;
       }
-
-
-      const passed =
-        data.accuracy >= 75;
-
-
-      return `
-        <div class="level-row">
-
-          <div class="level-name">
-            ${level}
-          </div>
-
-          <div class="bar">
-
-            <div
-              class="bar-fill"
-              style="width: ${data.accuracy}%"
-            ></div>
-
-          </div>
-
-          <div class="score">
-
-            ${data.correct}/${data.total}
-
-            ${
-              passed
-                ? `<span class="passed">✓</span>`
-                : ""
-            }
-
-          </div>
-
-        </div>
-      `;
-    })
+    )
     .join("");
 }
 
@@ -849,15 +1507,17 @@ function renderWeakConcepts(
 
       div.innerHTML = `
         <strong>
-          ${formatConcept(
-            item.concept
+          ${escapeHTML(
+            formatConcept(
+              item.concept
+            )
           )}
         </strong>
 
         <div class="small">
           ${skillIcons[item.skill]}
           ${skillNames[item.skill]}
-          · ${item.level}
+          · ${escapeHTML(item.level)}
         </div>
       `;
 
@@ -872,9 +1532,92 @@ function renderWeakConcepts(
 
 /*
 ==================================================
-UTILITIES
+NAVIGATION + UTILITIES
 ==================================================
 */
+
+function returnHome() {
+
+  stopSpeech();
+
+  developerSingleSkillMode =
+    false;
+
+
+  hideAllSections();
+
+  showSection(
+    "intro"
+  );
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+}
+
+
+function restartAssessment() {
+
+  stopSpeech();
+
+  responses = [];
+
+  developerSingleSkillMode =
+    false;
+
+
+  hideAllSections();
+
+  showSection(
+    "intro"
+  );
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+}
+
+
+function showSection(
+  id
+) {
+
+  document
+    .getElementById(id)
+    .classList.remove(
+      "hidden"
+    );
+}
+
+
+function hideAllSections() {
+
+  [
+    "intro",
+    "assessment",
+    "skillComplete",
+    "writingIntro",
+    "writingAssessment",
+    "writingSelfCheck",
+    "writingComplete",
+    "results"
+  ]
+    .forEach(
+      id => {
+
+        document
+          .getElementById(id)
+          .classList.add(
+            "hidden"
+          );
+      }
+    );
+}
+
 
 function formatConcept(
   concept
@@ -893,45 +1636,19 @@ function formatConcept(
 }
 
 
-function restartAssessment() {
+function escapeHTML(
+  value
+) {
 
-  stopSpeech();
-
-  responses = [];
-
-  hideAllSections();
-
-
-  document
-    .getElementById(
-      "intro"
-    )
-    .classList.remove(
-      "hidden"
+  const div =
+    document.createElement(
+      "div"
     );
 
 
-  window.scrollTo(
-    0,
-    0
-  );
-}
+  div.textContent =
+    String(value);
 
 
-function hideAllSections() {
-
-  [
-    "intro",
-    "assessment",
-    "skillComplete",
-    "results"
-  ]
-    .forEach(id => {
-
-      document
-        .getElementById(id)
-        .classList.add(
-          "hidden"
-        );
-    });
+  return div.innerHTML;
 }
