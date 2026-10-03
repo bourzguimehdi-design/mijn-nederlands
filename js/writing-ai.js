@@ -1055,27 +1055,18 @@ function saveWritingAIProgress() {
 
   try {
 
+    const progress = {
+      assessmentVersion: 2,
+      completed: false,
+      updatedAt: new Date().toISOString(),
+      currentTaskIndex: currentWritingTaskIndex,
+      responses: writingResponses
+    };
+
     localStorage.setItem(
-      "mijnNederlandsWritingAssessment",
-
-      JSON.stringify({
-
-        completed:
-          false,
-
-        updatedAt:
-          new Date()
-            .toISOString(),
-
-        currentTaskIndex:
-          currentWritingTaskIndex,
-
-        responses:
-          writingResponses
-
-      })
+      "mijnNederlandsWritingProgress",
+      JSON.stringify(progress)
     );
-
 
   } catch (error) {
 

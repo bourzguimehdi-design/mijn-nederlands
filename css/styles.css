@@ -250,19 +250,8 @@ button:active {
   border-bottom: none;
 }
 
-@media (max-width: 520px) {
-  .app {
-    width: 100%;
-  }
 
-  main {
-    padding: 20px;
-  }
-
-  h1 {
-    font-size: 29px;
-  }
-}/* ==================================================
+/* ==================================================
    WRITING
    ================================================== */
 
@@ -378,7 +367,10 @@ button:active {
 
 .warning-text {
   color: #b54708;
-}/* ==================================================
+}
+
+
+/* ==================================================
    AI WRITING FEEDBACK
    ================================================== */
 
@@ -482,4 +474,324 @@ button:active {
   color: white;
   font-size: 13px;
   font-weight: 700;
+}
+
+
+/* ==================================================
+   DASHBOARD
+   ================================================== */
+
+.dashboard-welcome {
+  margin-bottom: 24px;
+}
+
+.dashboard-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 28px 0 12px;
+}
+
+.dashboard-section-heading h2 {
+  margin: 4px 0 0;
+}
+
+.dashboard-space-top {
+  margin-top: 38px;
+}
+
+.dashboard-goal {
+  margin-top: 18px;
+}
+
+.dashboard-goal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.dashboard-goal-grid > div {
+  padding: 14px;
+  background: var(--soft);
+  border-radius: 12px;
+}
+
+.dashboard-big-value {
+  display: block;
+  margin-top: 6px;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.dashboard-time-total {
+  white-space: nowrap;
+}
+
+.dashboard-plan {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.dashboard-activity {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  text-align: left;
+  background: white;
+  border: 1px solid #e7e9ec;
+  border-radius: 14px;
+}
+
+.dashboard-activity-icon {
+  font-size: 24px;
+  text-align: center;
+}
+
+.dashboard-activity-main {
+  min-width: 0;
+}
+
+.dashboard-activity-title {
+  font-weight: 800;
+}
+
+.dashboard-activity-subtitle {
+  margin-top: 3px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.dashboard-activity-time {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dashboard-skills {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.dashboard-skill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.dashboard-skill-row:last-child {
+  border-bottom: none;
+}
+
+.dashboard-skill-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.dashboard-skill-level {
+  font-weight: 800;
+}
+
+.dashboard-focus-item {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.dashboard-focus-item:last-child {
+  border-bottom: none;
+}
+
+.dashboard-focus-icon {
+  font-size: 18px;
+}
+
+
+/* ==================================================
+   PROGRESS & MASTERY
+   ================================================== */
+
+.dashboard-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard-progress-grid > div {
+  min-width: 0;
+}
+
+.dashboard-progress-grid .small {
+  min-height: 34px;
+  line-height: 1.3;
+}
+
+.dashboard-progress-grid .dashboard-big-value {
+  margin-top: 4px;
+  font-size: 28px;
+}
+
+.dashboard-progress-highlight {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard-progress-highlight strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.dashboard-progress-highlight .small:last-child {
+  margin-top: 3px;
+}
+
+.dashboard-mastery-list {
+  padding-top: 22px;
+}
+
+.dashboard-mastery-list > .skill-label {
+  margin-bottom: 18px;
+}
+
+.dashboard-mastery-item {
+  margin-bottom: 22px;
+}
+
+.dashboard-mastery-item:last-child {
+  margin-bottom: 0;
+}
+
+.dashboard-mastery-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.dashboard-mastery-heading strong {
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.dashboard-mastery-heading span {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.dashboard-mastery-bar {
+  width: 100%;
+  height: 9px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: #eaecf0;
+  border-radius: 999px;
+}
+
+.dashboard-mastery-fill {
+  height: 100%;
+  background: var(--ink);
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+
+/* ==================================================
+   RESPONSIVE
+   ================================================== */
+
+@media (max-width: 520px) {
+
+  .app {
+    width: 100%;
+  }
+
+  main {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 29px;
+  }
+
+  .dashboard-goal-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dashboard-goal-grid > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard-activity {
+    grid-template-columns: 38px 1fr auto;
+    padding: 13px 11px;
+  }
+
+  .dashboard-progress-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .dashboard-progress-grid .small {
+    font-size: 11px;
+  }
+
+  .dashboard-progress-grid .dashboard-big-value {
+    font-size: 24px;
+  }
+
+}
+
+
+@media (max-width: 380px) {
+
+  .dashboard-progress-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .dashboard-progress-grid .small {
+    min-height: 0;
+    font-size: 13px;
+  }
+
+}
+/* ==================================================
+   MASTERY STATUS
+   ================================================== */
+
+.dashboard-mastery-score {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.dashboard-mastery-score strong {
+  display: block;
+  font-size: 16px;
+}
+
+.dashboard-mastery-score .dashboard-mastery-label {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
 }

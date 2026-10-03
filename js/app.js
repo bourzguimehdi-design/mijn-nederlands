@@ -1164,38 +1164,41 @@ function finishWritingAssessment() {
     "writingComplete"
   );
 
-
   renderWritingSummary();
-
 
   try {
 
-    localStorage.setItem(
-      "mijnNederlandsWritingAssessment",
-      JSON.stringify({
-        completedAt:
-          new Date().toISOString(),
+  const result = {
+    assessmentVersion: 2,
 
-        responses:
-          writingResponses
-      })
-    );
+    completedAt:
+      new Date().toISOString(),
 
-  } catch (error) {
-
-    console.warn(
-      "Could not save writing assessment.",
-      error
-    );
-  }
+    responses:
+      writingResponses
+  };
 
 
+  Storage.saveWritingAssessment(
+    result
+  );
+
+
+  ProfileEngine.refresh();
+
+
+} catch (error) {
+
+  console.warn(
+    "Could not save writing assessment.",
+    error
+  );
+}
   window.scrollTo(
     0,
     0
   );
 }
-
 
 function renderWritingSummary() {
 
@@ -1607,7 +1610,9 @@ function hideAllSections() {
     "writingFeedback",
     "writingError",
     "writingComplete",
-    "results"
+    "results",
+    "dashboard",
+    "moduleComingSoon",
   ]
     .forEach(
       id => {
@@ -1655,3 +1660,50 @@ function escapeHTML(
 
   return div.innerHTML;
 }
+/*
+==================================================
+APP STARTUP
+==================================================
+*/
+
+function initializeApp() {
+
+  try {
+
+    const profile =
+      ProfileEngine.refresh();
+
+    const hasAssessment =
+      profile &&
+      profile.assessmentSummary &&
+      (
+        profile.assessmentSummary.placementAttempts > 0 ||
+        profile.assessmentSummary.writingAssessments > 0
+      );
+
+
+    if (hasAssessment) {
+
+      openDashboard();
+
+      return;
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Could not restore existing profile.",
+      error
+    );
+
+  }
+
+
+  hideAllSections();
+
+  showSection(
+    "intro"
+  );
+}
+
+

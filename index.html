@@ -19,7 +19,7 @@
 
   <link
     rel="stylesheet"
-    href="css/styles.css"
+    href="css/styles.css?v=5"
   >
 
 </head>
@@ -40,6 +40,314 @@
 
 <main>
 
+  <!-- DASHBOARD -->
+
+<section
+  id="dashboard"
+  class="hidden"
+>
+
+  <div class="dashboard-welcome">
+
+    <div class="skill-label">
+      MIJN NEDERLANDS
+    </div>
+
+    <h1>
+      Your Dutch journey
+    </h1>
+
+    <p class="subtitle">
+      Your daily plan adapts to your
+      assessments and learning needs.
+    </p>
+
+  </div>
+
+
+  <!-- GOAL -->
+
+  <div class="card dashboard-goal">
+
+    <div class="dashboard-section-heading">
+
+      <div>
+
+        <div class="skill-label">
+          🇳🇱 YOUR GOAL
+        </div>
+
+        <h2>
+          Dutch naturalisation
+        </h2>
+
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-goal-grid">
+
+      <div>
+
+        <div class="small">
+          Required target
+        </div>
+
+        <strong
+          id="dashboardTargetLevel"
+          class="dashboard-big-value"
+        >
+          —
+        </strong>
+
+      </div>
+
+
+      <div>
+
+        <div class="small">
+          Training toward
+        </div>
+
+        <strong
+          id="dashboardTrainingTarget"
+          class="dashboard-big-value"
+        >
+          —
+        </strong>
+
+      </div>
+
+
+      <div>
+
+        <div class="small">
+          Goal
+        </div>
+
+        <strong
+          id="dashboardTargetDate"
+        >
+          —
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TODAY -->
+
+  <div class="dashboard-section-heading">
+
+    <div>
+
+      <div class="skill-label">
+        TODAY
+      </div>
+
+      <h2>
+        Your study plan
+      </h2>
+
+    </div>
+
+
+    <strong
+      id="dashboardPlanMinutes"
+      class="dashboard-time-total"
+    >
+      —
+    </strong>
+
+  </div>
+
+
+  <div
+    id="dashboardPlan"
+    class="dashboard-plan"
+  ></div>
+
+
+  <button
+    class="primary"
+    onclick="startTodayPlan()"
+  >
+    Start today's plan
+  </button>
+
+
+  <!-- PROFILE -->
+
+  <div class="dashboard-section-heading dashboard-space-top">
+
+    <div>
+
+      <div class="skill-label">
+        YOUR DUTCH
+      </div>
+
+      <h2>
+        Skill profile
+      </h2>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="dashboardSkills"
+    class="card dashboard-skills"
+  ></div>
+
+
+  <!-- FOCUS -->
+
+  <div class="dashboard-section-heading">
+
+    <div>
+
+      <div class="skill-label">
+        PERSONAL
+      </div>
+
+      <h2>
+        Focus areas
+      </h2>
+
+    </div>
+
+  </div>
+
+
+   <div
+    id="dashboardFocusAreas"
+    class="card"
+  ></div>
+
+
+  <!-- PROGRESS & MASTERY -->
+
+  <div class="dashboard-section-heading dashboard-space-top">
+
+    <div>
+
+      <div class="skill-label">
+        YOUR PROGRESS
+      </div>
+
+      <h2>
+        Progress & mastery
+      </h2>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="dashboardProgress"
+    class="card"
+  >
+
+    <p class="small">
+      Your learning progress will appear here.
+    </p>
+
+  </div>
+
+
+  <!-- ASSESSMENTS -->
+
+  <div class="dashboard-section-heading">
+
+    <div>
+
+      <div class="skill-label">
+        ASSESS
+      </div>
+
+      <h2>
+        Assessments
+      </h2>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <button
+      onclick="startAssessment()"
+    >
+      Retake placement assessment
+    </button>
+
+
+    <button
+      onclick="startWritingAssessment()"
+    >
+      Writing assessment
+    </button>
+<button
+  onclick="startSpeakingAssessment()"
+>
+  Speaking assessment
+</button>
+
+  </div>
+
+</section>
+<!-- ==========================================
+     PERSONALIZED PRACTICE
+=========================================== -->
+
+<section
+  id="practice-screen"
+  class="hidden"
+></section>
+
+
+<!-- TEMPORARY MODULE SCREEN -->
+
+<section
+  id="moduleComingSoon"
+  class="hidden"
+>
+
+  <div class="card">
+
+    <div class="skill-label">
+      MIJN NEDERLANDS
+    </div>
+
+    <h1
+      id="moduleComingSoonTitle"
+    >
+      Module
+    </h1>
+
+    <p
+      id="moduleComingSoonMessage"
+      class="subtitle"
+    ></p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="openDashboard()"
+  >
+    Back to today's plan
+  </button>
+
+</section>
 
 <!-- INTRO -->
 
@@ -115,6 +423,10 @@
       <button onclick="startWritingAssessment()">
         Writing
       </button>
+
+      <button onclick="startSpeakingAssessment()">
+  Speaking
+</button>
 
     </div>
 
@@ -644,6 +956,406 @@
 
 </section>
 
+<!-- SPEAKING INTRO -->
+
+<section
+  id="speakingIntro"
+  class="hidden"
+>
+
+  <div class="skill-label">
+    🗣️ Speaking assessment
+  </div>
+
+  <h1>
+    Now speak in Dutch
+  </h1>
+
+  <p class="subtitle">
+    You'll complete a series of short speaking tasks.
+    Your speech will be transcribed and evaluated
+    for your Dutch speaking ability.
+  </p>
+
+
+  <div class="card soft-card">
+
+    <strong>
+      How this works
+    </strong>
+
+    <p class="small">
+      Read the task, press Start recording,
+      speak naturally in Dutch, then stop the
+      recording when you're finished.
+    </p>
+
+    <p class="small">
+      If a task is too difficult and you cannot
+      answer it, you can skip it. This helps us
+      estimate your current speaking level.
+    </p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="beginSpeakingTasks()"
+  >
+    Start speaking assessment
+  </button>
+
+
+  <button onclick="openDashboard()">
+    Back
+  </button>
+
+</section>
+
+
+
+<!-- SPEAKING TASK -->
+
+<section
+  id="speakingAssessment"
+  class="hidden"
+>
+
+  <div class="progress">
+
+    <div
+      id="speakingProgressBar"
+      class="progress-bar"
+    ></div>
+
+  </div>
+
+
+  <div class="assessment-header">
+
+    <div>
+
+      <div class="skill-label">
+        🗣️ Speaking
+      </div>
+
+      <div
+        id="speakingTaskCounter"
+        class="small"
+      ></div>
+
+    </div>
+
+
+    <div
+      id="speakingLevelBadge"
+      class="badge"
+    ></div>
+
+  </div>
+
+
+  <h1
+    id="speakingTaskTitle"
+    class="question"
+  ></h1>
+
+
+  <div
+    id="speakingSituation"
+    class="writing-situation"
+  ></div>
+
+
+  <strong>
+    Your task
+  </strong>
+
+
+  <p id="speakingInstruction"></p>
+
+
+  <ul
+    id="speakingRequirements"
+    class="requirements"
+  ></ul>
+
+
+  <div
+    id="speakingRecorderStatus"
+    class="card soft-card"
+  >
+
+    <strong id="speakingRecorderStatusTitle">
+      Ready to record
+    </strong>
+
+    <p
+      id="speakingRecorderStatusText"
+      class="small"
+    >
+      Press Start recording when you're ready.
+    </p>
+
+    <div
+      id="speakingTimer"
+      class="dashboard-big-value"
+    >
+      00:00
+    </div>
+
+  </div>
+
+
+  <button
+    id="startSpeakingRecordingButton"
+    class="primary"
+    onclick="startSpeakingRecording()"
+  >
+    🎙️ Start recording
+  </button>
+
+
+  <button
+    id="stopSpeakingRecordingButton"
+    class="primary hidden"
+    onclick="stopSpeakingRecording()"
+  >
+    ⏹ Stop recording
+  </button>
+
+
+  <button
+    id="skipSpeakingTaskButton"
+    onclick="skipSpeakingTask()"
+  >
+    Skip this task
+  </button>
+
+</section>
+
+
+
+<!-- SPEAKING PROCESSING -->
+
+<section
+  id="speakingLoading"
+  class="hidden"
+>
+
+  <div class="evaluation-loading">
+
+    <div class="loading-spinner"></div>
+
+    <h2 id="speakingLoadingTitle">
+      Processing your Dutch…
+    </h2>
+
+    <p
+      id="speakingLoadingMessage"
+      class="subtitle"
+    >
+      Transcribing your recording and
+      evaluating your speaking.
+    </p>
+
+  </div>
+
+</section>
+
+
+
+<!-- SPEAKING FEEDBACK -->
+
+<section
+  id="speakingFeedback"
+  class="hidden"
+>
+
+  <div class="skill-label">
+    🗣️ Speaking feedback
+  </div>
+
+
+  <div class="feedback-heading">
+
+    <div>
+
+      <h1 id="speakingFeedbackPerformance">
+        Your result
+      </h1>
+
+      <p
+        id="speakingFeedbackLevel"
+        class="subtitle"
+      ></p>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="speakingFeedbackScores"
+    class="card"
+  ></div>
+
+
+  <div
+    id="speakingFeedbackStrengthsCard"
+    class="card success-card"
+  >
+
+    <h2>
+      ✓ What you did well
+    </h2>
+
+    <div id="speakingFeedbackStrengths"></div>
+
+  </div>
+
+
+  <div
+    id="speakingFeedbackErrorsCard"
+    class="card"
+  >
+
+    <h2>
+      ⚠ Important corrections
+    </h2>
+
+    <div id="speakingFeedbackErrors"></div>
+
+  </div>
+
+
+  <div
+    id="speakingFeedbackPriorityCard"
+    class="card"
+  >
+
+    <h2>
+      🎯 Practice next
+    </h2>
+
+    <div id="speakingFeedbackPriority"></div>
+
+  </div>
+
+
+  <div class="card soft-card">
+
+    <strong>
+      Overall feedback
+    </strong>
+
+    <p id="speakingFeedbackOverall"></p>
+
+
+    <strong>
+      Next step
+    </strong>
+
+    <p id="speakingFeedbackNextStep"></p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="continueAfterSpeakingFeedback()"
+  >
+    Continue
+  </button>
+
+</section>
+
+
+
+<!-- SPEAKING ERROR -->
+
+<section
+  id="speakingError"
+  class="hidden"
+>
+
+  <div class="card">
+
+    <h2>
+      Your recording couldn't be evaluated
+    </h2>
+
+    <p id="speakingErrorMessage"></p>
+
+    <p class="small">
+      You can try recording this task again
+      or skip it and continue the assessment.
+    </p>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="retrySpeakingTask()"
+  >
+    Try again
+  </button>
+
+
+  <button onclick="skipSpeakingTask()">
+    Skip this task
+  </button>
+
+</section>
+
+
+
+<!-- SPEAKING COMPLETE -->
+
+<section
+  id="speakingComplete"
+  class="hidden"
+>
+
+  <div class="card success-card">
+
+    <h2>
+      🗣️ Speaking assessment complete
+    </h2>
+
+    <p>
+      Your speaking assessment has been
+      completed and saved.
+    </p>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      Speaking summary
+    </h2>
+
+    <div id="speakingSummary"></div>
+
+  </div>
+
+
+  <button
+    class="primary"
+    onclick="openDashboard()"
+  >
+    Return to dashboard
+  </button>
+
+</section>
+
+
+
+<!-- RESULTS -->
 
 
 <!-- RESULTS -->
@@ -746,24 +1458,52 @@
 <script src="data/placement-questions.js"></script>
 <script src="data/listening-questions.js"></script>
 <script src="data/writing-tasks.js"></script>
+<script src="data/speaking-tasks.js?v=1"></script>
+<script src="js/speaking-engine.js?v=1"></script>
+<script src="js/speaking-recorder.js?v=1"></script>
 
 
 <!-- ENGINES -->
 
-<script src="js/storage.js"></script>
+<script src="js/storage.js?v=3"></script>
 <script src="js/assessment-engine.js"></script>
 <script src="js/writing-engine.js"></script>
 
 
 <!-- API -->
 
-<script src="js/api.js"></script>
+<script src="js/api.js?v=5"></script>
+
+<!-- PRACTICE ENGINE -->
+<script src="js/practice-engine.js?v=1"></script>
+
+<script src="js/practice-ui.js?v=3"></script>
 
 <!-- APP -->
-<script src="js/app.js"></script>
+<script src="js/app.js?v=2"></script>
+
+<!-- LEARNER PROFILE -->
+<script src="js/profile-engine.js?v=8"></script>
+
+<!-- STUDY PLAN -->
+<script src="js/study-plan-engine.js"></script>
 
 <!-- AI WRITING CONTROLLER -->
-<script src="js/writing-ai.js"></script>
 
+<script src="js/writing-ai.js?v=2"></script>
+
+
+<!-- AI SPEAKING CONTROLLER -->
+
+<script src="js/speaking-ai.js?v=1"></script>
+
+
+<!-- DASHBOARD -->
+
+<script src="js/dashboard.js?v=4"></script><script>
+
+
+  initializeApp();
+</script>
 </body>
 </html>
