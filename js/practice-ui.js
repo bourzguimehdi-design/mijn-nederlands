@@ -12,6 +12,7 @@ const PracticeUI = {
   currentStage: "explanation",
   currentQuestionIndex: 0,
   answers: [],
+  completedResult: null,
 async startFromActivity(activity) {
 
   if (!activity) {
@@ -20,35 +21,58 @@ async startFromActivity(activity) {
     );
   }
 
-  if (
-    activity.type !== "concept" ||
-    !activity.concept
-  ) {
-    throw new Error(
-      "This activity is not a concept-practice activity."
-    );
-  }
-
 
   const profile =
     ProfileEngine.refresh();
 
 
-  const session =
-    PracticeEngine.createConceptSession(
-      activity.concept,
-      profile,
-      {
-        minutes:
-          activity.minutes || 10
-      }
+  let session;
+
+
+  if (
+    activity.type === "concept" &&
+    activity.concept
+  ) {
+
+    session =
+      PracticeEngine.createConceptSession(
+        activity.concept,
+        profile,
+        {
+          minutes:
+            activity.minutes || 10
+        }
+      );
+
+  } else if (
+    activity.type === "skill" &&
+    activity.skill
+  ) {
+
+    session =
+      PracticeEngine.createSkillSession(
+        activity.skill,
+        profile,
+        {
+          minutes:
+            activity.minutes || 10
+        }
+      );
+
+  } else {
+
+    throw new Error(
+      "This activity cannot be opened as practice."
     );
+
+  }
 
 
   console.log(
     "Starting practice from activity:",
     activity
   );
+
 
   console.log(
     "Created practice session:",
@@ -61,6 +85,143 @@ async startFromActivity(activity) {
   );
 },
 
+
+  /*
+  ==================================================
+  START ERROR LESSON
+  ==================================================
+  */
+
+  async startErrorLesson(
+  concept
+) {
+
+  if (!concept) {
+
+    throw new Error(
+      "An error lesson concept is required."
+    );
+
+  }
+
+
+  /*
+  ==================================================
+  RESET PRACTICE STATE
+  ==================================================
+  */
+
+  this.currentSession =
+    null;
+
+  this.generatedPractice =
+    null;
+
+  this.currentStage =
+    "loading";
+
+  this.currentQuestionIndex =
+    0;
+
+  this.answers = [];
+
+
+  this.renderLoading();
+
+
+  try {
+
+    /*
+    ==================================================
+    GENERATE + ADAPT ERROR LESSON
+    ==================================================
+
+    ErrorLessonEngine.startLesson() now handles:
+
+    1. building the lesson context
+    2. creating the practice session
+    3. calling the API
+    4. adapting the response for PracticeUI
+    5. assigning the generated practice
+    6. rendering the explanation
+
+    Therefore PracticeUI must NOT perform the old
+    error-lesson response validation here.
+    ==================================================
+    */
+
+    const result =
+      await ErrorLessonEngine
+        .startLesson(
+          concept
+        );
+
+
+    console.log(
+      "ERROR LESSON RESULT:",
+      result
+    );
+
+
+    /*
+    ==================================================
+    FINAL SAFETY CHECK
+    ==================================================
+    */
+
+    if (
+      !result ||
+      result.status !==
+        "success" ||
+      !result.practice
+    ) {
+
+      throw new Error(
+        "Error lesson generation returned an incomplete result."
+      );
+
+    }
+
+
+    /*
+    ErrorLessonEngine.startLesson() already assigned:
+
+      this.currentSession
+      this.generatedPractice
+      this.currentStage
+      this.currentQuestionIndex
+      this.answers
+
+    through PracticeUI itself.
+
+    Nothing else needs to be transformed here.
+    */
+
+
+    return result;
+
+
+  } catch (error) {
+
+    console.error(
+      "Could not start error lesson:",
+      error
+    );
+
+
+    this.renderError(
+      error.message ||
+      "Could not load this error lesson."
+    );
+
+
+    throw error;
+
+  }
+
+},
+
+
   /*
   ==================================================
   START PRACTICE
@@ -68,13 +229,13 @@ async startFromActivity(activity) {
   */
 
   async start(session) {
-
     if (!session) {
       throw new Error(
         "A practice session is required."
       );
     }
 
+    this.completedResult = null;
     this.currentSession =
       session;
 
@@ -513,138 +674,544 @@ async startFromActivity(activity) {
   QUESTION
   ==================================================
   */
+  /*
+  ==================================================
+  LISTENING AUDIO
+  ==================================================
+  */
 
-  renderQuestion(
-    exercise,
-    stage,
-    total
-  ) {
+  speakListeningText(text) {
 
-    const root =
-      this.getRoot();
-
-    if (!root) {
+    if (
+      !text ||
+      !("speechSynthesis" in window)
+    ) {
       return;
     }
 
-    const number =
-      this.currentQuestionIndex + 1;
 
-    const progress =
-      stage === "guided"
-        ? 20 + (
-            number /
-            Math.max(total, 1)
-          ) * 45
-        : 65 + (
-            number /
-            Math.max(total, 1)
-          ) * 30;
+    window.speechSynthesis.cancel();
 
-    root.innerHTML = `
-      <div class="practice-shell">
 
-        ${this.renderHeader()}
+    const utterance =
+      new SpeechSynthesisUtterance(
+        text
+      );
 
-        <div class="practice-progress">
 
-          <div class="practice-progress-bar">
-            <div
-              class="practice-progress-fill"
-              style="width: ${progress}%"
-            ></div>
-          </div>
+    utterance.lang =
+      "nl-NL";
 
-          <div class="practice-progress-label">
+    utterance.rate =
+      0.9;
 
-            ${
-              stage === "guided"
-                ? "Guided practice"
-                : "Try it yourself"
-            }
+    utterance.pitch =
+      1;
 
-            · ${number} of ${total}
 
-          </div>
+    const voices =
+      window.speechSynthesis
+        .getVoices();
+
+
+    const dutchVoice =
+      voices.find(
+        voice =>
+          voice.lang
+            ?.toLowerCase()
+            .startsWith("nl")
+      );
+
+
+    if (dutchVoice) {
+
+      utterance.voice =
+        dutchVoice;
+
+    }
+
+
+    window.speechSynthesis.speak(
+      utterance
+    );
+
+  },
+
+
+  stopListeningAudio() {
+
+    if (
+      "speechSynthesis" in window
+    ) {
+
+      window.speechSynthesis.cancel();
+
+    }
+
+  },
+
+
+  renderListeningContext(
+    context
+  ) {
+
+    if (!context) {
+      return "";
+    }
+
+
+    const encodedContext =
+      encodeURIComponent(
+        context
+      );
+
+
+    return `
+
+      <div
+        class="practice-listening"
+      >
+
+        <div
+          class="practice-listening-icon"
+          aria-hidden="true"
+        >
+          🔊
+        </div>
+
+
+        <div
+          class="practice-listening-main"
+        >
+
+          <strong>
+            Listen to the audio
+          </strong>
+
+          <span>
+            Listen carefully, then answer
+            the question below.
+          </span>
 
         </div>
 
 
-        <section class="practice-card">
-
-          <div class="practice-card-label">
-
-            ${
-              stage === "guided"
-                ? "PRACTICE"
-                : "TRY IT YOURSELF"
-            }
-
-          </div>
-
-
-          <p class="practice-instruction">
-            ${this.escapeHTML(
-              exercise.instruction
-            )}
-          </p>
-
-
-          <h2 class="practice-prompt">
-            ${this.escapeHTML(
-              exercise.prompt
-            )}
-          </h2>
-
-
-          ${this.renderAnswerControl(
-            exercise
-          )}
-
-
-          ${
-            exercise.hint
-              ? `
-                <button
-                  class="practice-hint-button"
-                  type="button"
-                  onclick="PracticeUI.showHint()"
-                >
-                  Need a hint?
-                </button>
-
-                <div
-                  id="practice-hint"
-                  class="practice-hint"
-                  hidden
-                >
-                  ${this.escapeHTML(
-                    exercise.hint
-                  )}
-                </div>
-              `
-              : ""
-          }
-
-
-          <button
-            class="practice-primary-button"
-            type="button"
-            onclick="PracticeUI.submitCurrentAnswer()"
-          >
-            Check answer
-          </button>
-
-        </section>
+        <button
+          class="practice-listen-button"
+          type="button"
+          onclick="PracticeUI.speakListeningText(
+            decodeURIComponent(
+              '${encodedContext}'
+            )
+          )"
+        >
+          ▶ Play audio
+        </button>
 
       </div>
+
     `;
 
-    this.showScreen();
   },
 
 
   /*
+  ==================================================
+  QUESTION
+  ==================================================
+  */
+
+renderQuestion(
+  exercise,
+  stage,
+  total
+) {
+
+  const root =
+    this.getRoot();
+
+
+  if (!root) {
+    return;
+  }
+
+
+  this.stopListeningAudio();
+
+
+  const number =
+    this.currentQuestionIndex + 1;
+
+  const progress =
+    stage === "guided"
+      ? 20 +
+        Math.round(
+          (
+            number /
+            Math.max(total, 1)
+          ) * 35
+        )
+      : 60 +
+        Math.round(
+          (
+            number /
+            Math.max(total, 1)
+          ) * 35
+        );
+
+
+  const options =
+    Array.isArray(
+      exercise.options
+    )
+      ? exercise.options
+      : [];
+
+
+  /*
+  ==================================================
+  CONTEXT
+  ==================================================
+
+  Reading:
+    passage / notice / message
+
+  Listening:
+    transcript or listening context
+
+  Writing / speaking:
+    situation or supporting context
+
+  Concept practice:
+    normally no context
+  ==================================================
+  */
+
+  const context =
+    typeof exercise.context ===
+      "string"
+      ? exercise.context.trim()
+      : "";
+
+
+  /*
+  ==================================================
+  SKILL INFORMATION
+  ==================================================
+  */
+
+  const skill =
+    this.currentSession
+      ?.skill ||
+    this.generatedPractice
+      ?.skill ||
+    null;
+
+
+  const level =
+    this.currentSession
+      ?.level ||
+    this.generatedPractice
+      ?.level ||
+    null;
+
+
+  const skillLabel =
+    skill
+      ? String(skill)
+          .replace(
+            /_/g,
+            " "
+          )
+          .replace(
+            /\b\w/g,
+            character =>
+              character.toUpperCase()
+          )
+      : null;
+
+
+  /*
+  ==================================================
+  MULTIPLE-CHOICE OPTIONS
+  ==================================================
+
+  submitCurrentAnswer() expects:
+
+      input[name="practice-answer"]:checked
+
+  Therefore options must be radio inputs rather
+  than buttons calling the old answerOption()
+  function.
+  ==================================================
+  */
+
+  const optionsHTML =
+    options
+      .map(
+        (option, index) => {
+
+          const optionId =
+            `practice-option-${index}`;
+
+
+          return `
+
+            <label
+              class="practice-option"
+              for="${optionId}"
+            >
+
+              <input
+                id="${optionId}"
+                class="practice-option-input"
+                type="radio"
+                name="practice-answer"
+                value="${this.escapeHTML(
+                  option
+                )}"
+              >
+
+              <span
+                class="practice-option-text"
+              >
+                ${this.escapeHTML(
+                  option
+                )}
+              </span>
+
+            </label>
+
+          `;
+
+        }
+      )
+      .join("");
+
+
+  /*
+  ==================================================
+  RENDER
+  ==================================================
+  */
+
+  root.innerHTML = `
+
+    <div class="practice-shell">
+
+      ${this.renderHeader()}
+
+
+      <div class="practice-progress">
+
+        <div class="practice-progress-bar">
+
+          <div
+            class="practice-progress-fill"
+            style="width: ${progress}%"
+          ></div>
+
+        </div>
+
+
+        <div class="practice-progress-label">
+
+          ${
+            stage === "guided"
+              ? "Guided practice"
+              : "Try it yourself"
+          }
+
+          ${number} of ${total}
+
+        </div>
+
+      </div>
+
+
+      <section class="practice-card">
+
+
+        ${
+          skillLabel
+            ? `
+
+              <div class="practice-skill-meta">
+
+                <span
+                  class="practice-skill-name"
+                >
+                  ${this.escapeHTML(
+                    skillLabel
+                  )}
+                </span>
+
+                ${
+                  level
+                    ? `
+
+                      <span
+                        class="practice-skill-level"
+                      >
+                        ${this.escapeHTML(
+                          String(level)
+                        )}
+                      </span>
+
+                    `
+                    : ""
+                }
+
+              </div>
+
+            `
+            : ""
+        }
+
+
+        <div class="practice-card-label">
+
+          ${
+            stage === "guided"
+              ? "PRACTICE"
+              : "YOUR TURN"
+          }
+
+        </div>
+
+
+        ${
+          exercise.instruction
+            ? `
+
+              <p
+                class="practice-instruction"
+              >
+                ${this.escapeHTML(
+                  exercise.instruction
+                )}
+              </p>
+
+            `
+            : ""
+        }
+
+
+                ${
+          context
+            ? (
+                skill === "listening"
+                  ? this.renderListeningContext(
+                      context
+                    )
+                  : `
+
+                      <div
+                        class="practice-context"
+                      >
+                        ${this.escapeHTML(
+                          context
+                        )}
+                      </div>
+
+                    `
+              )
+            : ""
+        }
+
+
+        <h2
+          class="practice-question"
+        >
+          ${this.escapeHTML(
+            exercise.prompt || ""
+          )}
+        </h2>
+
+
+        ${
+          options.length
+            ? `
+
+              <div
+                class="practice-options"
+              >
+
+                ${optionsHTML}
+
+              </div>
+
+
+              <button
+                class="practice-primary-button practice-check-button"
+                type="button"
+                onclick="PracticeUI.submitCurrentAnswer()"
+              >
+                Check answer
+              </button>
+
+            `
+            : `
+
+              <div
+                class="practice-answer-area"
+              >
+
+                <textarea
+                  id="practice-text-answer"
+                  class="practice-answer-input"
+                  rows="4"
+                  placeholder="Write your answer here..."
+                ></textarea>
+
+
+                <button
+                  class="practice-primary-button"
+                  type="button"
+                  onclick="PracticeUI.submitCurrentAnswer()"
+                >
+                  Check answer
+                </button>
+
+              </div>
+
+            `
+        }
+
+
+        ${
+          exercise.hint
+            ? `
+
+              <div
+                class="practice-hint"
+              >
+
+                <strong>
+                  Hint:
+                </strong>
+
+                ${this.escapeHTML(
+                  exercise.hint
+                )}
+
+              </div>
+
+            `
+            : ""
+        }
+
+
+      </section>
+
+    </div>
+
+  `;
+
+
+  this.showScreen();
+
+},  /*
   ==================================================
   ANSWER CONTROLS
   ==================================================
@@ -728,36 +1295,45 @@ async startFromActivity(activity) {
   ==================================================
   */
 
-  if (
-    exercise.type ===
-    "multiple_choice"
-  ) {
+  const hasOptions =
+  Array.isArray(
+    exercise.options
+  ) &&
+  exercise.options.length > 0;
 
-    const selected =
-      document.querySelector(
-        'input[name="practice-answer"]:checked'
+
+if (hasOptions) {
+
+  const root =
+    this.getRoot();
+
+
+  const selected =
+    root?.querySelector(
+      'input[name="practice-answer"]:checked'
+    );
+
+
+  answer =
+    selected
+      ? selected.value
+      : "";
+
+} else {
+
+  const field =
+    this.getRoot()
+      ?.querySelector(
+        "#practice-text-answer"
       );
 
 
-    answer =
-      selected
-        ? selected.value
-        : "";
+  answer =
+    field
+      ? field.value.trim()
+      : "";
 
-  } else {
-
-    const field =
-      document.getElementById(
-        "practice-text-answer"
-      );
-
-
-    answer =
-      field
-        ? field.value.trim()
-        : "";
-
-  }
+}
 
 
   if (!answer) {
@@ -768,6 +1344,35 @@ async startFromActivity(activity) {
 
     return;
   }
+
+
+  /*
+  ==================================================
+  DETERMINE PRACTICE TYPE
+  ==================================================
+
+  Concept practice:
+    targetConceptCorrect
+
+  Skill practice:
+    targetSkillCorrect
+  ==================================================
+  */
+
+  const practiceType =
+    this.currentSession
+      ?.practiceType ||
+    this.generatedPractice
+      ?.practiceType ||
+    (
+      this.currentSession?.skill
+        ? "skill"
+        : "concept"
+    );
+
+
+  const isSkillPractice =
+    practiceType === "skill";
 
 
   /*
@@ -786,7 +1391,9 @@ async startFromActivity(activity) {
   ) {
 
     const correct =
-      this.normalizeAnswer(answer) ===
+      this.normalizeAnswer(
+        answer
+      ) ===
       this.normalizeAnswer(
         exercise.expectedAnswer
       );
@@ -803,6 +1410,22 @@ async startFromActivity(activity) {
       type:
         exercise.type,
 
+      practiceType,
+
+      concept:
+        this.currentSession
+          ?.concept ||
+        this.generatedPractice
+          ?.concept ||
+        null,
+
+      skill:
+        this.currentSession
+          ?.skill ||
+        this.generatedPractice
+          ?.skill ||
+        null,
+
       answer,
 
       expectedAnswer:
@@ -810,8 +1433,20 @@ async startFromActivity(activity) {
 
       correct,
 
+      /*
+      Only the applicable target field
+      receives a boolean.
+      */
+
       targetConceptCorrect:
-        correct,
+        isSkillPractice
+          ? null
+          : correct,
+
+      targetSkillCorrect:
+        isSkillPractice
+          ? correct
+          : null,
 
       overallCorrect:
         correct,
@@ -841,11 +1476,14 @@ async startFromActivity(activity) {
   OPEN-ENDED ANSWER
   ==================================================
 
-  Typed answers must not be compared
-  literally with one model answer.
+  Open-ended answers are evaluated by the API.
 
-  Ask the practice evaluator whether the
-  learner demonstrated the target concept.
+  Concept practice uses:
+    targetConceptCorrect
+
+  Skill practice uses:
+    targetSkillCorrect
+  ==================================================
   */
 
   const card =
@@ -872,7 +1510,10 @@ async startFromActivity(activity) {
 
   controls.forEach(
     element => {
-      element.disabled = true;
+
+      element.disabled =
+        true;
+
     }
   );
 
@@ -889,23 +1530,83 @@ async startFromActivity(activity) {
 
 
     const evaluation =
-      result.evaluation;
+      result?.evaluation ||
+      {};
 
 
     /*
-    The practice score represents mastery
-    of the TARGET CONCEPT.
-
-    Example:
-    spelling correct + adjective-ending
-    error = spelling target still correct.
+    ==================================================
+    DETERMINE TARGET CORRECTNESS
+    ==================================================
     */
 
-    const correct =
-      evaluation
-        .targetConceptCorrect ===
-      true;
+    let correct;
 
+
+    if (
+      isSkillPractice
+    ) {
+
+      /*
+      New skill-practice response.
+      */
+
+      if (
+        typeof evaluation
+          .targetSkillCorrect ===
+        "boolean"
+      ) {
+
+        correct =
+          evaluation
+            .targetSkillCorrect;
+
+      } else {
+
+        /*
+        Backward/failure-safe fallback.
+        */
+
+        correct =
+          evaluation
+            .overallCorrect ===
+          true;
+
+      }
+
+    } else {
+
+      /*
+      Existing concept-practice response.
+      */
+
+      if (
+        typeof evaluation
+          .targetConceptCorrect ===
+        "boolean"
+      ) {
+
+        correct =
+          evaluation
+            .targetConceptCorrect;
+
+      } else {
+
+        correct =
+          evaluation
+            .overallCorrect ===
+          true;
+
+      }
+
+    }
+
+
+    /*
+    ==================================================
+    SAVE ANSWER
+    ==================================================
+    */
 
     this.answers.push({
 
@@ -918,6 +1619,22 @@ async startFromActivity(activity) {
       type:
         exercise.type,
 
+      practiceType,
+
+      concept:
+        this.currentSession
+          ?.concept ||
+        this.generatedPractice
+          ?.concept ||
+        null,
+
+      skill:
+        this.currentSession
+          ?.skill ||
+        this.generatedPractice
+          ?.skill ||
+        null,
+
       answer,
 
       expectedAnswer:
@@ -926,21 +1643,63 @@ async startFromActivity(activity) {
       correct,
 
       targetConceptCorrect:
-        evaluation
-          .targetConceptCorrect,
+        isSkillPractice
+          ? null
+          : (
+              typeof evaluation
+                .targetConceptCorrect ===
+              "boolean"
+                ? evaluation
+                    .targetConceptCorrect
+                : correct
+            ),
+
+      targetSkillCorrect:
+        isSkillPractice
+          ? (
+              typeof evaluation
+                .targetSkillCorrect ===
+              "boolean"
+                ? evaluation
+                    .targetSkillCorrect
+                : correct
+            )
+          : null,
 
       overallCorrect:
         evaluation
-          .overallCorrect,
+          .overallCorrect ===
+        true,
 
       feedback:
-        evaluation.feedback,
+        evaluation.feedback ||
+        null,
 
       correction:
-        evaluation.correction,
+        evaluation.correction ||
+        null,
+
+      explanation:
+        evaluation.explanation ||
+        null,
+
+      /*
+      New Worker returns concepts[].
+
+      Keep errorConcept too for compatibility
+      with older stored practice results.
+      */
+
+      concepts:
+        Array.isArray(
+          evaluation.concepts
+        )
+          ? evaluation.concepts.slice()
+          : [],
 
       errorConcept:
-        evaluation.errorConcept,
+        evaluation.errorConcept ||
+        null,
 
       evaluationSource:
         "ai",
@@ -950,6 +1709,12 @@ async startFromActivity(activity) {
 
     });
 
+
+    /*
+    ==================================================
+    SHOW FEEDBACK
+    ==================================================
+    */
 
     this.renderEvaluatedFeedback(
       exercise,
@@ -967,13 +1732,16 @@ async startFromActivity(activity) {
 
 
     /*
-    Re-enable the controls so the learner
-    can retry instead of losing the answer.
+    Re-enable controls so the learner
+    can retry without losing the answer.
     */
 
     controls.forEach(
       element => {
-        element.disabled = false;
+
+        element.disabled =
+          false;
+
       }
     );
 
@@ -1107,6 +1875,7 @@ async startFromActivity(activity) {
     }
   },
 
+
   renderEvaluatedFeedback(
   exercise,
   answer,
@@ -1122,10 +1891,68 @@ async startFromActivity(activity) {
   }
 
 
-  const targetCorrect =
-    evaluation
-      .targetConceptCorrect ===
-    true;
+  /*
+  ==================================================
+  DETERMINE PRACTICE TYPE
+  ==================================================
+  */
+
+  const practiceType =
+    this.currentSession
+      ?.practiceType ||
+    this.generatedPractice
+      ?.practiceType ||
+    (
+      this.currentSession?.skill
+        ? "skill"
+        : "concept"
+    );
+
+
+  const isSkillPractice =
+    practiceType === "skill";
+
+
+  /*
+  ==================================================
+  TARGET CORRECTNESS
+  ==================================================
+  */
+
+  let targetCorrect;
+
+
+  if (
+    isSkillPractice
+  ) {
+
+    targetCorrect =
+      typeof evaluation
+        .targetSkillCorrect ===
+      "boolean"
+
+        ? evaluation
+            .targetSkillCorrect
+
+        : evaluation
+            .overallCorrect ===
+          true;
+
+  } else {
+
+    targetCorrect =
+      typeof evaluation
+        .targetConceptCorrect ===
+      "boolean"
+
+        ? evaluation
+            .targetConceptCorrect
+
+        : evaluation
+            .overallCorrect ===
+          true;
+
+  }
 
 
   const overallCorrect =
@@ -1164,16 +1991,60 @@ async startFromActivity(activity) {
       "Correct";
 
   } else if (
+    targetCorrect &&
+    isSkillPractice
+  ) {
+
+    heading =
+      "Skill correct";
+
+  } else if (
     targetCorrect
   ) {
 
     heading =
-      "Target skill correct";
+      "Target concept correct";
 
   } else {
 
     heading =
       "Review this one";
+
+  }
+
+
+  /*
+  ==================================================
+  ADDITIONAL CONCEPTS
+  ==================================================
+  */
+
+  const concepts =
+    Array.isArray(
+      evaluation.concepts
+    )
+      ? evaluation.concepts
+          .filter(Boolean)
+      : [];
+
+
+  /*
+  Backward compatibility with the
+  previous evaluator response.
+  */
+
+  if (
+    evaluation.errorConcept &&
+    evaluation.errorConcept !==
+      "none" &&
+    !concepts.includes(
+      evaluation.errorConcept
+    )
+  ) {
+
+    concepts.push(
+      evaluation.errorConcept
+    );
 
   }
 
@@ -1241,24 +2112,42 @@ async startFromActivity(activity) {
 
 
     ${
-      evaluation.errorConcept &&
-      evaluation.errorConcept !==
-        "none"
+      evaluation.explanation
         ? `
           <p class="small">
+            ${this.escapeHTML(
+              evaluation.explanation
+            )}
+          </p>
+        `
+        : ""
+    }
+
+
+    ${
+      concepts.length
+        ? `
+          <p class="small">
+
             <strong>
               Also review:
             </strong>
 
-            ${this.escapeHTML(
-              String(
-                evaluation.errorConcept
+            ${concepts
+              .map(
+                concept =>
+                  this.escapeHTML(
+                    String(
+                      concept
+                    )
+                      .replaceAll(
+                        "_",
+                        " "
+                      )
+                  )
               )
-                .replaceAll(
-                  "_",
-                  " "
-                )
-            )}
+              .join(", ")}
+
           </p>
         `
         : ""
@@ -1290,7 +2179,10 @@ async startFromActivity(activity) {
       )
       .forEach(
         element => {
-          element.disabled = true;
+
+          element.disabled =
+            true;
+
         }
       );
 
@@ -1306,7 +2198,9 @@ async startFromActivity(activity) {
       );
 
 
-    if (continueButton) {
+    if (
+      continueButton
+    ) {
 
       continueButton.disabled =
         false;
@@ -1316,6 +2210,7 @@ async startFromActivity(activity) {
   }
 
 },
+
 
   nextQuestion() {
 
@@ -1377,12 +2272,9 @@ async startFromActivity(activity) {
     if (hint) {
       hint.hidden = false;
     }
-  },
-
-
-  /*
+  },  /*
   ==================================================
-  COMPLETION
+  COMPLETE
   ==================================================
   */
 
@@ -1391,10 +2283,17 @@ async startFromActivity(activity) {
   const root =
     this.getRoot();
 
+
   if (!root) {
     return;
   }
 
+
+  /*
+  ==================================================
+  RESULT
+  ==================================================
+  */
 
   const total =
     this.answers.length;
@@ -1407,12 +2306,98 @@ async startFromActivity(activity) {
     ).length;
 
 
+  const incorrect =
+    Math.max(
+      0,
+      total - correct
+    );
+
+
   const score =
     total > 0
       ? Math.round(
-          (correct / total) * 100
+          (
+            correct /
+            total
+          ) * 100
         )
       : 0;
+
+
+  /*
+  ==================================================
+  PRACTICE TYPE
+  ==================================================
+  */
+
+  const session =
+    this.currentSession ||
+    {};
+
+
+  const practiceType =
+    session.practiceType ||
+    (
+      session.skill
+        ? "skill"
+        : "concept"
+    );
+
+
+  const concept =
+    practiceType === "concept"
+      ? (
+          session.concept ||
+          this.generatedPractice
+            ?.concept ||
+          null
+        )
+      : null;
+
+
+  const skill =
+    practiceType === "skill"
+      ? (
+          session.skill ||
+          this.generatedPractice
+            ?.skill ||
+          null
+        )
+      : null;
+
+
+  const level =
+    session.level ||
+    this.generatedPractice
+      ?.level ||
+    null;
+
+
+  /*
+  ==================================================
+  DISPLAY LABEL
+  ==================================================
+  */
+
+  const target =
+    concept ||
+    skill ||
+    null;
+
+
+  const targetLabel =
+    target
+      ? String(target)
+          .replaceAll(
+            "_",
+            " "
+          )
+          .replace(
+            /\b\w/g,
+            character =>
+              character.toUpperCase()
+          )
+      : "this topic";
 
 
   /*
@@ -1421,51 +2406,47 @@ async startFromActivity(activity) {
   ==================================================
   */
 
-  let savedResult = null;
+  let savedResult = this.completedResult;
 
-
-  if (
-    typeof Storage !== "undefined" &&
-    typeof Storage.savePracticeResult ===
+  if (!savedResult && total > 0 &&
+    typeof Storage !==
+      "undefined" &&
+    typeof Storage
+      .savePracticeResult ===
       "function"
   ) {
 
-    const session =
-      this.currentSession || {};
-
-
     const practiceResult = {
-
-      /*
-      Reuse the practice session ID.
-
-      Storage prevents duplicate entries
-      using this ID.
-      */
 
       id:
         session.id ||
-        `practice_${session.concept || "unknown"}_${Date.now()}`,
+        `practice_${
+          concept ||
+          skill ||
+          "unknown"
+        }_${Date.now()}`,
 
 
       type:
-        "concept_practice",
+        practiceType === "skill"
+          ? "skill_practice"
+          : "concept_practice",
 
 
-      concept:
-        session.concept ||
-        this.generatedPractice?.concept ||
-        null,
+      practiceType,
+
+      concept,
+
+      skill,
 
 
-      level:
-        session.level ||
-        this.generatedPractice?.level ||
-        null,
+      level,
 
 
       title:
         session.title ||
+        this.generatedPractice
+          ?.title ||
         null,
 
 
@@ -1481,13 +2462,6 @@ async startFromActivity(activity) {
       score,
 
 
-      /*
-      Keep the exercise evidence.
-
-      Clone the array so the saved result
-      does not depend on later UI changes.
-      */
-
       answers:
         this.answers.map(
           answer => ({
@@ -1496,8 +2470,13 @@ async startFromActivity(activity) {
         ),
 
 
+      dailyPlanDate: typeof Dashboard !== "undefined" && Dashboard.activeActivity
+        ? Dashboard.getTodayKey() : null,
+      dailyActivityId: typeof Dashboard !== "undefined" && Dashboard.activeActivity
+        ? Dashboard.activeActivity.id : null,
       completedAt:
-        new Date().toISOString()
+        new Date()
+          .toISOString()
 
     };
 
@@ -1505,20 +2484,57 @@ async startFromActivity(activity) {
     try {
 
       savedResult =
-        Storage.savePracticeResult(
-          practiceResult
-        );
+        Storage
+          .savePracticeResult(
+            practiceResult
+          );
 
 
       console.log(
         "Practice result saved:",
         savedResult
       );
+      if (savedResult) {
+        this.completedResult = savedResult;
+        if (typeof Dashboard !== "undefined") {
+          Dashboard.completeActivity(savedResult);
+        }
+      }
+
+
+      if (
+        savedResult &&
+        typeof ProgressEngine !==
+          "undefined" &&
+        typeof ProgressEngine
+          .saveSnapshot ===
+          "function"
+      ) {
+
+        const progressSnapshot =
+          ProgressEngine
+            .saveSnapshot();
+
+
+        console.log(
+          "Progress snapshot saved after practice:",
+          progressSnapshot
+        );
+
+      } else if (
+        savedResult
+      ) {
+
+        console.warn(
+          "Progress snapshot engine is unavailable."
+        );
+
+      }
 
     } catch (error) {
 
       console.error(
-        "Could not save practice result:",
+        "Could not save practice result or progress snapshot:",
         error
       );
 
@@ -1535,66 +2551,1075 @@ async startFromActivity(activity) {
 
   /*
   ==================================================
-  RENDER COMPLETION SCREEN
+  RESULT MESSAGE
+  ==================================================
+  */
+
+  let resultHeading;
+  let resultMessage;
+
+
+  if (
+    score >= 90
+  ) {
+
+    resultHeading =
+      "Excellent work";
+
+    resultMessage =
+      `You showed strong control of ${targetLabel}.`;
+
+  } else if (
+    score >= 75
+  ) {
+
+    resultHeading =
+      "Good progress";
+
+    resultMessage =
+      `You're building solid control of ${targetLabel}.`;
+
+  } else if (
+    score >= 60
+  ) {
+
+    resultHeading =
+      "Keep building";
+
+    resultMessage =
+      `${targetLabel} still needs some practice.`;
+
+  } else {
+
+    resultHeading =
+      "Worth reviewing";
+
+    resultMessage =
+      `We'll keep ${targetLabel} in your practice rotation.`;
+
+  }
+
+
+  /*
+  ==================================================
+  COMPLETION SCREEN
   ==================================================
   */
 
   root.innerHTML = `
+
     <div class="practice-shell">
 
       ${this.renderHeader()}
 
+
       <div class="practice-progress">
 
         <div class="practice-progress-bar">
+
           <div
             class="practice-progress-fill"
             style="width: 100%"
           ></div>
+
         </div>
 
       </div>
 
 
-      <section class="practice-card">
+      <section
+        class="practice-card practice-complete-card"
+      >
 
         <div class="practice-card-label">
           COMPLETE
         </div>
 
+
         <h2>
           Practice complete
         </h2>
 
-        <p class="practice-complete-score">
-          ${correct} of ${total}
-          exercises matched the model answer.
-        </p>
 
-        <p>
-          ${
-            savedResult
-              ? `Your result was saved to your learning profile.`
-              : `Your practice is complete.`
-          }
-        </p>
-
-        <button
-          class="practice-primary-button"
-          type="button"
-          onclick="PracticeUI.close()"
+        <div
+          class="practice-result-summary"
         >
+
+          <div
+            class="practice-result-score"
+          >
+            ${score}%
+          </div>
+
+
+          <div
+            class="practice-result-details"
+          >
+
+            <strong>
+              ${correct} of ${total} correct
+            </strong>
+
+            <span>
+              ${this.escapeHTML(
+                targetLabel
+              )}
+
+              ${
+                level
+                  ? ` · ${this.escapeHTML(
+                      String(level)
+                    )}`
+                  : ""
+              }
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="practice-result-message"
+        >
+
+          <strong>
+            ${this.escapeHTML(
+              resultHeading
+            )}
+          </strong>
+
+          <p>
+            ${this.escapeHTML(
+              resultMessage
+            )}
+          </p>
+
+        </div>
+
+
+        ${
+          incorrect > 0
+            ? `
+
+              <div
+                class="practice-review-summary"
+              >
+
+                <div
+                  class="practice-review-count"
+                >
+                  ${incorrect}
+                </div>
+
+                <div>
+
+                  <strong>
+                    ${
+                      incorrect === 1
+                        ? "answer needs review"
+                        : "answers need review"
+                    }
+                  </strong>
+
+                  <p>
+                    ${
+                      savedResult
+                        ? `Your mistakes were saved and can be used to adapt future practice.`
+                        : `These answers are worth reviewing again.`
+                    }
+                  </p>
+
+                </div>
+
+              </div>
+
+            `
+            : `
+
+              <div
+                class="practice-review-summary practice-review-summary-clear"
+              >
+
+                <div
+                  class="practice-review-count"
+                >
+                  ✓
+                </div>
+
+                <div>
+
+                  <strong>
+                    No mistakes to review
+                  </strong>
+
+                  <p>
+                    You answered every exercise correctly.
+                  </p>
+
+                </div>
+
+              </div>
+
+            `
+        }
+
+
+        ${savedResult && typeof Dashboard !== "undefined" && Dashboard.getNextActivity()
+          ? `<button class="practice-primary-button practice-complete-button"
+                type="button" onclick="Dashboard.continueTodayPlan()">
+                Continue Today's Plan →
+              </button>`
+          : ""}
+        <button class="practice-primary-button practice-complete-button"
+          type="button" onclick="PracticeUI.close()">
           Back to dashboard
         </button>
 
       </section>
 
     </div>
+
   `;
 
 
   this.showScreen();
+
 },
+
+
+  /*
+  ==================================================
+  PROGRESS
+  ==================================================
+  */
+
+  renderProgress() {
+
+    const root =
+      this.getRoot();
+
+
+    if (!root) {
+      return;
+    }
+
+
+    const profile =
+      ProfileEngine.refresh();
+
+
+    const concepts =
+      ProfileEngine
+        .getPriorityConcepts(
+          profile,
+          100
+        );
+
+
+    if (!concepts.length) {
+
+      root.innerHTML = `
+        <div class="practice-shell">
+
+          ${this.renderHeader()}
+
+          <section class="practice-card">
+
+            <div class="practice-card-label">
+              PROGRESS
+            </div>
+
+            <h2>
+              Your practice progress
+            </h2>
+
+            <p class="small">
+              Complete some concept practice
+              to start tracking mastery.
+            </p>
+
+            <button
+              class="practice-primary-button"
+              type="button"
+              onclick="PracticeUI.close()"
+            >
+              Back to dashboard
+            </button>
+
+          </section>
+
+        </div>
+      `;
+
+
+      this.showScreen();
+
+
+      return;
+    }
+
+
+    /*
+    Concepts that have actual practice evidence.
+    */
+
+    const practised =
+      concepts.filter(
+        concept =>
+          (
+            concept.practiceSuccesses ||
+            0
+          ) +
+          (
+            concept.practiceFailures ||
+            0
+          ) > 0
+      );
+
+
+    const totalSuccesses =
+      practised.reduce(
+        (
+          total,
+          concept
+        ) =>
+          total +
+          (
+            concept.practiceSuccesses ||
+            0
+          ),
+        0
+      );
+
+
+    const totalFailures =
+      practised.reduce(
+        (
+          total,
+          concept
+        ) =>
+          total +
+          (
+            concept.practiceFailures ||
+            0
+          ),
+        0
+      );
+
+
+    const totalAnswers =
+      totalSuccesses +
+      totalFailures;
+
+
+    const accuracy =
+      totalAnswers
+        ? Math.round(
+            (
+              totalSuccesses /
+              totalAnswers
+            ) * 100
+          )
+        : 0;
+
+
+    const strongest =
+      [...practised]
+        .sort(
+          (
+            a,
+            b
+          ) =>
+            (
+              b.mastery ||
+              0
+            ) -
+            (
+              a.mastery ||
+              0
+            )
+        )[0];
+
+
+    const progressConcepts =
+      [...practised]
+        .sort(
+          (
+            a,
+            b
+          ) =>
+            (
+              b.mastery ||
+              0
+            ) -
+            (
+              a.mastery ||
+              0
+            )
+        )
+        .slice(
+          0,
+          5
+        );
+
+
+    const conceptProgressHTML =
+      progressConcepts
+        .map(
+          concept => {
+
+            const mastery =
+              Math.max(
+                0,
+                Math.min(
+                  100,
+                  concept.mastery ||
+                  0
+                )
+              );
+
+
+            const recentSuccesses =
+              concept
+                .recentPracticeSuccesses ||
+              0;
+
+
+            const recentFailures =
+              concept
+                .recentPracticeFailures ||
+              0;
+
+
+            const recentTotal =
+              recentSuccesses +
+              recentFailures;
+
+
+            const recentText =
+              recentTotal
+                ? `${recentSuccesses} of ${recentTotal} correct in recent practice`
+                : "Practice data available";
+
+
+            return `
+
+              <div class="dashboard-mastery-item">
+
+                <div class="dashboard-mastery-heading">
+
+                  <strong>
+                    ${this.escapeHTML(
+                      StudyPlanEngine
+                        .formatConcept(
+                          concept.name
+                        )
+                    )}
+                  </strong>
+
+
+                  <div class="dashboard-mastery-score">
+
+                    <strong>
+                      ${mastery}%
+                    </strong>
+
+
+                    <span class="dashboard-mastery-label">
+                      ${this.escapeHTML(
+                        ProfileEngine
+                          .getMasteryLabel(
+                            mastery
+                          )
+                      )}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <div class="dashboard-mastery-bar">
+
+                  <div
+                    class="dashboard-mastery-fill"
+                    style="width: ${mastery}%"
+                  ></div>
+
+                </div>
+
+
+                <div class="small">
+                  ${recentText}
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
+
+
+    root.innerHTML = `
+
+      <div class="practice-shell">
+
+        ${this.renderHeader()}
+
+
+        <section class="practice-card">
+
+          <div class="practice-card-label">
+            PROGRESS
+          </div>
+
+
+          <h2>
+            Your practice progress
+          </h2>
+
+
+          <div class="dashboard-progress-grid">
+
+            <div>
+
+              <div class="small">
+                Practice answers
+              </div>
+
+              <strong class="dashboard-big-value">
+                ${totalAnswers}
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <div class="small">
+                Practice accuracy
+              </div>
+
+              <strong class="dashboard-big-value">
+                ${accuracy}%
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <div class="small">
+                Concepts practised
+              </div>
+
+              <strong class="dashboard-big-value">
+                ${practised.length}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          ${
+            strongest
+              ? `
+
+                <div class="dashboard-progress-highlight">
+
+                  <div class="small">
+                    Strongest practised concept
+                  </div>
+
+                  <strong>
+                    ${this.escapeHTML(
+                      StudyPlanEngine
+                        .formatConcept(
+                          strongest.name
+                        )
+                    )}
+                  </strong>
+
+                  <div class="small">
+                    ${strongest.mastery || 0}%
+                    mastery
+                  </div>
+
+                </div>
+
+              `
+              : ""
+          }
+
+
+          ${
+            conceptProgressHTML
+              ? `
+
+                <div class="dashboard-mastery-list">
+
+                  <div class="skill-label">
+                    TOPICS TO WORK ON
+                  </div>
+
+                  ${conceptProgressHTML}
+
+                </div>
+
+              `
+              : ""
+          }
+
+
+          <button
+            class="practice-primary-button"
+            type="button"
+            onclick="PracticeUI.close()"
+          >
+            Back to dashboard
+          </button>
+
+        </section>
+
+      </div>
+    `;
+
+
+    this.showScreen();
+
+  },  /*
+  ==================================================
+  PROFILE / PRACTICE SUMMARY
+  ==================================================
+  */
+
+  renderPracticeSummary() {
+
+    const root =
+      this.getRoot();
+
+
+    if (!root) {
+      return;
+    }
+
+
+    const profile =
+      ProfileEngine.refresh();
+
+
+    const session =
+      this.currentSession ||
+      {};
+
+
+    const practiceType =
+      session.practiceType ||
+      (
+        session.skill
+          ? "skill"
+          : "concept"
+      );
+
+
+    /*
+    ==================================================
+    CONCEPT PRACTICE SUMMARY
+    ==================================================
+    */
+
+    if (
+      practiceType ===
+      "concept"
+    ) {
+
+      const conceptName =
+        PracticeEngine
+          .normalizeConcept(
+            session.concept
+          );
+
+
+      const concept =
+        profile
+          ?.concepts
+          ?.[
+            conceptName
+          ] ||
+        null;
+
+
+      const mastery =
+        concept
+          ? Math.max(
+              0,
+              Math.min(
+                100,
+                concept.mastery ||
+                0
+              )
+            )
+          : 0;
+
+
+      const masteryLabel =
+        typeof ProfileEngine
+          .getMasteryLabel ===
+          "function"
+
+          ? ProfileEngine
+              .getMasteryLabel(
+                mastery
+              )
+
+          : "";
+
+
+      const successes =
+        concept
+          ?.practiceSuccesses ||
+        0;
+
+
+      const failures =
+        concept
+          ?.practiceFailures ||
+        0;
+
+
+      const total =
+        successes +
+        failures;
+
+
+      const accuracy =
+        total
+          ? Math.round(
+              (
+                successes /
+                total
+              ) * 100
+            )
+          : 0;
+
+
+      root.innerHTML = `
+        <div class="practice-shell">
+
+          ${this.renderHeader()}
+
+
+          <section class="practice-card">
+
+            <div class="practice-card-label">
+              PRACTICE PROGRESS
+            </div>
+
+
+            <h2>
+              ${this.escapeHTML(
+                StudyPlanEngine
+                  .formatConcept(
+                    conceptName
+                  )
+              )}
+            </h2>
+
+
+            <div class="dashboard-progress-grid">
+
+              <div>
+
+                <div class="small">
+                  Mastery
+                </div>
+
+                <strong class="dashboard-big-value">
+                  ${mastery}%
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <div class="small">
+                  Practice accuracy
+                </div>
+
+                <strong class="dashboard-big-value">
+                  ${accuracy}%
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <div class="small">
+                  Practice answers
+                </div>
+
+                <strong class="dashboard-big-value">
+                  ${total}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            ${
+              masteryLabel
+                ? `
+                  <div class="dashboard-progress-highlight">
+
+                    <div class="small">
+                      Current mastery
+                    </div>
+
+                    <strong>
+                      ${this.escapeHTML(
+                        masteryLabel
+                      )}
+                    </strong>
+
+                  </div>
+                `
+                : ""
+            }
+
+
+            <div class="dashboard-mastery-bar">
+
+              <div
+                class="dashboard-mastery-fill"
+                style="width: ${mastery}%"
+              ></div>
+
+            </div>
+
+
+            <button
+              class="practice-primary-button"
+              type="button"
+              onclick="PracticeUI.close()"
+            >
+              Back to dashboard
+            </button>
+
+          </section>
+
+        </div>
+      `;
+
+
+      this.showScreen();
+
+
+      return;
+
+    }
+
+
+    /*
+    ==================================================
+    SKILL PRACTICE SUMMARY
+    ==================================================
+
+    Skill practice is deliberately displayed using
+    skill evidence rather than concept mastery.
+
+    We do NOT look for a concept named "reading",
+    "writing", etc.
+    ==================================================
+    */
+
+    const skillName =
+      session.skill ||
+      this.generatedPractice
+        ?.skill ||
+      null;
+
+
+    const skill =
+      skillName
+        ? profile
+            ?.skills
+            ?.[skillName]
+        : null;
+
+
+    const skillLevel =
+      skill
+        ?.level ||
+      session.level ||
+      null;
+
+
+    const confidence =
+      Number(
+        skill?.confidence ||
+        0
+      );
+
+
+    const confidencePercent =
+      confidence <= 1
+        ? Math.round(
+            confidence * 100
+          )
+        : Math.round(
+            confidence
+          );
+
+
+    const totalAnswers =
+      this.answers.length;
+
+
+    const correctAnswers =
+      this.answers.filter(
+        answer =>
+          answer.correct
+      ).length;
+
+
+    const sessionAccuracy =
+      totalAnswers
+        ? Math.round(
+            (
+              correctAnswers /
+              totalAnswers
+            ) * 100
+          )
+        : 0;
+
+
+    root.innerHTML = `
+      <div class="practice-shell">
+
+        ${this.renderHeader()}
+
+
+        <section class="practice-card">
+
+          <div class="practice-card-label">
+            SKILL PRACTICE
+          </div>
+
+
+          <h2>
+            ${this.escapeHTML(
+              PracticeEngine
+                .formatConcept(
+                  skillName ||
+                  "practice"
+                )
+            )}
+          </h2>
+
+
+          <div class="dashboard-progress-grid">
+
+            <div>
+
+              <div class="small">
+                Current level
+              </div>
+
+              <strong class="dashboard-big-value">
+                ${this.escapeHTML(
+                  skillLevel ||
+                  "—"
+                )}
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <div class="small">
+                This session
+              </div>
+
+              <strong class="dashboard-big-value">
+                ${sessionAccuracy}%
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <div class="small">
+                Answers
+              </div>
+
+              <strong class="dashboard-big-value">
+                ${totalAnswers}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          ${
+            skill?.assessed
+              ? `
+                <div class="dashboard-progress-highlight">
+
+                  <div class="small">
+                    Profile confidence
+                  </div>
+
+                  <strong>
+                    ${confidencePercent}%
+                  </strong>
+
+                </div>
+              `
+              : ""
+          }
+
+
+          <p class="small">
+            This practice session is saved as
+            ${this.escapeHTML(
+              PracticeEngine
+                .formatConcept(
+                  skillName ||
+                  "skill"
+                )
+            )}
+            skill practice.
+          </p>
+
+
+          <button
+            class="practice-primary-button"
+            type="button"
+            onclick="PracticeUI.close()"
+          >
+            Back to dashboard
+          </button>
+
+        </section>
+
+      </div>
+    `;
+
+
+    this.showScreen();
+
+  },
+
 
   /*
   ==================================================
@@ -1607,6 +3632,7 @@ async startFromActivity(activity) {
     const session =
       this.currentSession;
 
+
     return `
       <div class="practice-header">
 
@@ -1618,23 +3644,27 @@ async startFromActivity(activity) {
           ${this.escapeHTML(
             session?.title ||
             session?.concept ||
+            session?.skill ||
             "Practice"
           )}
         </h1>
 
         <p>
           ${this.escapeHTML(
-            session?.level || ""
+            session?.level ||
+            ""
           )}
           ·
           ${Number(
-            session?.minutes || 10
+            session?.minutes ||
+            10
           )}
           min
         </p>
 
       </div>
     `;
+
   },
 
 
@@ -1644,45 +3674,56 @@ async startFromActivity(activity) {
   ==================================================
   */
 
- showScreen() {
+  showScreen() {
 
-  const root =
-    this.getRoot();
+    const root =
+      this.getRoot();
 
-  if (!root) {
-    return;
-  }
 
-  /*
-  Hide the dashboard.
-  */
+    if (!root) {
+      return;
+    }
 
-  const dashboard =
-    document.getElementById(
-      "dashboard"
+
+    /*
+    Hide the dashboard.
+    */
+
+    const dashboard =
+      document.getElementById(
+        "dashboard"
+      );
+
+
+    if (dashboard) {
+
+      dashboard
+        .classList
+        .add(
+          "hidden"
+        );
+
+    }
+
+
+    /*
+    Show practice.
+    */
+
+    root
+      .classList
+      .remove(
+        "hidden"
+      );
+
+
+    window.scrollTo(
+      0,
+      0
     );
 
-  if (dashboard) {
-    dashboard.classList.add(
-      "hidden"
-    );
-  }
+  },
 
-
-  /*
-  Show practice.
-  */
-
-  root.classList.remove(
-    "hidden"
-  );
-
-
-  window.scrollTo(
-    0,
-    0
-  );
-},
 
   close() {
 
@@ -1692,12 +3733,16 @@ async startFromActivity(activity) {
     ) {
 
       openDashboard();
+
       return;
+
     }
+
 
     console.warn(
       "openDashboard() was not found."
     );
+
   },
 
 
@@ -1710,19 +3755,30 @@ async startFromActivity(activity) {
   normalizeAnswer(value) {
 
     return String(
-      value || ""
+      value ||
+      ""
     )
       .trim()
-      .toLocaleLowerCase("nl-NL")
-      .replace(/[.!?]+$/g, "")
-      .replace(/\s+/g, " ");
+      .toLocaleLowerCase(
+        "nl-NL"
+      )
+      .replace(
+        /[.!?]+$/g,
+        ""
+      )
+      .replace(
+        /\s+/g,
+        " "
+      );
+
   },
 
 
   escapeHTML(value) {
 
     return String(
-      value ?? ""
+      value ??
+      ""
     )
       .replaceAll(
         "&",
@@ -1744,6 +3800,7 @@ async startFromActivity(activity) {
         "'",
         "&#039;"
       );
+
   },
 
 
@@ -1752,6 +3809,7 @@ async startFromActivity(activity) {
     return this.escapeHTML(
       value
     );
+
   }
 
 };

@@ -10,6 +10,54 @@ const Dashboard = {
 
   profile: null,
   plan: null,
+  activeActivity: null,
+  DAILY_PLAN_KEY: "mijn_nederlands_daily_plan_v1",
+
+  getTodayKey() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  },
+
+  getDailyRecord() {
+    try {
+      const data = JSON.parse(localStorage.getItem(this.DAILY_PLAN_KEY) || "null");
+      return data && data.date === this.getTodayKey() ? data : null;
+    } catch (_) {
+      return null;
+    }
+  },
+
+  saveDailyRecord(record) {
+    localStorage.setItem(this.DAILY_PLAN_KEY, JSON.stringify(record));
+  },
+
+  isActivityComplete(activity) {
+    return Boolean(this.getDailyRecord()?.completed?.[activity.id]);
+  },
+
+  getNextActivity() {
+    return this.plan?.activities.find(a => !this.isActivityComplete(a)) || null;
+  },
+
+  completeActivity(savedResult) {
+    if (!this.activeActivity || !savedResult) return false;
+    const record = this.getDailyRecord();
+    if (!record || !record.plan.activities.some(a => a.id === this.activeActivity.id)) return false;
+    if (record.completed[this.activeActivity.id]) return true;
+    record.completed[this.activeActivity.id] = {
+      resultId: savedResult.id,
+      completedAt: savedResult.completedAt
+    };
+    this.saveDailyRecord(record);
+    return true;
+  },
+
+  continueTodayPlan() {
+    this.activeActivity = null;
+    const next = this.getNextActivity();
+    if (next) this.startActivity(next, this.plan.activities.indexOf(next));
+    else this.open();
+  },
 
 
   /*
@@ -20,13 +68,17 @@ const Dashboard = {
 
   open() {
 
+    this.activeActivity = null;
     this.profile =
       ProfileEngine.refresh();
 
-    this.plan =
-      StudyPlanEngine.createTodayPlan(
-        this.profile
-      );
+    let record = this.getDailyRecord();
+    if (!record || !record.plan || !Array.isArray(record.plan.activities)) {
+      const plan = StudyPlanEngine.createTodayPlan(this.profile);
+      record = { date: this.getTodayKey(), plan, completed: {} };
+      this.saveDailyRecord(record);
+    }
+    this.plan = record.plan;
 
     hideAllSections();
 
@@ -64,19 +116,19 @@ const Dashboard = {
   ==================================================
   */
 
-render() {
+  render() {
 
-  this.renderGoal();
+    this.renderGoal();
 
-  this.renderPlan();
+    this.renderPlan();
 
-  this.renderSkills();
+    this.renderSkills();
 
-  this.renderFocusAreas();
+    this.renderFocusAreas();
 
-  this.renderProgress();
+    this.renderProgress();
 
-},
+  },
 
 
   /*
@@ -159,114 +211,422 @@ render() {
 
   renderPlan() {
 
-    const plan =
-      this.plan;
+  const plan =
+    this.plan;
 
 
-    const minutes =
-      document.getElementById(
-        "dashboardPlanMinutes"
-      );
+  const minutes =
+    document.getElementById(
+      "dashboardPlanMinutes"
+    );
 
 
-    if (minutes) {
+  if (minutes) {
 
-      minutes.textContent =
-        `${plan.plannedMinutes} min`;
+    minutes.textContent =
+      `${plan.plannedMinutes} min`;
 
-    }
-
-
-    const container =
-      document.getElementById(
-        "dashboardPlan"
-      );
+  }
 
 
-    if (!container) {
-      return;
-    }
+  const container =
+    document.getElementById(
+      "dashboardPlan"
+    );
 
 
-    container.innerHTML =
-      "";
+  if (!container) {
+    return;
+  }
 
 
-    plan.activities.forEach(
-      (activity, index) => {
+  container.innerHTML =
+    "";
 
-        const row =
-          document.createElement(
-            "button"
+
+  /*
+  ==================================================
+  ACTIVITY GROUPS
+  ==================================================
+
+  Concept practice is different from ordinary
+  skill practice.
+
+  Instead of presenting the concept as though
+  it were another language skill, we present
+  it as today's personalized focus.
+
+  The underlying activity object and click
+  behaviour remain unchanged.
+  ==================================================
+  */
+
+
+  const focusActivities =
+    plan.activities.filter(
+      activity =>
+        activity.type === "concept"
+    );
+
+
+  const regularActivities =
+    plan.activities.filter(
+      activity =>
+        activity.type !== "concept"
+    );
+
+
+  /*
+  ==================================================
+  HELPER: CREATE ACTIVITY ROW
+  ==================================================
+  */
+
+  const createActivityRow =
+    (
+      activity,
+      originalIndex,
+      options = {}
+    ) => {
+
+      const row =
+        document.createElement(
+          "button"
+        );
+
+
+      row.type =
+        "button";
+
+
+      row.className =
+        options.focus
+          ? "dashboard-activity dashboard-activity-focus"
+          : "dashboard-activity";
+
+
+      row.onclick =
+        () =>
+          this.startActivity(
+            activity,
+            originalIndex
           );
 
 
-        row.className =
-          "dashboard-activity";
+      /*
+      ------------------------------------------
+      TITLE
+      ------------------------------------------
+      */
 
 
-        row.onclick =
-          () =>
-            this.startActivity(
-              activity,
-              index
+      const title =
+        escapeHTML(
+          activity.title || ""
+        );
+
+
+      /*
+      ------------------------------------------
+      SUBTITLE
+      ------------------------------------------
+
+      Focus activities receive clearer learner-
+      facing wording.
+
+      We still use the original activity data;
+      this changes presentation only.
+      ------------------------------------------
+      */
+
+
+      let subtitle =
+        activity.subtitle || "";
+
+
+      if (
+        options.focus
+      ) {
+
+        /*
+        The current subtitle may contain text
+        such as:
+
+        "High priority · detected in Writing,
+        Speaking"
+
+        Remove the internal scheduling wording
+        and make the reason understandable to
+        the learner.
+        */
+
+
+        const detectedMatch =
+          String(subtitle)
+            .match(
+              /detected in\s+(.+)$/i
             );
 
 
-        const number =
-          index + 1;
+        if (
+          detectedMatch &&
+          detectedMatch[1]
+        ) {
+
+          subtitle =
+            `Recommended from your recent ${detectedMatch[1]} mistakes`;
+
+        } else {
+
+          subtitle =
+            "Recommended from your recent learning";
+
+        }
+
+      }
 
 
-        row.innerHTML = `
+      /*
+      ------------------------------------------
+      ICON
+      ------------------------------------------
+      */
+
+
+      const icon =
+        activity.icon ||
+        (
+          options.focus
+            ? "🎯"
+            : "•"
+        );
+
+
+      /*
+      ------------------------------------------
+      NUMBER
+      ------------------------------------------
+
+      Keep the actual plan order.
+
+      This means the visible numbering remains:
+
+      1. focus
+      2. writing
+      3. speaking
+      ...
+      ------------------------------------------
+      */
+
+
+      const number =
+        originalIndex + 1;
+
+
+      row.innerHTML = `
+
+        <div
+          class="dashboard-activity-icon"
+          aria-hidden="true"
+        >
+          ${icon}
+        </div>
+
+
+        <div
+          class="dashboard-activity-main"
+        >
+
+          ${
+            options.focus
+              ? `
+                <div
+                  class="dashboard-focus-label"
+                >
+                  TODAY'S FOCUS
+                </div>
+              `
+              : ""
+          }
+
 
           <div
-            class="dashboard-activity-icon"
+            class="dashboard-activity-title"
           >
-            ${activity.icon}
-          </div>
-
-
-          <div
-            class="dashboard-activity-main"
-          >
-
-            <div
-              class="dashboard-activity-title"
+            <span
+              class="dashboard-activity-number"
             >
               ${number}.
-              ${escapeHTML(
-                activity.title
-              )}
-            </div>
+            </span>
 
-            <div
-              class="dashboard-activity-subtitle"
-            >
-              ${escapeHTML(
-                activity.subtitle
-              )}
-            </div>
-
+            ${title}
           </div>
 
 
-          <div
-            class="dashboard-activity-time"
-          >
-            ${activity.minutes} min
-          </div>
+          ${
+            subtitle
+              ? `
+                <div
+                  class="dashboard-activity-subtitle"
+                >
+                  ${escapeHTML(
+                    subtitle
+                  )}
+                </div>
+              `
+              : ""
+          }
 
-        `;
+        </div>
 
 
-        container.appendChild(
-          row
+        <div
+          class="dashboard-activity-time"
+        >
+          ${activity.minutes} min
+        </div>
+
+      `;
+
+
+      return row;
+
+    };
+
+
+  /*
+  ==================================================
+  TODAY'S FOCUS
+  ==================================================
+  */
+
+
+  if (
+    focusActivities.length
+  ) {
+
+    const section =
+      document.createElement(
+        "div"
+      );
+
+
+    section.className =
+      "dashboard-plan-section dashboard-focus-section";
+
+
+    focusActivities.forEach(
+      activity => {
+
+        const originalIndex =
+          plan.activities.indexOf(
+            activity
+          );
+
+
+        section.appendChild(
+          createActivityRow(
+            activity,
+            originalIndex,
+            {
+              focus: true
+            }
+          )
         );
 
       }
     );
 
-  },
+
+    container.appendChild(
+      section
+    );
+
+  }
+
+
+  /*
+  ==================================================
+  PRACTICE SECTION
+  ==================================================
+  */
+
+
+  if (
+    regularActivities.length
+  ) {
+
+    const section =
+      document.createElement(
+        "div"
+      );
+
+
+    section.className =
+      "dashboard-plan-section dashboard-practice-section";
+
+
+    /*
+    Only show the PRACTICE heading when there
+    is also a separate focus activity.
+
+    This avoids unnecessary headings if a plan
+    happens to contain no concept practice.
+    */
+
+
+    if (
+      focusActivities.length
+    ) {
+
+      const heading =
+        document.createElement(
+          "div"
+        );
+
+
+      heading.className =
+        "dashboard-plan-section-label";
+
+
+      heading.textContent =
+        "PRACTICE";
+
+
+      section.appendChild(
+        heading
+      );
+
+    }
+
+
+    regularActivities.forEach(
+      activity => {
+
+        const originalIndex =
+          plan.activities.indexOf(
+            activity
+          );
+
+
+        section.appendChild(
+          createActivityRow(
+            activity,
+            originalIndex
+          )
+        );
+
+      }
+    );
+
+
+    container.appendChild(
+      section
+    );
+
+  }
+
+},
 
 
   /*
@@ -416,551 +776,874 @@ render() {
 
   /*
   ==================================================
-  PROGRESS & MASTERY
-
+  FOCUS AREAS
   ==================================================
   */
-renderProgress() {
 
-  const container =
-    document.getElementById(
-      "dashboardProgress"
-    );
+  renderFocusAreas() {
 
-
-  if (!container) {
-    return;
-  }
+    const container =
+      document.getElementById(
+        "dashboardFocusAreas"
+      );
 
 
-  const profile =
-    this.profile ||
-    ProfileEngine.refresh();
+    if (!container) {
+      return;
+    }
 
 
-  const concepts =
-    ProfileEngine.getPriorityConcepts(
-      profile,
-      100
-    );
+    const concepts =
+      ProfileEngine
+        .getPriorityConcepts(
+          this.profile,
+          3
+        );
 
 
-  if (!concepts.length) {
-
-    container.innerHTML = `
-      <p class="small">
-        Complete some practice to start
-        tracking your progress.
-      </p>
-    `;
-
-    return;
-  }
+    container.innerHTML =
+      "";
 
 
-  /*
-  Concepts the learner has actually
-  practised.
-  */
+    if (
+      concepts.length === 0
+    ) {
 
-  const practised =
-    concepts.filter(
-      concept =>
-        (
-          concept.practiceSuccesses || 0
-        ) +
-        (
-          concept.practiceFailures || 0
-        ) > 0
-    );
+      container.innerHTML = `
 
+        <p class="small">
+          Complete more writing and
+          language exercises so Mijn
+          Nederlands can identify your
+          personal focus areas.
+        </p>
 
-  const totalSuccesses =
-    practised.reduce(
-      (total, concept) =>
-        total +
-        (
-          concept.practiceSuccesses || 0
-        ),
-      0
-    );
+      `;
+
+      return;
+    }
 
 
-  const totalFailures =
-    practised.reduce(
-      (total, concept) =>
-        total +
-        (
-          concept.practiceFailures || 0
-        ),
-      0
-    );
-
-
-  const totalAnswers =
-    totalSuccesses +
-    totalFailures;
-
-
-  const accuracy =
-    totalAnswers
-      ? Math.round(
-          (
-            totalSuccesses /
-            totalAnswers
-          ) * 100
-        )
-      : 0;
-
-
-  /*
-  Highest mastery among concepts that
-  have actually been practised.
-  */
-
-  const strongest =
-    [...practised]
-      .sort(
-        (a, b) =>
-          (b.mastery || 0) -
-          (a.mastery || 0)
-      )[0];
-
-const progressConcepts =
-  [...practised]
-    .sort(
-      (a, b) =>
-        (b.mastery || 0) -
-        (a.mastery || 0)
-    )
-    .slice(
-      0,
-      5
-    );
-
-
-const conceptProgressHTML =
-  progressConcepts
-    .map(
+    concepts.forEach(
       concept => {
 
-        const mastery =
-          Math.max(
-            0,
-            Math.min(
-              100,
-              concept.mastery || 0
-            )
+        const item =
+          document.createElement(
+            "div"
           );
 
 
-        const recentSuccesses =
-          concept.recentPracticeSuccesses ||
-          0;
+        item.className =
+          "dashboard-focus-item";
 
 
-        const recentFailures =
-          concept.recentPracticeFailures ||
-          0;
+        /*
+        Make the focus area behave like
+        an interactive practice item.
+        */
+
+        item.setAttribute(
+          "role",
+          "button"
+        );
+
+        item.setAttribute(
+          "tabindex",
+          "0"
+        );
 
 
-        const recentTotal =
-          recentSuccesses +
-          recentFailures;
+        item.innerHTML = `
+
+          <div
+            class="dashboard-focus-icon"
+          >
+            ⚠
+          </div>
 
 
-        const recentText =
-          recentTotal
-            ? `${recentSuccesses} of ${recentTotal} correct in recent practice`
-            : "Practice data available";
+          <div>
 
-
-        return `
-
-          <div class="dashboard-mastery-item">
-
-            <div class="dashboard-mastery-heading">
-
-  <strong>
-    ${escapeHTML(
-      StudyPlanEngine.formatConcept(
-        concept.name
-      )
-    )}
-  </strong>
-
-  <div class="dashboard-mastery-score">
-
-    <strong>
-      ${mastery}%
-    </strong>
-
-    <span class="dashboard-mastery-label">
-      ${escapeHTML(
-        ProfileEngine.getMasteryLabel(
-          mastery
-        )
-      )}
-    </span>
-
-  </div>
-
-</div>
-
-
-            <div class="dashboard-mastery-bar">
-
-              <div
-                class="dashboard-mastery-fill"
-                style="width: ${mastery}%"
-              ></div>
-
-            </div>
+            <strong>
+              ${escapeHTML(
+                StudyPlanEngine
+                  .formatConcept(
+                    concept.name
+                  )
+              )}
+            </strong>
 
 
             <div class="small">
-              ${recentText}
+
+              ${escapeHTML(
+                StudyPlanEngine
+                  .getConceptReason(
+                    concept
+                  )
+              )}
+
             </div>
 
           </div>
 
         `;
 
-      }
-    )
-    .join("");
-  container.innerHTML = `
 
-    <div class="dashboard-progress-grid">
+        /*
+        ------------------------------------------
+        START PERSONALIZED CONCEPT PRACTICE
+        ------------------------------------------
+        */
 
-      <div>
+        const startPractice =
+          async () => {
 
-        <div class="small">
-          Practice answers
-        </div>
+            if (
+              typeof PracticeUI ===
+              "undefined"
+            ) {
 
-        <strong class="dashboard-big-value">
-          ${totalAnswers}
-        </strong>
+              console.error(
+                "PracticeUI is not available."
+              );
 
-      </div>
-
-
-      <div>
-
-        <div class="small">
-          Practice accuracy
-        </div>
-
-        <strong class="dashboard-big-value">
-          ${accuracy}%
-        </strong>
-
-      </div>
+              return;
+            }
 
 
-      <div>
+            const activity = {
 
-        <div class="small">
-          Concepts practised
-        </div>
+              id:
+                `focus-${concept.name}`,
 
-        <strong class="dashboard-big-value">
-          ${practised.length}
-        </strong>
+              type:
+                "concept",
 
-      </div>
+              concept:
+                concept.name,
 
-    </div>
+              title:
+                StudyPlanEngine
+                  .formatConcept(
+                    concept.name
+                  ),
 
+              subtitle:
+                StudyPlanEngine
+                  .getConceptReason(
+                    concept
+                  ),
 
-    ${
-      strongest
-        ? `
+              minutes: 10,
 
-          <div class="dashboard-progress-highlight">
+              priority:
+                concept.priority ||
+                "high"
 
-            <div class="small">
-              Strongest practised concept
-            </div>
-
-            <strong>
-              ${escapeHTML(
-                StudyPlanEngine.formatConcept(
-                  strongest.name
-                )
-              )}
-            </strong>
-
-            <div class="small">
-              ${strongest.mastery || 0}% mastery
-            </div>
-
-          </div>
-
-        `
-        : ""
-    }
-<div class="dashboard-mastery-list">
-
-  <div class="skill-label">
-    CONCEPT MASTERY
-  </div>
-
-  ${conceptProgressHTML}
-
-</div>
-  `;
-
-},
-
-  renderFocusAreas() {
-
-  const container =
-    document.getElementById(
-      "dashboardFocusAreas"
-    );
+            };
 
 
-  if (!container) {
-    return;
-  }
+            try {
+
+              await PracticeUI
+                .startFromActivity(
+                  activity
+                );
+
+            } catch (error) {
+
+              console.error(
+                "Could not start practice:",
+                error
+              );
+
+            }
+
+          };
 
 
-  const concepts =
-    ProfileEngine
-      .getPriorityConcepts(
-        this.profile,
-        3
-      );
+        /*
+        Mouse / touch.
+        */
 
-
-  container.innerHTML = "";
-
-
-  if (
-    concepts.length === 0
-  ) {
-
-    container.innerHTML = `
-
-      <p class="small">
-        Complete more writing and
-        language exercises so Mijn
-        Nederlands can identify your
-        personal focus areas.
-      </p>
-
-    `;
-
-    return;
-  }
-
-
-  concepts.forEach(
-    concept => {
-
-      const item =
-        document.createElement(
-          "div"
+        item.addEventListener(
+          "click",
+          startPractice
         );
 
 
-      item.className =
-        "dashboard-focus-item";
+        /*
+        Keyboard accessibility.
+        */
+
+        item.addEventListener(
+          "keydown",
+          event => {
+
+            if (
+              event.key === "Enter" ||
+              event.key === " "
+            ) {
+
+              event.preventDefault();
+
+              startPractice();
+
+            }
+
+          }
+        );
 
 
-      /*
-      Make the focus area behave like
-      an interactive practice item.
-      */
+        container.appendChild(
+          item
+        );
 
-      item.setAttribute(
-        "role",
-        "button"
+      }
+    );
+
+  },  /*
+  ==================================================
+  PROGRESS & MASTERY
+  ==================================================
+  */
+
+  renderProgress() {
+
+    const container =
+      document.getElementById(
+        "dashboardProgress"
       );
 
-      item.setAttribute(
-        "tabindex",
-        "0"
-      );
+
+    if (!container) {
+      return;
+    }
 
 
-      item.innerHTML = `
+    /*
+    ==================================================
+    PROGRESS ENGINE
+    ==================================================
 
-        <div
-          class="dashboard-focus-icon"
-        >
-          ⚠
+    ProgressEngine is now the source of truth for
+    learner-facing progress.
+
+    ProfileEngine still owns the learner model, but
+    the dashboard should not independently recreate
+    progress calculations.
+    ==================================================
+    */
+
+    if (
+      typeof ProgressEngine ===
+        "undefined" ||
+      typeof ProgressEngine.getProgress !==
+        "function"
+    ) {
+
+      container.innerHTML = `
+        <p class="small">
+          Progress tracking is not available yet.
+        </p>
+      `;
+
+      return;
+    }
+
+
+    const progress =
+      ProgressEngine.getProgress();
+
+
+    /*
+    ==================================================
+    SNAPSHOT HISTORY
+    ==================================================
+    */
+
+    const snapshotHistory =
+      typeof Storage !== "undefined" &&
+      typeof Storage.getProgressHistory ===
+        "function"
+
+        ? Storage.getProgressHistory()
+
+        : [];
+
+
+    const skills =
+      Array.isArray(
+        progress.skills
+      )
+        ? progress.skills
+        : [];
+
+
+    const concepts =
+      Array.isArray(
+        progress.concepts
+      )
+        ? progress.concepts
+        : [];
+
+
+    const practice =
+      progress.practice || {};
+
+
+    const activity =
+      progress.activity || {};
+
+
+    const hasEvidence =
+      Number(
+        activity.totalActivities || 0
+      ) > 0 ||
+      concepts.length > 0;
+
+
+    if (!hasEvidence) {
+
+      container.innerHTML = `
+        <p class="small">
+          Complete an assessment or some practice
+          to start tracking your progress.
+        </p>
+      `;
+
+      return;
+    }
+
+
+    /*
+    ==================================================
+    SKILL PROGRESS
+    ==================================================
+    */
+
+    const skillProgressHTML =
+      skills
+        .filter(
+          skill =>
+            skill.assessed === true ||
+            Boolean(
+              skill.currentLevel
+            ) ||
+            (
+              Array.isArray(
+                skill.evidence
+              ) &&
+              skill.evidence.length > 0
+            )
+        )
+        .map(
+          skill => {
+
+            const label =
+              StudyPlanEngine
+                .formatConcept(
+                  skill.skill
+                );
+
+
+            const level =
+              skill.currentLevel ||
+              "Assessed";
+
+
+            /*
+            Convert internal trend states into
+            learner-facing language.
+            */
+
+            const trendLabels = {
+
+              improving:
+                "↑ Improving",
+
+              declining:
+                "↓ Needs attention",
+
+              stable:
+                "→ Stable",
+
+              insufficient_data:
+                "More data needed"
+
+            };
+
+
+            const trendText =
+              trendLabels[
+                skill.trend
+              ] ||
+              "More data needed";
+
+
+            return `
+
+              <div class="dashboard-mastery-item">
+
+                <div class="dashboard-mastery-heading">
+
+                  <strong>
+                    ${escapeHTML(
+                      label
+                    )}
+                  </strong>
+
+
+                  <div class="dashboard-mastery-score">
+
+                    <strong>
+                      ${escapeHTML(
+                        level
+                      )}
+                    </strong>
+
+                    <span class="dashboard-mastery-label">
+                      ${escapeHTML(
+                        trendText
+                      )}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
+
+
+    /*
+    ==================================================
+    CONCEPT MASTERY
+    ==================================================
+
+    Show the learner the concepts that currently
+    need the most attention.
+
+    Lower mastery is shown first.
+
+    This is deliberately different from the Focus
+    Areas card. Focus Areas decides what the learner
+    should practise next; this section explains the
+    learner's current mastery state.
+    ==================================================
+    */
+
+    const conceptProgress =
+      concepts
+        .filter(
+          concept =>
+            concept.mastery !== null &&
+            concept.mastery !== undefined
+        )
+        .slice()
+        .sort(
+          (a, b) =>
+            Number(
+              a.mastery || 0
+            ) -
+            Number(
+              b.mastery || 0
+            )
+        )
+        .slice(
+          0,
+          5
+        );
+
+
+    const conceptProgressHTML =
+      conceptProgress
+        .map(
+          concept => {
+
+            const mastery =
+              Math.max(
+                0,
+                Math.min(
+                  100,
+                  Number(
+                    concept.mastery || 0
+                  )
+                )
+              );
+
+
+            const masteryLabel =
+              typeof ProfileEngine
+                .getMasteryLabel ===
+                "function"
+
+                ? ProfileEngine
+                    .getMasteryLabel(
+                      mastery
+                    )
+
+                : `${mastery}%`;
+
+
+            /*
+            ------------------------------------------
+            PRACTICE DESCRIPTION
+            ------------------------------------------
+            */
+
+            let practiceText =
+              "No practice yet";
+
+
+            if (
+              Number(
+                concept.practiceSessions ||
+                0
+              ) > 0
+            ) {
+
+              if (
+                concept.latestPracticeScore !==
+                  null &&
+                concept.latestPracticeScore !==
+                  undefined
+              ) {
+
+                practiceText =
+                  `Latest practice: ${concept.latestPracticeScore}%`;
+
+              } else {
+
+                const sessions =
+                  Number(
+                    concept.practiceSessions ||
+                    0
+                  );
+
+
+                practiceText =
+                  `${sessions} practice session${
+                    sessions === 1
+                      ? ""
+                      : "s"
+                  }`;
+
+              }
+
+            }
+
+
+            return `
+
+              <div class="dashboard-mastery-item">
+
+                <div class="dashboard-mastery-heading">
+
+                  <strong>
+                    ${escapeHTML(
+                      concept.label ||
+                      StudyPlanEngine
+                        .formatConcept(
+                          concept.concept
+                        )
+                    )}
+                  </strong>
+
+
+                  <div class="dashboard-mastery-score">
+
+                    <strong>
+                      ${mastery}%
+                    </strong>
+
+                    <span class="dashboard-mastery-label">
+                      ${escapeHTML(
+                        masteryLabel
+                      )}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <div class="dashboard-mastery-bar">
+
+                  <div
+                    class="dashboard-mastery-fill"
+                    style="width: ${mastery}%"
+                  ></div>
+
+                </div>
+
+
+                <div class="small">
+                  ${escapeHTML(
+                    practiceText
+                  )}
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
+
+
+    /*
+    ==================================================
+    SNAPSHOT HISTORY SUMMARY
+    ==================================================
+    */
+
+    let historyText =
+      "Progress history starts with your next completed activity.";
+
+
+    if (
+      snapshotHistory.length
+    ) {
+
+      const sortedHistory =
+        snapshotHistory
+          .slice()
+          .sort(
+            (a, b) =>
+              ProgressEngine
+                .getTime(a) -
+              ProgressEngine
+                .getTime(b)
+          );
+
+
+      const firstSnapshot =
+        sortedHistory[0];
+
+
+      const firstDateValue =
+        firstSnapshot
+          ?.generatedAt ||
+        firstSnapshot
+          ?.savedAt ||
+        firstSnapshot
+          ?.completedAt ||
+        null;
+
+
+      if (
+        firstDateValue
+      ) {
+
+        const firstDate =
+          new Date(
+            firstDateValue
+          );
+
+
+        if (
+          !Number.isNaN(
+            firstDate.getTime()
+          )
+        ) {
+
+          historyText =
+            `Tracking progress since ${
+              firstDate
+                .toLocaleDateString(
+                  "en-GB",
+                  {
+                    day:
+                      "numeric",
+
+                    month:
+                      "short",
+
+                    year:
+                      "numeric"
+                  }
+                )
+            }.`;
+
+        }
+
+      }
+
+    }
+
+
+    /*
+    ==================================================
+    PRACTICE SUMMARY
+    ==================================================
+    */
+
+    const practiceAccuracy =
+      practice.accuracy === null ||
+      practice.accuracy === undefined
+
+        ? "—"
+
+        : `${practice.accuracy}%`;
+
+
+    const practiceTrendLabels = {
+
+      improving:
+        "↑ Improving",
+
+      declining:
+        "↓ Needs attention",
+
+      stable:
+        "→ Stable",
+
+      insufficient_data:
+        "More data needed"
+
+    };
+
+
+    const practiceTrend =
+      practiceTrendLabels[
+        practice.trend
+      ] ||
+      "More data needed";
+
+
+    /*
+    ==================================================
+    RENDER
+    ==================================================
+    */
+
+    container.innerHTML = `
+
+      <div class="dashboard-progress-grid">
+
+        <div>
+
+          <div class="small">
+            Practice sessions
+          </div>
+
+          <strong class="dashboard-big-value">
+            ${Number(
+              practice.sessions || 0
+            )}
+          </strong>
+
         </div>
 
 
         <div>
 
-          <strong>
+          <div class="small">
+            Practice accuracy
+          </div>
+
+          <strong class="dashboard-big-value">
             ${escapeHTML(
-              StudyPlanEngine
-                .formatConcept(
-                  concept.name
-                )
+              practiceAccuracy
             )}
           </strong>
 
+        </div>
+
+
+        <div>
 
           <div class="small">
-
-            ${escapeHTML(
-              StudyPlanEngine
-                .getConceptReason(
-                  concept
-                )
-            )}
-
+            Progress snapshots
           </div>
+
+          <strong class="dashboard-big-value">
+            ${snapshotHistory.length}
+          </strong>
 
         </div>
 
-      `;
+      </div>
 
 
-      /*
-      ------------------------------------------
-      START PERSONALIZED CONCEPT PRACTICE
-      ------------------------------------------
-      */
+      <div class="dashboard-progress-highlight">
 
-      const startPractice =
-        async () => {
+        <div class="small">
+          Practice trend
+        </div>
 
-          if (
-            typeof PracticeUI ===
-            "undefined"
-          ) {
+        <strong>
+          ${escapeHTML(
+            practiceTrend
+          )}
+        </strong>
 
-            console.error(
-              "PracticeUI is not available."
-            );
+        <div class="small">
+          ${escapeHTML(
+            historyText
+          )}
+        </div>
 
-            return;
-          }
-
-
-          const activity = {
-
-            id:
-              `focus-${concept.name}`,
-
-            type:
-              "concept",
-
-            concept:
-              concept.name,
-
-            title:
-              StudyPlanEngine
-                .formatConcept(
-                  concept.name
-                ),
-
-            subtitle:
-              StudyPlanEngine
-                .getConceptReason(
-                  concept
-                ),
-
-            minutes: 10,
-
-            priority:
-              concept.priority ||
-              "high"
-
-          };
+      </div>
 
 
-          try {
+      ${
+        skillProgressHTML
+          ? `
 
-            await PracticeUI
-              .startFromActivity(
-                activity
-              );
+              <div class="dashboard-mastery-list">
 
-          } catch (error) {
+                <div class="skill-label">
+                  SKILL PROGRESS
+                </div>
 
-            console.error(
-              "Could not start practice:",
-              error
-            );
+                ${skillProgressHTML}
 
-          }
+              </div>
 
-        };
-
-
-      /*
-      Mouse / touch.
-      */
-
-      item.addEventListener(
-        "click",
-        startPractice
-      );
+            `
+          : ""
+      }
 
 
-      /*
-      Keyboard accessibility.
-      */
+      ${
+        conceptProgressHTML
+          ? `
 
-      item.addEventListener(
-        "keydown",
-        event => {
+              <div class="dashboard-mastery-list">
 
-          if (
-            event.key === "Enter" ||
-            event.key === " "
-          ) {
+                <div class="skill-label">
+                  TOPICS TO WORK ON
+                </div>
 
-            event.preventDefault();
+                ${conceptProgressHTML}
 
-            startPractice();
+              </div>
 
-          }
+            `
+          : ""
+      }
 
-        }
-      );
+    `;
 
-
-      container.appendChild(
-        item
-      );
-
-    }
-  );
-
-},
-
-  /*
+  },  /*
   ==================================================
   START TODAY'S PLAN
   ==================================================
   */
 
   startTodayPlan() {
-
-    if (
-      !this.plan ||
-      !this.plan.activities.length
-    ) {
-
-      return;
-
-    }
-
-
-    this.startActivity(
-      this.plan.activities[0],
-      0
-    );
-
+    const next = this.getNextActivity();
+    if (next) this.startActivity(next, this.plan.activities.indexOf(next));
+    else this.open();
   },
 
 
@@ -969,11 +1652,15 @@ const conceptProgressHTML =
   START AN ACTIVITY
   ==================================================
 
-  For modules that already exist,
-  launch them.
+  Today's Plan is PRACTICE.
 
-  Missing modules show a temporary
-  message until we build them.
+  Assessment launchers must not be used here.
+
+  Concept activities and language-skill activities
+  are routed through PracticeUI.
+
+  This prevents Reading, Listening, Writing and
+  Speaking from reopening their initial assessments.
   ==================================================
   */
 
@@ -982,62 +1669,179 @@ const conceptProgressHTML =
     index
   ) {
 
-    if (!activity) {
-      return;
-    }
-
+    if (!activity) return;
+    this.activeActivity = activity;
 
     /*
-PERSONALIZED CONCEPT PRACTICE
-*/
-
-if (
-  activity.type ===
-  "concept"
-) {
-
-  if (
-    typeof PracticeUI ===
-    "undefined"
-  ) {
-
-    console.error(
-      "PracticeUI is not available."
-    );
-
-    return;
-
-  }
-
-
-  PracticeUI
-    .startFromActivity(
-      activity
-    )
-    .catch(
-      error => {
-
-        console.error(
-          "Could not start practice:",
-          error
-        );
-
-      }
-    );
-
-
-  return;
-
-}
-
-
-    /*
-    KNM
+    ==================================================
+    CONCEPT PRACTICE
+    ==================================================
     */
 
     if (
       activity.type ===
-      "knm"
+      "concept"
+    ) {
+
+      if (
+        typeof PracticeUI ===
+        "undefined"
+      ) {
+
+        console.error(
+          "PracticeUI is not available."
+        );
+
+        return;
+
+      }
+
+
+      const concept = this.profile?.concepts?.[activity.concept];
+      const needsLesson = concept && (
+        (Number(concept.mastery) < 60 &&
+          (Number(concept.moderateErrors || 0) + Number(concept.majorErrors || 0) > 0)) ||
+        Number(concept.recentPracticeFailures || 0) >= 3
+      );
+      const launch = needsLesson && typeof ErrorLessonEngine !== "undefined"
+        ? ErrorLessonEngine.startLesson(activity.concept)
+        : PracticeUI.startFromActivity(activity);
+      Promise.resolve(launch)
+        .catch(
+          error => {
+
+            console.error(
+              "Could not start concept practice:",
+              error
+            );
+
+          }
+        );
+
+
+      return;
+
+    }
+
+
+    /*
+    ==================================================
+    SKILL PRACTICE
+    ==================================================
+
+    Study-plan skill activities must start a
+    PracticeEngine skill session.
+
+    They must NOT call:
+
+      developerStartSkill()
+      startWritingAssessment()
+      startSpeakingAssessment()
+
+    Those functions belong to assessment flows,
+    not Today's Plan.
+    ==================================================
+    */
+
+    const practiceSkills = [
+
+      "grammar",
+
+      "vocabulary",
+
+      "reading",
+
+      "listening",
+
+      "writing",
+
+      "speaking"
+
+    ];
+
+
+    if (
+      activity.skill &&
+      practiceSkills.includes(
+        activity.skill
+      )
+    ) {
+
+      if (
+        typeof PracticeUI ===
+        "undefined"
+      ) {
+
+        console.error(
+          "PracticeUI is not available."
+        );
+
+        return;
+
+      }
+
+
+      /*
+      Normalize the activity as skill practice.
+
+      Some existing StudyPlanEngine activities may
+      already have type: "skill".
+
+      Others may simply contain a skill property.
+
+      PracticeUI.startFromActivity() supports
+      type: "skill", so normalize it here rather
+      than depending on older study-plan shapes.
+      */
+
+      const practiceActivity = {
+
+        ...activity,
+
+        type:
+          "skill"
+
+      };
+
+
+      PracticeUI
+        .startFromActivity(
+          practiceActivity
+        )
+        .catch(
+          error => {
+
+            console.error(
+              `Could not start ${activity.skill} practice:`,
+              error
+            );
+
+          }
+        );
+
+
+      return;
+
+    }
+
+
+    /*
+    ==================================================
+    KNM
+    ==================================================
+
+    KNM is intentionally kept separate for now.
+
+    It will eventually need its own practice
+    generator/content architecture.
+    ==================================================
+    */
+
+    if (
+      activity.type ===
+        "knm" ||
+      activity.skill ===
+        "knm"
     ) {
 
       this.showComingSoon(
@@ -1051,7 +1855,9 @@ if (
 
 
     /*
+    ==================================================
     REVIEW
+    ==================================================
     */
 
     if (
@@ -1070,74 +1876,16 @@ if (
 
 
     /*
-    EXISTING SKILLS
+    ==================================================
+    UNKNOWN ACTIVITY
+    ==================================================
     */
 
-    switch (
-      activity.skill
-    ) {
-
-      case "grammar":
-
-        developerStartSkill(
-          "grammar"
-        );
-
-        return;
-
-
-      case "vocabulary":
-
-        developerStartSkill(
-          "vocabulary"
-        );
-
-        return;
-
-
-      case "reading":
-
-        developerStartSkill(
-          "reading"
-        );
-
-        return;
-
-
-      case "listening":
-
-        developerStartSkill(
-          "listening"
-        );
-
-        return;
-
-
-      case "writing":
-
-        startWritingAssessment();
-
-        return;
-
-
-      case "speaking":
-
-        this.showComingSoon(
-          "Speaking",
-          "Speaking assessment will use your microphone and AI feedback."
-        );
-
-        return;
-
-
-      default:
-
-        this.showComingSoon(
-          activity.title,
-          "This activity is not available yet."
-        );
-
-    }
+    this.showComingSoon(
+      activity.title ||
+      "Practice",
+      "This activity is not available yet."
+    );
 
   },
 

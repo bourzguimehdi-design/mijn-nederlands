@@ -370,146 +370,725 @@ const ProfileEngine = {
   REFRESH PROFILE
   ==================================================
   */
+refresh() {
 
-  refresh() {
-
-    const profile =
-      this.load();
-
-
-    /*
-    Rebuild evidence-derived state.
-
-    Goals and preferences remain untouched.
-    */
-
-    profile.skills = {
-
-      grammar:
-        this.createSkill(),
-
-      vocabulary:
-        this.createSkill(),
-
-      reading:
-        this.createSkill(),
-
-      listening:
-        this.createSkill(),
-
-      writing:
-        this.createSkill(),
-
-      speaking:
-        this.createSkill(),
-
-      knm:
-        this.createSkill()
-
-    };
+  const profile =
+    this.load();
 
 
-    profile.concepts = {};
+  /*
+  ==================================================
+  PRESERVE CONCEPT METADATA
+  ==================================================
+
+  Concept evidence is rebuilt during refresh.
+
+  However, some concept properties describe the
+  learner's evolving curriculum rather than raw
+  assessment evidence.
+
+  These must survive a refresh:
+
+  - origin
+  - label
+  - category
+  - discoveryCount
+  - discoveredAt
+  - promoted
+  - promotedAt
+  - learningTopic
+  ==================================================
+  */
+
+  const previousConcepts =
+    profile.concepts &&
+    typeof profile.concepts === "object"
+
+      ? profile.concepts
+
+      : {};
 
 
-    profile.assessmentSummary = {
+  /*
+  Rebuild evidence-derived state.
 
-  placementAttempts: 0,
+  Goals and preferences remain untouched.
+  */
 
-  writingAssessments: 0,
+  profile.skills = {
 
-  writingResponses: 0,
+    grammar:
+      this.createSkill(),
 
-  speakingAssessments: 0,
+    vocabulary:
+      this.createSkill(),
 
-  speakingResponses: 0,
+    reading:
+      this.createSkill(),
 
-  practiceSessions: 0,
+    listening:
+      this.createSkill(),
 
-  practiceResponses: 0,
+    writing:
+      this.createSkill(),
 
-  latestPlacementAt: null,
+    speaking:
+      this.createSkill(),
 
-  latestWritingAt: null,
+    knm:
+      this.createSkill()
 
-  latestSpeakingAt: null,
-
-  latestPracticeAt: null
-
-};
-
-
-    this.importPlacementEvidence(
-  profile
-);
-
-
-this.importWritingEvidence(
-  profile
-);
+  };
 
 
-this.importWritingConceptEvidence(
-  profile
-);
+  /*
+  Evidence importers still receive a clean concept
+  collection.
+
+  Persistent discovery metadata is restored after
+  all evidence has been imported.
+  */
+
+  profile.concepts = {};
 
 
-this.importSpeakingEvidence(
-  profile
-);
+  profile.assessmentSummary = {
+
+    placementAttempts: 0,
+
+    writingAssessments: 0,
+
+    writingResponses: 0,
+
+    speakingAssessments: 0,
+
+    speakingResponses: 0,
+
+    practiceSessions: 0,
+
+    practiceResponses: 0,
+
+    latestPlacementAt: null,
+
+    latestWritingAt: null,
+
+    latestSpeakingAt: null,
+
+    latestPracticeAt: null
+
+  };
 
 
-this.importSpeakingConceptEvidence(
-  profile
-);
+  /*
+  ==================================================
+  IMPORT EVIDENCE
+  ==================================================
+  */
+
+  this.importPlacementEvidence(
+    profile
+  );
 
 
-this.importPracticeEvidence(
-  profile
-);
+  this.importWritingEvidence(
+    profile
+  );
 
+
+  this.importWritingConceptEvidence(
+    profile
+  );
+
+
+  this.importSpeakingEvidence(
+    profile
+  );
+
+
+  this.importSpeakingConceptEvidence(
+    profile
+  );
+
+
+  this.importPracticeEvidence(
+    profile
+  );
+
+
+  /*
+  ==================================================
+  RESTORE DISCOVERY METADATA
+  ==================================================
+
+  Match old and newly rebuilt concepts by normalized
+  concept name.
+
+  This preserves curriculum/discovery state without
+  preserving stale evidence counters.
+  ==================================================
+  */
+
+  Object.entries(
+    previousConcepts
+  )
+    .forEach(
+      ([rawName, previous]) => {
+
+        if (!previous) {
+
+          return;
+
+        }
+
+
+        const name =
+          this.normalizeConceptName(
+            previous.name ||
+            previous.concept ||
+            rawName
+          );
+
+
+        if (!name) {
+
+          return;
+
+        }
 
 /*
 ==================================================
-RECALCULATE CONCEPT MASTERY
+APPLY CURRICULUM METADATA
 ==================================================
 
-Practice evidence is imported after the formal
-assessment evidence.
+Evidence is rebuilt on every refresh, while
+curriculum placement describes the concept itself.
 
-Recalculate mastery now so successful practice
-and practice failures are reflected in the
-final learner profile.
+Apply known curriculum metadata after discovery
+metadata has been restored so both built-in and
+promoted discovered concepts receive their
+skill / CEFR classification.
+==================================================
 */
 
 Object.values(
   profile.concepts
-).forEach(
-  concept => {
+)
+  .forEach(
+    concept => {
 
-    concept.mastery =
-      this.calculateConceptMastery(
-        concept
-      );
-
-  }
-);
+      if (!concept) {
+        return;
+      }
 
 
-this.calculateConfidence(
-  profile
-);
+      const curriculum =
+        this.getConceptCurriculumMetadata(
+          concept.name ||
+          concept.concept
+        );
 
-    this.save(
-      profile
+
+      if (!curriculum) {
+        return;
+      }
+
+
+      if (curriculum.skill) {
+
+        concept.skill =
+          curriculum.skill;
+
+      }
+
+
+      if (curriculum.cefrLevel) {
+
+        concept.cefrLevel =
+          curriculum.cefrLevel;
+
+      }
+
+    }
+  );
+        /*
+        ------------------------------------------
+        CONCEPT NO LONGER CREATED BY IMPORTERS
+        ------------------------------------------
+
+        Discovered concepts may exist only in the
+        persistent learner profile.
+
+        Preserve them so refresh does not erase
+        learner-specific topics.
+        ------------------------------------------
+        */
+
+        if (
+  !profile.concepts[
+    name
+  ]
+) {
+
+  /*
+  ==================================================
+  RESTORE GENUINELY DISCOVERED CONCEPTS
+  ==================================================
+
+  Do not trust previous.origin by itself.
+
+  Older versions of the profile engine could mark
+  assessment concepts as "discovered".
+
+  A concept is restored only when it contains real
+  discovery evidence.
+  */
+
+  const hasDiscoveryEvidence =
+    Number(
+      previous.discoveryCount ||
+      0
+    ) > 0 ||
+    Boolean(
+      previous.discoveredAt
     );
 
 
-    return profile;
+  if (
+    hasDiscoveryEvidence
+  ) {
 
-  },
+    profile.concepts[
+      name
+    ] = {
+
+      ...previous,
+
+      name,
+
+      origin:
+        "discovered"
+
+    };
+
+  }
 
 
+  return;
+
+}
+
+
+const current =
+  profile.concepts[
+    name
+  ];
+        /*
+        ------------------------------------------
+        BUILT-IN CONCEPT
+        ------------------------------------------
+        */
+
+        if (
+          this.isBuiltInConcept(
+            name
+          )
+        ) {
+
+          current.origin =
+            "built_in";
+
+          current.label =
+            null;
+
+          current.category =
+            null;
+
+          current.discoveryCount =
+            0;
+
+          current.discoveredAt =
+            null;
+
+          current.promoted =
+            false;
+
+          current.promotedAt =
+            null;
+
+          current.learningTopic =
+            true;
+
+
+          return;
+
+        }
+
+
+        /*
+        ------------------------------------------
+        DISCOVERED CONCEPT
+        ------------------------------------------
+        */
+
+        if (
+          previous.origin ===
+            "discovered"
+        ) {
+
+          current.origin =
+            "discovered";
+
+
+          current.label =
+            previous.label ||
+            current.label ||
+            this.formatConceptName?.(
+              name
+            ) ||
+            name;
+
+
+          current.category =
+            previous.category ||
+            current.category ||
+            "language";
+
+
+          current.discoveryCount =
+  Math.max(
+    Number(
+      previous.discoveryCount ||
+      0
+    ),
+    Number(
+      current.discoveryCount ||
+      0
+    )
+  );
+
+
+          current.discoveredAt =
+            previous.discoveredAt ||
+            current.discoveredAt ||
+            null;
+
+
+          current.promoted =
+            previous.promoted ===
+            true;
+
+
+          current.promotedAt =
+            previous.promotedAt ||
+            null;
+
+
+          current.learningTopic =
+            previous.learningTopic ===
+            true;
+
+        }
+
+      }
+    );
+
+
+  /*
+  ==================================================
+  CLASSIFY NEW CONCEPTS
+  ==================================================
+
+  Anything rebuilt from evidence that did not have
+  previous discovery metadata still needs a valid
+  origin.
+
+  Only concepts in the explicit built-in registry
+  are marked built_in.
+
+  Everything else is learner-discovered.
+  ==================================================
+  */
+
+  Object.values(
+    profile.concepts
+  )
+    .forEach(
+      concept => {
+
+        const name =
+          this.normalizeConceptName(
+            concept.name ||
+            concept.concept
+          );
+
+
+        concept.name =
+          name;
+
+
+        if (
+          this.isBuiltInConcept(
+            name
+          )
+        ) {
+
+          concept.origin =
+            "built_in";
+
+
+          if (
+            concept.label ===
+            undefined
+          ) {
+
+            concept.label =
+              null;
+
+          }
+
+
+          if (
+            concept.category ===
+            undefined
+          ) {
+
+            concept.category =
+              null;
+
+          }
+
+
+          if (
+            concept.discoveryCount ===
+            undefined
+          ) {
+
+            concept.discoveryCount =
+              0;
+
+          }
+
+
+          if (
+            concept.discoveredAt ===
+            undefined
+          ) {
+
+            concept.discoveredAt =
+              null;
+
+          }
+
+
+          concept.learningTopic =
+            true;
+
+        }
+
+        else {
+
+  /*
+  ==================================================
+  NON-BUILT-IN CONCEPT
+  ==================================================
+
+  A non-built-in concept is not automatically an
+  AI-discovered learning topic.
+
+  Only concepts carrying genuine discovery evidence
+  enter the discovery/promotion pipeline.
+
+  Other concepts can still exist as useful assessment
+  evidence without becoming curriculum topics.
+  ==================================================
+  */
+
+  const hasDiscoveryEvidence =
+  Number(
+    concept.discoveryCount ||
+    0
+  ) > 0 ||
+  Boolean(
+    concept.discoveredAt
+  );
+
+  if (
+    hasDiscoveryEvidence
+  ) {
+
+    concept.origin =
+      "discovered";
+
+  }
+
+  else {
+
+    concept.origin =
+      "assessment";
+
+  }
+
+
+          if (
+            !concept.label
+          ) {
+
+            concept.label =
+              String(
+                name
+              )
+                .replace(
+                  /_/g,
+                  " "
+                )
+                .replace(
+                  /\b\w/g,
+                  letter =>
+                    letter.toUpperCase()
+                );
+
+          }
+
+
+          if (
+            !concept.category
+          ) {
+
+            concept.category =
+              "language";
+
+          }
+
+
+          if (
+            concept.discoveryCount ===
+            undefined
+          ) {
+
+            concept.discoveryCount =
+              0;
+
+          }
+
+
+          if (
+            concept.discoveredAt ===
+            undefined
+          ) {
+
+            concept.discoveredAt =
+              null;
+
+          }
+
+
+          if (
+            concept.promoted ===
+            undefined
+          ) {
+
+            concept.promoted =
+              false;
+
+          }
+
+
+          if (
+            concept.promotedAt ===
+            undefined
+          ) {
+
+            concept.promotedAt =
+              null;
+
+          }
+
+
+          if (
+            concept.learningTopic ===
+            undefined
+          ) {
+
+            concept.learningTopic =
+              false;
+
+          }
+
+        }
+
+      }
+    );
+
+/*
+==================================================
+PROMOTE ELIGIBLE DISCOVERED CONCEPTS
+==================================================
+
+Discovery evidence has now been imported and
+persistent discovery metadata has been restored.
+
+Promote any discovered concepts that have gathered
+enough genuine evidence to enter the learner's
+active curriculum.
+*/
+
+this.promoteEligibleDiscoveredConcepts(
+  profile
+);
+  /*
+  ==================================================
+  RECALCULATE CONCEPT MASTERY
+  ==================================================
+
+  Practice evidence is imported after the formal
+  assessment evidence.
+
+  Recalculate mastery now so successful practice
+  and practice failures are reflected in the
+  final learner profile.
+  ==================================================
+  */
+
+  Object.values(
+    profile.concepts
+  )
+    .forEach(
+      concept => {
+
+        concept.mastery =
+          this.calculateConceptMastery(
+            concept
+          );
+
+      }
+    );
+
+
+  /*
+  ==================================================
+  CONFIDENCE
+  ==================================================
+  */
+
+  this.calculateConfidence(
+    profile
+  );
+
+
+  /*
+  ==================================================
+  SAVE
+  ==================================================
+  */
+
+  this.save(
+    profile
+  );
+
+
+  return profile;
+
+},
   /*
   ==================================================
   PLACEMENT EVIDENCE
@@ -2522,134 +3101,312 @@ importSpeakingConceptEvidence(
   */
 
   importWritingConceptEvidence(
-    profile
-  ) {
+  profile
+) {
 
-    let learningProfile;
-
-
-    try {
-
-      learningProfile =
-        JSON.parse(
-          localStorage.getItem(
-            "mijnNederlandsLearningProfile"
-          ) || "null"
-        );
-
-    } catch (error) {
-
-      learningProfile = null;
-
-    }
+  let learningProfile;
 
 
-    if (
-      !learningProfile ||
-      !learningProfile.concepts
-    ) {
+  try {
 
-      return;
-
-    }
-
-
-    Object.entries(
-      learningProfile.concepts
-    )
-      .forEach(
-        ([rawName, evidence]) => {
-
-          const name =
-            this.normalizeConceptName(
-              rawName
-            );
-
-
-          const concept =
-            this.ensureConcept(
-              profile,
-              name
-            );
-
-
-          concept.encounters +=
-            Number(
-              evidence
-                .writingEncounters ||
-              0
-            );
-
-
-          concept.errors +=
-            Number(
-              evidence
-                .writingErrors ||
-              0
-            );
-
-
-          concept.minorErrors +=
-            Number(
-              evidence
-                .minorErrors ||
-              0
-            );
-
-
-          concept.moderateErrors +=
-            Number(
-              evidence
-                .moderateErrors ||
-              0
-            );
-
-
-          concept.majorErrors +=
-            Number(
-              evidence
-                .majorErrors ||
-              0
-            );
-
-
-          concept.priorityCount +=
-            Number(
-              evidence
-                .priorityCount ||
-              0
-            );
-
-
-          concept.lastSeen =
-            this.latestDate(
-              concept.lastSeen,
-              evidence.lastSeen
-            );
-
-
-          if (
-            !concept.sources.includes(
-              "writing"
-            )
-          ) {
-
-            concept.sources.push(
-              "writing"
-            );
-
-          }
-
-
-          concept.mastery =
-            this.calculateConceptMastery(
-              concept
-            );
-
-        }
+    learningProfile =
+      JSON.parse(
+        localStorage.getItem(
+          "mijnNederlandsLearningProfile"
+        ) || "null"
       );
 
-  },
+  } catch (error) {
+
+    learningProfile = null;
+
+  }
+
+
+  if (
+    !learningProfile ||
+    !learningProfile.concepts
+  ) {
+
+    return;
+
+  }
+
+
+  Object.entries(
+    learningProfile.concepts
+  )
+    .forEach(
+      ([rawName, evidence]) => {
+
+        const name =
+          this.normalizeConceptName(
+            rawName
+          );
+
+
+        const isBuiltIn =
+          this.isBuiltInConcept(
+            name
+          );
+
+
+        /*
+        ==================================================
+        DISCOVERY METADATA
+        ==================================================
+
+        Do not manufacture a discovery count here.
+
+        recordWritingLearningEvidence() is responsible
+        for counting genuine AI observations.
+
+        This importer only transfers that stored evidence
+        into the rebuilt learner profile.
+        ==================================================
+        */
+
+        const storedDiscoveryCount =
+          isBuiltIn
+
+            ? 0
+
+            : Number(
+                evidence
+                  .discoveryCount ||
+                0
+              );
+
+
+        const concept =
+          this.ensureConcept(
+            profile,
+            name,
+            {
+              origin:
+                isBuiltIn
+                  ? "built_in"
+                  : "discovered",
+
+              label:
+                isBuiltIn
+                  ? null
+                  : (
+                      evidence.label ||
+                      rawName
+                    ),
+
+              category:
+                isBuiltIn
+                  ? null
+                  : (
+                      evidence.category ||
+                      "language"
+                    ),
+
+              discoveryCount:
+                storedDiscoveryCount,
+
+              discoveredAt:
+                isBuiltIn
+                  ? null
+                  : (
+                      evidence
+                        .discoveredAt ||
+                      null
+                    ),
+
+              promoted:
+                isBuiltIn
+                  ? false
+                  : (
+                      evidence
+                        .promoted ===
+                      true
+                    ),
+
+              promotedAt:
+                isBuiltIn
+                  ? null
+                  : (
+                      evidence
+                        .promotedAt ||
+                      null
+                    ),
+
+              learningTopic:
+                isBuiltIn
+                  ? true
+                  : (
+                      evidence
+                        .learningTopic ===
+                      true
+                    )
+            }
+          );
+
+
+        /*
+        ==================================================
+        WRITING EVIDENCE
+        ==================================================
+        */
+
+        concept.encounters +=
+          Number(
+            evidence
+              .writingEncounters ||
+            0
+          );
+
+
+        concept.errors +=
+          Number(
+            evidence
+              .writingErrors ||
+            0
+          );
+
+
+        concept.minorErrors +=
+          Number(
+            evidence
+              .minorErrors ||
+            0
+          );
+
+
+        concept.moderateErrors +=
+          Number(
+            evidence
+              .moderateErrors ||
+            0
+          );
+
+
+        concept.majorErrors +=
+          Number(
+            evidence
+              .majorErrors ||
+            0
+          );
+
+
+        concept.priorityCount +=
+          Number(
+            evidence
+              .priorityCount ||
+            0
+          );
+
+
+        /*
+        ==================================================
+        DISCOVERY STATE
+        ==================================================
+        */
+
+        if (
+          !isBuiltIn
+        ) {
+
+          concept.origin =
+            "discovered";
+
+
+          concept.discoveryCount =
+            storedDiscoveryCount;
+
+
+          concept.discoveredAt =
+            evidence
+              .discoveredAt ||
+            concept.discoveredAt ||
+            null;
+
+
+          concept.promoted =
+            evidence
+              .promoted ===
+            true;
+
+
+          concept.promotedAt =
+            evidence
+              .promotedAt ||
+            concept.promotedAt ||
+            null;
+
+
+          concept.learningTopic =
+            concept.promoted ===
+            true;
+
+        }
+
+        else {
+
+          concept.origin =
+            "built_in";
+
+
+          concept.discoveryCount =
+            0;
+
+
+          concept.learningTopic =
+            true;
+
+        }
+
+
+        /*
+        ==================================================
+        LAST SEEN
+        ==================================================
+        */
+
+        concept.lastSeen =
+          this.latestDate(
+            concept.lastSeen,
+            evidence.lastSeen
+          );
+
+
+        /*
+        ==================================================
+        SOURCE
+        ==================================================
+        */
+
+        if (
+          !concept.sources.includes(
+            "writing"
+          )
+        ) {
+
+          concept.sources.push(
+            "writing"
+          );
+
+        }
+
+
+        /*
+        ==================================================
+        MASTERY
+        ==================================================
+        */
+
+        concept.mastery =
+          this.calculateConceptMastery(
+            concept
+          );
+
+      }
+    );
+
+},
 
 /*
 ==================================================
@@ -2759,17 +3516,17 @@ importPracticeEvidence(
   */
 
   const chronologicalHistory =
-  history
-    .slice()
-    .sort(
-      (a, b) =>
-        this.getAssessmentTime(a) -
-        this.getAssessmentTime(b)
-    );
+    history
+      .slice()
+      .sort(
+        (a, b) =>
+          this.getAssessmentTime(a) -
+          this.getAssessmentTime(b)
+      );
 
 
-chronologicalHistory.forEach(
-  session => {
+  chronologicalHistory.forEach(
+    session => {
 
       if (!session) {
         return;
@@ -2780,22 +3537,38 @@ chronologicalHistory.forEach(
         session.concept;
 
 
-      if (!rawTargetConcept) {
-        return;
-      }
+      /*
+      Skill practice has no target concept.
 
+      Its secondary concept evidence is still
+      useful, so do not discard the whole
+      session merely because session.concept
+      is null.
+      */
 
       const targetName =
-        this.normalizeConceptName(
-          rawTargetConcept
-        );
+        rawTargetConcept
+          ? this.normalizeConceptName(
+              rawTargetConcept
+            )
+          : null;
 
 
       const targetConcept =
-        this.ensureConcept(
-          profile,
-          targetName
-        );
+        targetName
+          ? this.ensureConcept(
+              profile,
+              targetName,
+              {
+                origin:
+                  this.isBuiltInConcept(
+                    targetName
+                  )
+                    ? "built_in"
+                    : "discovered"
+              }
+            )
+          : null;
 
 
       const answers =
@@ -2811,45 +3584,43 @@ chronologicalHistory.forEach(
         session.savedAt ||
         null;
 
-        /*
-Track the most recent practice time
-for the target concept.
-*/
-
-if (
-  sessionTime &&
-  (
-    !targetConcept.lastPracticeAt ||
-    new Date(sessionTime).getTime() >
-      new Date(
-        targetConcept.lastPracticeAt
-      ).getTime()
-  )
-) {
-
-  /*
-A newer session replaces the previous
-"recent" practice window.
-*/
-
-targetConcept.lastPracticeAt =
-  sessionTime;
-
-targetConcept.recentPracticeSuccesses =
-  0;
-
-targetConcept.recentPracticeFailures =
-  0;
-
-}
-
 
       /*
-      Mark practice as a source for the
-      target concept.
+      ==================================================
+      TARGET CONCEPT SESSION STATE
+      ==================================================
       */
 
       if (
+        targetConcept &&
+        sessionTime &&
+        (
+          !targetConcept.lastPracticeAt ||
+          new Date(
+            sessionTime
+          ).getTime() >
+            new Date(
+              targetConcept.lastPracticeAt
+            ).getTime()
+        )
+      ) {
+
+        targetConcept.lastPracticeAt =
+          sessionTime;
+
+        targetConcept
+          .recentPracticeSuccesses =
+            0;
+
+        targetConcept
+          .recentPracticeFailures =
+            0;
+
+      }
+
+
+      if (
+        targetConcept &&
         !targetConcept.sources.includes(
           "practice"
         )
@@ -2862,10 +3633,16 @@ targetConcept.recentPracticeFailures =
       }
 
 
-      if (sessionTime) {
+      if (
+        targetConcept &&
+        sessionTime
+      ) {
 
         targetConcept.lastSeen =
-          sessionTime;
+          this.latestDate(
+            targetConcept.lastSeen,
+            sessionTime
+          );
 
       }
 
@@ -2884,194 +3661,255 @@ targetConcept.recentPracticeFailures =
           }
 
 
-          targetConcept.encounters +=
-            1;
-
-
           /*
-          ------------------------------------------
+          ==================================================
           TARGET CONCEPT RESULT
-          ------------------------------------------
-
-          Prefer targetConceptCorrect from
-          the new evaluator.
-
-          Fall back to correct for older
-          locally graded practice records.
+          ==================================================
           */
 
-          const targetCorrect =
-            typeof answer
-              .targetConceptCorrect ===
-              "boolean"
-              ? answer
-                  .targetConceptCorrect
-              : answer.correct === true;
-
-
-          if (targetCorrect) {
-
+          if (
             targetConcept
-              .practiceSuccesses +=
-                1;
+          ) {
 
-          } else {
+            targetConcept.encounters +=
+              1;
 
-            targetConcept
-              .practiceFailures +=
-                1;
+
+            const targetCorrect =
+              typeof answer
+                .targetConceptCorrect ===
+                "boolean"
+
+                ? answer
+                    .targetConceptCorrect
+
+                : answer.correct ===
+                    true;
+
+
+            if (
+              targetCorrect
+            ) {
+
+              targetConcept
+                .practiceSuccesses +=
+                  1;
+
+            } else {
+
+              targetConcept
+                .practiceFailures +=
+                  1;
+
+            }
 
 
             /*
-            A failed target exercise is useful
-            evidence, but practice should be
-            lighter than formal assessment.
-
-            Record it as a minor error.
+            ------------------------------------------
+            RECENT PRACTICE SIGNAL
+            ------------------------------------------
             */
 
-            targetConcept.errors +=
-              1;
+            if (
+              sessionTime &&
+              targetConcept.lastPracticeAt &&
+              sessionTime ===
+                targetConcept.lastPracticeAt
+            ) {
 
-            targetConcept.minorErrors +=
-              1;
+              if (
+                targetCorrect
+              ) {
+
+                targetConcept
+                  .recentPracticeSuccesses +=
+                    1;
+
+              } else {
+
+                targetConcept
+                  .recentPracticeFailures +=
+                    1;
+
+              }
+
+            }
 
           }
 
+
+          /*
+          ==================================================
+          SECONDARY CONCEPT EVIDENCE
+          ==================================================
+
+          New evaluator:
+              answer.concepts[]
+
+          Legacy evaluator:
+              answer.errorConcept
+
+          Both are supported.
+
+          These are supporting practice signals,
+          not formal assessment errors.
+          ==================================================
+          */
 /*
 ==================================================
-RECENT PRACTICE SIGNAL
+SECONDARY ERROR EVIDENCE
 ==================================================
 
-For now, "recent" means the latest practice
-session for this concept.
+Only an explicit errorConcept represents a
+secondary mistake.
 
-Only answers belonging to that latest session
-should contribute to the recent counters.
+answer.concepts[] describes concepts involved
+in the exercise. A concept being present there
+does NOT mean the learner made an error in it.
+
+Example:
+
+target = vocabulary_choice
+concepts = ["vocabulary_choice", "spelling"]
+correct = true
+errorConcept = "none"
+
+This must NOT create a spelling error.
+==================================================
 */
 
+const rawErrorConcept =
+  answer.errorConcept;
+
+
 if (
-  sessionTime &&
-  targetConcept.lastPracticeAt &&
-  sessionTime ===
-    targetConcept.lastPracticeAt
+  typeof rawErrorConcept !==
+    "string" ||
+  !rawErrorConcept.trim() ||
+  rawErrorConcept ===
+    "none"
 ) {
 
-  if (targetCorrect) {
-
-    targetConcept
-      .recentPracticeSuccesses +=
-        1;
-
-  } else {
-
-    targetConcept
-      .recentPracticeFailures +=
-        1;
-
-  }
+  return;
 
 }
-          /*
-          ------------------------------------------
-          SECONDARY ERROR
-          ------------------------------------------
-
-          Example:
-
-          target = spelling
-          spelling correct = true
-          errorConcept = adjective_ending
-
-          The adjective error belongs to
-          adjective_ending, not spelling.
-          */
-
-          const rawErrorConcept =
-            answer.errorConcept;
 
 
-          if (
-            typeof rawErrorConcept !==
-              "string" ||
-            !rawErrorConcept.trim() ||
-            rawErrorConcept === "none"
-          ) {
-
-            return;
-
-          }
+const errorName =
+  this.normalizeConceptName(
+    rawErrorConcept
+  );
 
 
-          const errorName =
-            this.normalizeConceptName(
-              rawErrorConcept
-            );
+if (
+  !errorName ||
+  errorName === targetName
+) {
+
+  return;
+
+}
 
 
-          /*
-          Avoid double-counting when the
-          evaluator reports the target concept
-          itself as the secondary error.
-          */
-
-          if (
-            errorName ===
-            targetName
-          ) {
-
-            return;
-
-          }
+const isBuiltIn =
+  this.isBuiltInConcept(
+    errorName
+  );
 
 
-          const errorConcept =
-            this.ensureConcept(
-              profile,
-              errorName
-            );
+const errorConcept =
+  this.ensureConcept(
+    profile,
+    errorName,
+    {
+      origin:
+        isBuiltIn
+          ? "built_in"
+          : "discovered",
+
+      label:
+        isBuiltIn
+          ? null
+          : errorName,
+
+      category:
+        isBuiltIn
+          ? null
+          : "language"
+    }
+  );
 
 
-          errorConcept.encounters +=
-            1;
+/*
+Secondary mistakes discovered during practice
+are supporting practice evidence.
 
-          errorConcept.errors +=
-            1;
+They do not modify formal assessment error
+counters.
+*/
 
-          errorConcept.minorErrors +=
-            1;
-
-          errorConcept
-            .practiceSecondaryErrors +=
-              1;
+errorConcept.encounters +=
+  1;
 
 
-          if (
-            !errorConcept.sources.includes(
-              "practice"
-            )
-          ) {
-
-            errorConcept.sources.push(
-              "practice"
-            );
-
-          }
+errorConcept
+  .practiceSecondaryErrors +=
+    1;
 
 
-          if (sessionTime) {
+if (
+  !errorConcept.sources.includes(
+    "practice"
+  )
+) {
 
-            errorConcept.lastSeen =
-              sessionTime;
+  errorConcept.sources.push(
+    "practice"
+  );
 
-          }
+}
+
+
+if (
+  sessionTime
+) {
+
+  errorConcept.lastSeen =
+    this.latestDate(
+      errorConcept.lastSeen,
+      sessionTime
+    );
+
+}
+
+
+errorConcept.mastery =
+  this.calculateConceptMastery(
+    errorConcept
+  );
 
         }
-
       );
 
-    }
 
+      /*
+      Recalculate target mastery after all
+      answers in this session have been
+      imported.
+      */
+
+      if (
+        targetConcept
+      ) {
+
+        targetConcept.mastery =
+          this.calculateConceptMastery(
+            targetConcept
+          );
+
+      }
+
+    }
   );
 
 },
@@ -3080,64 +3918,859 @@ if (
   CONCEPT MODEL
   ==================================================
   */
+CONCEPT_CATALOG: {
 
-  ensureConcept(
-    profile,
-    name
-  ) {
+  spelling: {
+    label: "Spelling",
+    skill: "writing",
+    level: "A1"
+  },
 
-    if (
-      !profile.concepts[
-        name
-      ]
-    ) {
+  articles: {
+    label: "Articles",
+    skill: "grammar",
+    level: "A1"
+  },
 
-      profile.concepts[
-        name
-      ] = {
+  word_order: {
+    label: "Word order",
+    skill: "grammar",
+    level: "A1"
+  },
 
-        name,
+  verb_conjugation: {
+    label: "Verb conjugation",
+    skill: "grammar",
+    level: "A1"
+  },
 
-        encounters: 0,
+  perfect_tense: {
+    label: "Perfect tense",
+    skill: "grammar",
+    level: "A2"
+  },
 
-        errors: 0,
+  modal_verbs: {
+    label: "Modal verbs",
+    skill: "grammar",
+    level: "A2"
+  },
 
-        minorErrors: 0,
+  prepositions: {
+    label: "Prepositions",
+    skill: "grammar",
+    level: "A2"
+  },
 
-        moderateErrors: 0,
+  adjective_endings: {
+    label: "Adjective endings",
+    skill: "grammar",
+    level: "A2"
+  },
 
-        majorErrors: 0,
+  vocabulary_choice: {
+    label: "Vocabulary choice",
+    skill: "vocabulary",
+    level: "A2"
+  },
 
-priorityCount: 0,
+  inversion: {
+    label: "Inversion",
+    skill: "grammar",
+    level: "B1"
+  }
 
-practiceSuccesses: 0,
+},
 
-practiceFailures: 0,
+getConceptCurriculumMetadata(
+  name
+) {
 
-practiceSecondaryErrors: 0,
+  const normalized =
+    this.normalizeConceptName(
+      name
+    );
 
-lastPracticeAt: null,
 
-recentPracticeSuccesses: 0,
+  /*
+  ==================================================
+  CONCEPT CURRICULUM MAP
+  ==================================================
 
-recentPracticeFailures: 0,
+  This describes where a concept belongs in the
+  learning curriculum.
 
-mastery: null,
+  It is independent from learner mastery.
 
-lastSeen: null,
+  Unknown discovered concepts deliberately return
+  null metadata until they are classified.
+  ==================================================
+  */
 
-sources: []
+  const curriculum = {
 
-      };
+    spelling: {
+      skill: "writing",
+      cefrLevel: "A1"
+    },
 
+    articles: {
+      skill: "grammar",
+      cefrLevel: "A1"
+    },
+
+    word_order: {
+      skill: "grammar",
+      cefrLevel: "A1"
+    },
+
+    verb_conjugation: {
+      skill: "grammar",
+      cefrLevel: "A1"
+    },
+
+    perfect_tense: {
+      skill: "grammar",
+      cefrLevel: "A2"
+    },
+
+    modal_verbs: {
+      skill: "grammar",
+      cefrLevel: "A2"
+    },
+
+    prepositions: {
+      skill: "grammar",
+      cefrLevel: "A2"
+    },
+
+    adjective_endings: {
+      skill: "grammar",
+      cefrLevel: "A2"
+    },
+
+    vocabulary_choice: {
+      skill: "vocabulary",
+      cefrLevel: "A2"
+    },
+
+    inversion: {
+      skill: "grammar",
+      cefrLevel: "B1"
+    },
+
+
+    /*
+    Promoted discovered concepts can also be
+    classified here.
+
+    Their origin remains "discovered".
+    */
+
+    separable_verbs: {
+      skill: "grammar",
+      cefrLevel: "A2"
     }
 
+  };
 
-    return profile.concepts[
+
+  return (
+    curriculum[
+      normalized
+    ] || {
+      skill: null,
+      cefrLevel: null
+    }
+  );
+
+},
+
+isBuiltInConcept(
+  name
+) {
+
+  const normalized =
+    this.normalizeConceptName(
       name
+    );
+
+
+  return Boolean(
+    this.CONCEPT_CATALOG[
+      normalized
+    ]
+  );
+
+},
+
+/*
+==================================================
+DISCOVERED CONCEPT STATUS
+==================================================
+
+A concept discovered by AI does not immediately
+become part of the learner's curriculum.
+
+Lifecycle:
+
+discovered
+    ↓
+candidate
+    ↓
+promoted
+
+Built-in concepts are always considered active.
+==================================================
+*/
+
+getDiscoveredConceptStatus(
+  concept
+) {
+
+  if (!concept) {
+
+    return "unknown";
+
+  }
+
+
+  /*
+  ------------------------------------------
+  BUILT-IN CONCEPT
+  ------------------------------------------
+  */
+
+  if (
+    concept.origin === "built_in" ||
+    this.isBuiltInConcept(
+      concept.name ||
+      concept.concept
+    )
+  ) {
+
+    return "built_in";
+
+  }
+
+
+  /*
+  ------------------------------------------
+  ALREADY PROMOTED
+  ------------------------------------------
+  */
+
+  if (
+    concept.promoted === true
+  ) {
+
+    return "promoted";
+
+  }
+
+
+  const discoveryCount =
+    Number(
+      concept.discoveryCount ||
+      0
+    );
+
+
+  const encounters =
+    Number(
+      concept.encounters ||
+      concept.writingEncounters ||
+      0
+    );
+
+
+  const errors =
+    Number(
+      concept.errors ||
+      concept.writingErrors ||
+      0
+    );
+
+
+  /*
+  ------------------------------------------
+  CANDIDATE
+  ------------------------------------------
+
+  Two pieces of evidence are enough for the
+  concept to become a serious candidate.
+
+  It is still NOT part of the normal curriculum.
+  ------------------------------------------
+  */
+
+  if (
+    discoveryCount >= 2 ||
+    errors >= 2 ||
+    encounters >= 2
+  ) {
+
+    return "candidate";
+
+  }
+
+
+  return "discovered";
+
+},
+
+
+/*
+==================================================
+CHECK WHETHER DISCOVERED CONCEPT CAN BE PROMOTED
+==================================================
+*/
+
+shouldPromoteDiscoveredConcept(
+  concept
+) {
+
+  if (!concept) {
+
+    return false;
+
+  }
+
+
+  /*
+  Built-in concepts do not need promotion.
+  */
+
+  if (
+    concept.origin === "built_in" ||
+    this.isBuiltInConcept(
+      concept.name ||
+      concept.concept
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  /*
+  Do not promote twice.
+  */
+
+  if (
+    concept.promoted === true
+  ) {
+
+    return false;
+
+  }
+
+
+  const discoveryCount =
+    Number(
+      concept.discoveryCount ||
+      0
+    );
+
+
+  const errors =
+    Number(
+      concept.errors ||
+      concept.writingErrors ||
+      0
+    );
+
+
+  const priorityCount =
+    Number(
+      concept.priorityCount ||
+      0
+    );
+
+
+  const majorErrors =
+    Number(
+      concept.majorErrors ||
+      0
+    );
+
+
+  const moderateErrors =
+    Number(
+      concept.moderateErrors ||
+      0
+    );
+
+
+  /*
+  ==================================================
+  PROMOTION RULES
+  ==================================================
+
+  Normal path:
+      3+ genuine observations.
+
+  Strong-error path:
+      2+ observations AND either:
+      - repeated priority signal
+      - major error
+      - repeated moderate errors
+
+  This keeps one isolated AI label from becoming
+  a permanent learning topic.
+  ==================================================
+  */
+
+  if (
+    discoveryCount >= 3
+  ) {
+
+    return true;
+
+  }
+
+
+  if (
+    discoveryCount >= 2 &&
+    (
+      priorityCount >= 2 ||
+      majorErrors >= 1 ||
+      moderateErrors >= 2 ||
+      errors >= 3
+    )
+  ) {
+
+    return true;
+
+  }
+
+
+  return false;
+
+},
+
+
+/*
+==================================================
+PROMOTE DISCOVERED CONCEPT
+==================================================
+*/
+
+promoteDiscoveredConcept(
+  concept
+) {
+
+  if (
+    !this.shouldPromoteDiscoveredConcept(
+      concept
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  const now =
+    new Date()
+      .toISOString();
+
+
+  concept.promoted =
+    true;
+
+
+  concept.promotedAt =
+    now;
+
+
+  concept.learningTopic =
+    true;
+
+
+  /*
+  Preserve origin.
+
+  "discovered" tells us where the concept came from.
+  "promoted" tells us whether it entered the
+  learner's active curriculum.
+  */
+
+  if (
+    !concept.origin
+  ) {
+
+    concept.origin =
+      "discovered";
+
+  }
+
+
+  /*
+  Give newly promoted concepts a mastery value
+  if they do not have one yet.
+  */
+
+  if (
+    concept.mastery === null ||
+    concept.mastery === undefined
+  ) {
+
+    concept.mastery =
+      this.calculateConceptMastery(
+        concept
+      );
+
+  }
+
+  /*
+==================================================
+CURRICULUM METADATA
+==================================================
+
+Promotion makes the discovered concept part of
+the learner's active curriculum.
+
+If we know where this concept belongs, attach
+that metadata now.
+*/
+
+const curriculum =
+  this.getConceptCurriculumMetadata(
+    concept.name ||
+    concept.concept
+  );
+
+
+if (curriculum) {
+
+  if (curriculum.skill) {
+
+    concept.skill =
+      curriculum.skill;
+
+  }
+
+
+  if (curriculum.cefrLevel) {
+
+    concept.cefrLevel =
+      curriculum.cefrLevel;
+
+  }
+
+}
+
+  return true;
+
+},
+
+
+/*
+==================================================
+PROMOTE ELIGIBLE DISCOVERED CONCEPTS
+==================================================
+
+Runs across the learner profile.
+
+Returns the concepts that were promoted during
+this pass.
+==================================================
+*/
+
+promoteEligibleDiscoveredConcepts(
+  profile
+) {
+
+  if (
+    !profile ||
+    !profile.concepts
+  ) {
+
+    return [];
+
+  }
+
+
+  const promoted = [];
+
+
+  Object.values(
+    profile.concepts
+  )
+    .forEach(
+      concept => {
+
+        if (
+          this.promoteDiscoveredConcept(
+            concept
+          )
+        ) {
+
+          promoted.push(
+            concept
+          );
+
+        }
+
+      }
+    );
+
+
+  return promoted;
+
+},
+
+  ensureConcept(
+  profile,
+  name,
+  options = {}
+) {
+
+  /*
+  ==================================================
+  NORMALIZE
+  ==================================================
+  */
+
+  const normalizedName =
+    this.normalizeConceptName(
+      name
+    );
+
+
+  if (!normalizedName) {
+
+    return null;
+
+  }
+
+
+  /*
+  ==================================================
+  CREATE CONCEPT
+  ==================================================
+  */
+
+  if (
+    !profile.concepts[
+      normalizedName
+    ]
+  ) {
+
+    profile.concepts[
+      normalizedName
+    ] = {
+
+      name:
+        normalizedName,
+
+
+      /*
+      ------------------------------------------
+      DISCOVERY METADATA
+      ------------------------------------------
+      */
+
+      origin:
+        options.origin ||
+        "built_in",
+
+      label:
+        options.label ||
+        null,
+
+      category:
+        options.category ||
+        null,
+skill:
+  this.CONCEPT_CATALOG[
+    normalizedName
+  ]?.skill ||
+  options.skill ||
+  null,
+
+cefrLevel:
+  this.CONCEPT_CATALOG[
+    normalizedName
+  ]?.level ||
+  options.cefrLevel ||
+  null,
+
+      discoveryCount:
+        options.discoveryCount ||
+        0,
+
+      discoveredAt:
+        options.origin ===
+        "discovered"
+
+          ? new Date()
+              .toISOString()
+
+          : null,
+
+
+      /*
+      ------------------------------------------
+      ASSESSMENT EVIDENCE
+      ------------------------------------------
+      */
+
+      encounters: 0,
+
+      errors: 0,
+
+      minorErrors: 0,
+
+      moderateErrors: 0,
+
+      majorErrors: 0,
+
+      priorityCount: 0,
+
+
+      /*
+      ------------------------------------------
+      PRACTICE EVIDENCE
+      ------------------------------------------
+      */
+
+      practiceSuccesses: 0,
+
+      practiceFailures: 0,
+
+      practiceSecondaryErrors: 0,
+
+      lastPracticeAt: null,
+
+      recentPracticeSuccesses: 0,
+
+      recentPracticeFailures: 0,
+
+
+      /*
+      ------------------------------------------
+      LEARNING STATE
+      ------------------------------------------
+      */
+
+      mastery: null,
+
+      lastSeen: null,
+
+      sources: []
+
+    };
+
+  }
+
+
+  /*
+  ==================================================
+  BACKWARD-COMPATIBLE METADATA
+  ==================================================
+
+  Existing learner profiles were created before
+  concept discovery metadata existed.
+
+  Add missing fields without deleting any
+  existing evidence.
+  */
+
+  const concept =
+    profile.concepts[
+      normalizedName
     ];
 
-  },
+
+  if (
+    concept.origin ===
+    undefined
+  ) {
+
+    concept.origin =
+      options.origin ||
+      "built_in";
+
+  }
+
+
+  if (
+    concept.label ===
+    undefined
+  ) {
+
+    concept.label =
+      options.label ||
+      null;
+
+  }
+
+
+  if (
+    concept.category ===
+    undefined
+  ) {
+
+    concept.category =
+      options.category ||
+      null;
+
+  }
+if (
+  concept.skill ===
+  undefined
+) {
+
+  concept.skill =
+    this.CONCEPT_CATALOG[
+      normalizedName
+    ]?.skill ||
+    options.skill ||
+    null;
+
+}
+
+
+if (
+  concept.cefrLevel ===
+  undefined
+) {
+
+  concept.cefrLevel =
+    this.CONCEPT_CATALOG[
+      normalizedName
+    ]?.level ||
+    options.cefrLevel ||
+    null;
+
+}
+
+  if (
+    concept.discoveryCount ===
+    undefined
+  ) {
+
+    concept.discoveryCount = 0;
+
+  }
+
+
+  if (
+    concept.discoveredAt ===
+    undefined
+  ) {
+
+    concept.discoveredAt = null;
+
+  }
+
+
+  return concept;
+
+},
 
 
   /*
@@ -3189,34 +4822,51 @@ sources: []
   ==================================================
   */
 
-  calculateConceptMastery(
+ calculateConceptMastery(
   concept
 ) {
 
   /*
   ==================================================
-  FORMAL ERROR PENALTY
+  FORMAL ASSESSMENT MASTERY
   ==================================================
 
-  Existing assessment evidence remains the
-  main source of concept mastery.
+  Formal assessment evidence remains the main
+  measure of demonstrated proficiency.
+
+  Practice can show recovery, but it should not
+  erase an assessment weakness after one lesson.
+  ==================================================
   */
 
+  const minorErrors =
+    Number(
+      concept.minorErrors ||
+      0
+    );
+
+  const moderateErrors =
+    Number(
+      concept.moderateErrors ||
+      0
+    );
+
+  const majorErrors =
+    Number(
+      concept.majorErrors ||
+      0
+    );
+
+
   const weightedErrors =
-
     (
-      concept.minorErrors *
-      1
+      minorErrors * 1
     ) +
-
     (
-      concept.moderateErrors *
-      2
+      moderateErrors * 2
     ) +
-
     (
-      concept.majorErrors *
-      3
+      majorErrors * 3
     );
 
 
@@ -3236,19 +4886,18 @@ sources: []
 
   /*
   ==================================================
-  PRACTICE ADJUSTMENT
+  PRACTICE EVIDENCE
   ==================================================
 
-  Practice should refine mastery gradually.
+  Practice is supporting evidence.
 
-  Successes provide a small positive signal.
+  Successful practice can recover part of the
+  assessment penalty, but cannot simply add points
+  beyond what there is to recover.
 
-  Failures provide a somewhat stronger
-  negative signal.
-
-  The total adjustment is capped so one
-  practice session cannot radically change
-  the learner profile.
+  Failures can lower mastery because they provide
+  evidence that the weakness is still active.
+  ==================================================
   */
 
   const practiceSuccesses =
@@ -3265,92 +4914,182 @@ sources: []
     );
 
 
-  const positiveAdjustment =
-    Math.min(
-      15,
-      practiceSuccesses * 2
-    );
+  const totalPractice =
+    practiceSuccesses +
+    practiceFailures;
 
 
-const negativeAdjustment =
-  Math.min(
-    15,
-    practiceFailures * 3
-  );
-
-  const practiceAdjustment =
-    positiveAdjustment -
-    negativeAdjustment;
-/*
-==================================================
-RECENT PRACTICE RECOVERY
-==================================================
-
-Strong recent performance is evidence that the
-learner may be overcoming an earlier weakness.
-
-Recovery is deliberately capped so one strong
-session cannot immediately create mastery.
-*/
-
-const recentSuccesses =
-  Number(
-    concept.recentPracticeSuccesses ||
-    0
-  );
+  let practiceRecovery = 0;
 
 
-const recentFailures =
-  Number(
-    concept.recentPracticeFailures ||
-    0
-  );
+  if (
+    totalPractice > 0 &&
+    penalty > 0
+  ) {
+
+    const practiceAccuracy =
+      practiceSuccesses /
+      totalPractice;
 
 
-const recentAttempts =
-  recentSuccesses +
-  recentFailures;
+    /*
+    At most, accumulated practice can recover
+    40% of the formal assessment penalty.
 
+    The evidence strength grows gradually and
+    reaches full strength after 16 attempts.
+    */
 
-let recoveryAdjustment = 0;
-
-
-if (recentAttempts >= 5) {
-
-  const recentAccuracy =
-    recentSuccesses /
-    recentAttempts;
-
-
-  if (recentAccuracy >= 0.8) {
-
-    recoveryAdjustment =
+    const evidenceStrength =
       Math.min(
-        10,
-        Math.round(
-          recentAccuracy * 10
-        )
+        1,
+        totalPractice / 16
       );
+
+
+    practiceRecovery =
+      penalty *
+      0.4 *
+      practiceAccuracy *
+      evidenceStrength;
 
   }
 
-}
+
+  /*
+  ==================================================
+  RECENT PRACTICE RECOVERY
+  ==================================================
+
+  The latest session tells us whether the learner
+  appears to be recovering now.
+
+  It can recover another part of the assessment
+  penalty, but only when enough recent evidence
+  exists.
+
+  This is intentionally smaller than the old
+  +10 bonus and is tied directly to the existing
+  assessment penalty.
+  ==================================================
+  */
+
+  const recentSuccesses =
+    Number(
+      concept.recentPracticeSuccesses ||
+      0
+    );
+
+
+  const recentFailures =
+    Number(
+      concept.recentPracticeFailures ||
+      0
+    );
+
+
+  const recentAttempts =
+    recentSuccesses +
+    recentFailures;
+
+
+  let recentRecovery = 0;
+
+
+  if (
+    recentAttempts >= 5 &&
+    penalty > 0
+  ) {
+
+    const recentAccuracy =
+      recentSuccesses /
+      recentAttempts;
+
+
+    if (
+      recentAccuracy >= 0.8
+    ) {
+
+      /*
+      Scale recovery from 0 at 80% accuracy
+      to full recovery strength at 100%.
+      */
+
+      const recoveryStrength =
+        Math.min(
+          1,
+          Math.max(
+            0,
+            (
+              recentAccuracy -
+              0.8
+            ) / 0.2
+          )
+        );
+
+
+      recentRecovery =
+        penalty *
+        0.2 *
+        recoveryStrength;
+
+    }
+
+  }
+
+
+  /*
+  ==================================================
+  PRACTICE FAILURE PENALTY
+  ==================================================
+
+  Practice failures are useful evidence that the
+  concept is still unstable.
+
+  Keep this modest because practice is a learning
+  environment, not a formal assessment.
+  ==================================================
+  */
+
+  const practiceFailurePenalty =
+    Math.min(
+      10,
+      practiceFailures * 1.5
+    );
+
 
   /*
   ==================================================
   FINAL MASTERY
   ==================================================
+
+  Assessment establishes the baseline.
+
+  Practice can recover part of an existing
+  assessment penalty.
+
+  Practice cannot manufacture mastery above the
+  assessment ceiling simply by accumulating easy
+  successful exercises.
+  ==================================================
   */
 
-  return Math.max(
-  20,
-  Math.min(
-    100,
+  const mastery =
     baseMastery +
-    practiceAdjustment +
-    recoveryAdjustment
-  )
-);
+    practiceRecovery +
+    recentRecovery -
+    practiceFailurePenalty;
+
+
+  return Math.round(
+    Math.max(
+      20,
+      Math.min(
+        100,
+        mastery
+      )
+    )
+  );
 
 },
 
@@ -3442,46 +5181,65 @@ getMasteryLabel(
   */
 
   getPriorityConcepts(
-    profile = null,
-    limit = 5
-  ) {
+  profile = null,
+  limit = 5
+) {
 
-    const current =
-      profile ||
-      this.refresh();
+  const current =
+    profile ||
+    this.refresh();
 
 
-    return Object.values(
-      current.concepts
+  return Object.values(
+    current.concepts
+  )
+
+    .map(
+      concept => {
+
+        const priorityScore =
+          this.getConceptPriorityScore(
+            concept
+          );
+
+
+        const readinessMultiplier =
+          this.getConceptReadinessMultiplier(
+            concept,
+            current
+          );
+
+
+        return {
+
+          concept,
+
+          effectivePriority:
+            priorityScore *
+            readinessMultiplier
+
+        };
+
+      }
     )
 
-      .sort(
-        (a, b) => {
+    .sort(
+      (a, b) =>
+        b.effectivePriority -
+        a.effectivePriority
+    )
 
-          const scoreA =
-            this.getConceptPriorityScore(
-              a
-            );
+    .slice(
+      0,
+      limit
+    )
 
+    .map(
+      item =>
+        item.concept
+    );
 
-          const scoreB =
-            this.getConceptPriorityScore(
-              b
-            );
-
-
-          return scoreB -
-            scoreA;
-
-        }
-      )
-
-      .slice(
-        0,
-        limit
-      );
-
-  },
+},
 
 
   /*
@@ -3489,6 +5247,162 @@ getMasteryLabel(
   PRIORITY SCORE
   ==================================================
   */
+getConceptReadinessMultiplier(
+  concept,
+  profile
+) {
+
+  /*
+  ==================================================
+  CEFR READINESS
+  ==================================================
+
+  Concept priority represents learning need.
+
+  CEFR readiness adjusts that need according to
+  whether the concept is appropriate for the
+  learner's current level in the relevant skill.
+
+  It must NOT modify mastery or assessment evidence.
+  */
+
+
+  if (
+    !concept ||
+    !profile
+  ) {
+
+    return 1;
+
+  }
+
+
+  const skillName =
+    concept.skill;
+
+
+  const conceptLevel =
+    concept.cefrLevel;
+
+
+  /*
+  Discovered/unclassified concepts currently have
+  no reliable curriculum metadata.
+
+  Leave their priority unchanged.
+  */
+
+  if (
+    !skillName ||
+    !conceptLevel
+  ) {
+
+    return 1;
+
+  }
+
+
+  const skill =
+    profile.skills?.[
+      skillName
+    ];
+
+
+  /*
+  If the relevant skill has not been assessed,
+  do not make assumptions about readiness.
+  */
+
+  if (
+    !skill ||
+    !skill.assessed ||
+    !skill.level
+  ) {
+
+    return 1;
+
+  }
+
+
+  const learnerValue =
+    this.getLevelValue(
+      skill.level
+    );
+
+
+  const conceptValue =
+    this.getLevelValue(
+      conceptLevel
+    );
+
+
+  if (
+    learnerValue === null ||
+    conceptValue === null
+  ) {
+
+    return 1;
+
+  }
+
+
+  const difference =
+    conceptValue -
+    learnerValue;
+
+
+  /*
+  Concept is at or below the learner's current
+  level: fully appropriate.
+  */
+
+  if (
+    difference <= 0
+  ) {
+
+    return 1;
+
+  }
+
+
+  /*
+  Up to half a CEFR step ahead is useful stretch
+  material.
+  */
+
+  if (
+    difference <= 0.5
+  ) {
+
+    return 0.9;
+
+  }
+
+
+  /*
+  One full level ahead may still appear when the
+  underlying evidence is strong, but it should not
+  dominate current-level weaknesses.
+  */
+
+  if (
+    difference <= 1
+  ) {
+
+    return 0.6;
+
+  }
+
+
+  /*
+  Material substantially beyond the learner's
+  current skill level is strongly deferred rather
+  than completely hidden.
+  */
+
+  return 0.3;
+
+},
 
   getConceptPriorityScore(
   concept
@@ -3805,22 +5719,194 @@ const practiceReduction =
   */
 
   normalizeConceptName(
-    value
-  ) {
+  value
+) {
 
-    return String(value)
+  /*
+  ==================================================
+  BASIC NORMALIZATION
+  ==================================================
+  */
+
+  let name =
+    String(
+      value || ""
+    )
 
       .trim()
 
       .toLowerCase()
 
       .replace(
-        /\s+/g,
+        /[^a-z0-9]+/g,
         "_"
+      )
+
+      .replace(
+        /^_+|_+$/g,
+        ""
       );
 
-  },
 
+  /*
+  ==================================================
+  KNOWN CONCEPT ALIASES
+  ==================================================
+
+  AI feedback may describe the same learning
+  concept using slightly different names.
+
+  Map common variants to one canonical concept
+  so the learner profile does not fragment.
+  */
+
+  const aliases = {
+
+    /*
+    SPELLING
+    */
+
+    spelling_error:
+      "spelling",
+
+    spelling_errors:
+      "spelling",
+
+
+    /*
+    ARTICLES
+    */
+
+    article:
+      "articles",
+
+    article_usage:
+      "articles",
+
+    dutch_articles:
+      "articles",
+
+    de_het:
+      "articles",
+
+    de_het_articles:
+      "articles",
+
+
+    /*
+WORD ORDER
+*/
+
+sentence_order:
+  "word_order",
+
+dutch_word_order:
+  "word_order",
+
+    /*
+    VERB CONJUGATION
+    */
+
+    verb_conjugation_error:
+      "verb_conjugation",
+
+    verb_conjugations:
+      "verb_conjugation",
+
+    conjugation:
+      "verb_conjugation",
+
+
+    /*
+    PERFECT TENSE
+    */
+
+    perfect:
+      "perfect_tense",
+
+    perfectum:
+      "perfect_tense",
+
+    present_perfect:
+      "perfect_tense",
+
+
+    /*
+    MODAL VERBS
+    */
+
+    modal_verb:
+      "modal_verbs",
+
+    modals:
+      "modal_verbs",
+
+
+    /*
+    PREPOSITIONS
+    */
+
+    preposition:
+      "prepositions",
+
+    preposition_usage:
+      "prepositions",
+
+
+    /*
+    ADJECTIVES
+    */
+
+    adjective:
+      "adjective_endings",
+
+    adjectives:
+      "adjective_endings",
+
+    adjective_ending:
+      "adjective_endings",
+
+
+    /*
+    VOCABULARY
+    */
+
+    vocabulary:
+      "vocabulary_choice",
+
+    word_choice:
+      "vocabulary_choice",
+
+    vocabulary_error:
+      "vocabulary_choice",
+
+    lexical_choice:
+      "vocabulary_choice",
+
+
+    /*
+    INVERSION
+    */
+
+    dutch_inversion:
+      "inversion"
+
+  };
+
+
+  if (
+    aliases[name]
+  ) {
+
+    name =
+      aliases[name];
+
+  }
+
+
+  return name;
+
+},
 
   /*
   ==================================================

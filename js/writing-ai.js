@@ -25,6 +25,7 @@ async function submitWritingTask() {
       currentWritingTaskIndex
     ];
 
+
   if (!task) {
     return;
   }
@@ -708,123 +709,67 @@ function renderWritingErrors(
         "feedback-item";
 
 
-      /*
-      Original
-      */
-
-      const original =
-        document.createElement(
-          "div"
-        );
-
-
-      original.className =
-        "error-original";
-
-
-      original.textContent =
-        error.original;
-
-
-      /*
-      Correction
-      */
-
-      const correction =
-        document.createElement(
-          "div"
-        );
-
-
-      correction.className =
-        "error-correction";
-
-
-      correction.textContent =
-        `→ ${error.correction}`;
-
-
-      /*
-      Explanation
-      */
-
-      const explanation =
-        document.createElement(
-          "p"
-        );
-
-
-      explanation.textContent =
-        error.explanation;
-
-
-      /*
-      Concept
-      */
-
       const concept =
-        document.createElement(
-          "span"
-        );
+        error.concept
+          ? formatConcept(
+              error.concept
+            )
+          : "Language";
 
-
-      concept.className =
-        "feedback-tag";
-
-
-      concept.textContent =
-        formatConcept(
-          error.concept ||
-          "language"
-        );
-
-
-      /*
-      Severity
-      */
 
       const severity =
-        document.createElement(
-          "span"
-        );
-
-
-      const severityValue =
         error.severity ||
         "minor";
 
 
-      severity.className =
-        `feedback-tag severity-${severityValue}`;
+      item.innerHTML = `
+
+        <strong>
+          ${escapeHTML(concept)}
+        </strong>
+
+        <span
+          class="
+            feedback-tag
+            severity-${escapeHTML(
+              severity
+            )}
+          "
+        >
+          ${escapeHTML(severity)}
+        </span>
 
 
-      severity.textContent =
-        severityValue;
+        <div
+          class="error-original"
+        >
+          ${escapeHTML(
+            error.original ||
+            ""
+          )}
+        </div>
 
 
-      item.appendChild(
-        original
-      );
+        <div
+          class="error-correction"
+        >
+          ${escapeHTML(
+            error.correction ||
+            ""
+          )}
+        </div>
 
 
-      item.appendChild(
-        correction
-      );
+        <p class="small">
 
+          ${escapeHTML(
+            error.explanation ||
+            ""
+          )}
 
-      item.appendChild(
-        explanation
-      );
+        </p>
 
-
-      item.appendChild(
-        concept
-      );
-
-
-      item.appendChild(
-        severity
-      );
+      `;
 
 
       container.appendChild(
@@ -903,53 +848,25 @@ function renderWritingSuggestions(
         "feedback-item";
 
 
-      const original =
-        document.createElement(
-          "strong"
-        );
+      item.innerHTML = `
 
+        <strong>
+          ${escapeHTML(
+            suggestion.title ||
+            "Suggestion"
+          )}
+        </strong>
 
-      original.textContent =
-        suggestion.original;
+        <p class="small">
 
+          ${escapeHTML(
+            suggestion.explanation ||
+            ""
+          )}
 
-      const improved =
-        document.createElement(
-          "div"
-        );
+        </p>
 
-
-      improved.className =
-        "error-correction";
-
-
-      improved.textContent =
-        `→ ${suggestion.suggestion}`;
-
-
-      const explanation =
-        document.createElement(
-          "p"
-        );
-
-
-      explanation.textContent =
-        suggestion.explanation;
-
-
-      item.appendChild(
-        original
-      );
-
-
-      item.appendChild(
-        improved
-      );
-
-
-      item.appendChild(
-        explanation
-      );
+      `;
 
 
       container.appendChild(
@@ -958,6 +875,281 @@ function renderWritingSuggestions(
 
     }
   );
+
+}
+
+
+
+/*
+==================================================
+PRIORITY CONCEPTS
+==================================================
+*/
+
+function renderWritingPriorities(
+  concepts
+) {
+
+  const card =
+    document.getElementById(
+      "feedbackPrioritiesCard"
+    );
+
+
+  const container =
+    document.getElementById(
+      "feedbackPriorities"
+    );
+
+
+  if (
+    !card ||
+    !container
+  ) {
+    return;
+  }
+
+
+  if (
+    concepts.length === 0
+  ) {
+
+    card.classList.add(
+      "hidden"
+    );
+
+    return;
+
+  }
+
+
+  card.classList.remove(
+    "hidden"
+  );
+
+
+  container.innerHTML =
+    "";
+
+
+  concepts.forEach(
+    concept => {
+
+      const tag =
+        document.createElement(
+          "span"
+        );
+
+
+      tag.className =
+        "priority-concept";
+
+
+      tag.textContent =
+        formatConcept(
+          concept
+        );
+
+
+      container.appendChild(
+        tag
+      );
+
+    }
+  );
+
+}
+
+
+
+/*
+==================================================
+FORMAT CONCEPT
+==================================================
+*/
+
+function formatConcept(
+  value
+) {
+
+  return String(
+    value || ""
+  )
+    .replaceAll(
+      "_",
+      " "
+    )
+    .replace(
+      /\b\w/g,
+      letter =>
+        letter.toUpperCase()
+    );
+
+}/*
+==================================================
+WRITING AI PROGRESS STORAGE
+==================================================
+*/
+
+function saveWritingAIProgress() {
+
+  try {
+
+    const data = {
+
+      responses:
+        writingResponses,
+
+      savedAt:
+        new Date()
+          .toISOString()
+
+    };
+
+
+    localStorage.setItem(
+      "mijnNederlandsWritingAI",
+
+      JSON.stringify(
+        data
+      )
+    );
+
+
+  } catch (error) {
+
+    console.warn(
+      "Could not save writing AI progress.",
+      error
+    );
+
+  }
+
+}
+
+
+/*
+==================================================
+LOAD WRITING AI PROGRESS
+==================================================
+*/
+
+function loadWritingAIProgress() {
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        "mijnNederlandsWritingProgress"
+      );
+
+
+    if (!raw) {
+      return;
+    }
+
+
+    const progress =
+      JSON.parse(raw);
+
+
+    if (
+      Array.isArray(
+        progress.responses
+      )
+    ) {
+
+      writingResponses =
+        progress.responses;
+
+    }
+
+
+    if (
+      Number.isInteger(
+        progress.currentTaskIndex
+      )
+    ) {
+
+      currentWritingTaskIndex =
+        progress.currentTaskIndex;
+
+    }
+
+
+  } catch (error) {
+
+    console.warn(
+      "Could not load writing progress.",
+      error
+    );
+
+  }
+
+}
+
+
+
+/*
+==================================================
+FORMAT CONCEPT
+==================================================
+*/
+
+function formatConcept(
+  value
+) {
+
+  return String(
+    value || ""
+  )
+    .replace(
+      /_/g,
+      " "
+    )
+    .replace(
+      /\b\w/g,
+      letter =>
+        letter.toUpperCase()
+    );
+
+}
+
+
+
+/*
+==================================================
+ESCAPE HTML
+==================================================
+*/
+
+function escapeHTML(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
@@ -1056,17 +1248,34 @@ function saveWritingAIProgress() {
   try {
 
     const progress = {
-      assessmentVersion: 2,
-      completed: false,
-      updatedAt: new Date().toISOString(),
-      currentTaskIndex: currentWritingTaskIndex,
-      responses: writingResponses
+
+      assessmentVersion:
+        2,
+
+      completed:
+        false,
+
+      updatedAt:
+        new Date()
+          .toISOString(),
+
+      currentTaskIndex:
+        currentWritingTaskIndex,
+
+      responses:
+        writingResponses
+
     };
+
 
     localStorage.setItem(
       "mijnNederlandsWritingProgress",
-      JSON.stringify(progress)
+
+      JSON.stringify(
+        progress
+      )
     );
+
 
   } catch (error) {
 
@@ -1094,19 +1303,23 @@ function recordWritingLearningEvidence(
 
   try {
 
-    const storageKey =
+    const profileStorageKey =
       "mijnNederlandsLearningProfile";
 
 
     const existing =
       JSON.parse(
         localStorage.getItem(
-          storageKey
+          profileStorageKey
         ) || "{}"
       );
 
 
-    if (!existing.concepts) {
+    if (
+      !existing.concepts ||
+      typeof existing.concepts !==
+        "object"
+    ) {
 
       existing.concepts = {};
 
@@ -1115,165 +1328,717 @@ function recordWritingLearningEvidence(
 
     const errors =
       Array.isArray(
-        evaluation.errors
+        evaluation?.errors
       )
         ? evaluation.errors
         : [];
 
 
     const priorityConcepts =
+      Array.isArray(
+        evaluation?.priorityConcepts
+      )
+        ? evaluation.priorityConcepts
+        : [];
+
+
+    /*
+    ==================================================
+    NORMALIZE CONCEPT NAME
+    ==================================================
+
+    The learner profile needs one canonical key for
+    each concept.
+
+    Examples:
+
+      "Separable Verbs"
+      "separable verbs"
+      "separable_verbs"
+
+    all become:
+
+      "separable_verbs"
+    ==================================================
+    */
+
+    const normalizeConceptName =
+      value => {
+
+        return String(
+          value || ""
+        )
+          .trim()
+          .toLowerCase()
+          .replace(
+            /[^a-z0-9]+/g,
+            "_"
+          )
+          .replace(
+            /^_+|_+$/g,
+            ""
+          );
+
+      };
+
+
+    /*
+    ==================================================
+    BUILT-IN CONCEPTS
+    ==================================================
+
+    These already belong to the normal curriculum.
+
+    They may collect writing evidence, but they should
+    not enter the discovered -> candidate -> promoted
+    pipeline.
+    ==================================================
+    */
+
+    const builtInConcepts =
+      new Set([
+        "spelling",
+        "articles",
+        "word_order",
+        "verb_conjugation",
+        "perfect_tense",
+        "modal_verbs",
+        "prepositions",
+        "adjective_endings",
+        "vocabulary_choice",
+        "inversion"
+      ]);
+
+
+    /*
+    ==================================================
+    NORMALIZED PRIORITY CONCEPTS
+    ==================================================
+    */
+
+    const normalizedPriorityConcepts =
       new Set(
 
-        Array.isArray(
-          evaluation.priorityConcepts
-        )
-          ? evaluation.priorityConcepts
-          : []
+        priorityConcepts
+          .map(
+            concept =>
+              normalizeConceptName(
+                concept
+              )
+          )
+          .filter(Boolean)
 
       );
 
 
-    errors.forEach(
-      error => {
+    /*
+    ==================================================
+    MIGRATE / MERGE LEGACY CONCEPT KEYS
+    ==================================================
 
-        const concept =
-          error.concept;
+    Older versions could store:
+
+      existing.concepts["Separable Verbs"]
+
+    while the new version stores:
+
+      existing.concepts["separable_verbs"]
+
+    Before recording new evidence, merge duplicate
+    representations into the canonical normalized key.
+    ==================================================
+    */
+
+    const mergeNumber =
+      (a, b) =>
+        Number(a || 0) +
+        Number(b || 0);
 
 
-        if (!concept) {
-          return;
+    const mergeLatestDate =
+      (a, b) => {
+
+        if (!a) {
+          return b || null;
         }
+
+        if (!b) {
+          return a || null;
+        }
+
+
+        const aTime =
+          new Date(a)
+            .getTime();
+
+
+        const bTime =
+          new Date(b)
+            .getTime();
+
+
+        if (
+          Number.isNaN(aTime)
+        ) {
+
+          return b;
+
+        }
+
+
+        if (
+          Number.isNaN(bTime)
+        ) {
+
+          return a;
+
+        }
+
+
+        return bTime > aTime
+          ? b
+          : a;
+
+      };
+
+
+    const mergeEarliestDate =
+      (a, b) => {
+
+        if (!a) {
+          return b || null;
+        }
+
+        if (!b) {
+          return a || null;
+        }
+
+
+        const aTime =
+          new Date(a)
+            .getTime();
+
+
+        const bTime =
+          new Date(b)
+            .getTime();
+
+
+        if (
+          Number.isNaN(aTime)
+        ) {
+
+          return b;
+
+        }
+
+
+        if (
+          Number.isNaN(bTime)
+        ) {
+
+          return a;
+
+        }
+
+
+        return bTime < aTime
+          ? b
+          : a;
+
+      };
+
+
+    const mergeConceptRecords =
+      (
+        target,
+        source,
+        canonicalName
+      ) => {
+
+        const merged =
+          target || {};
+
+
+        const sourceRecord =
+          source || {};
+
+
+        const isBuiltIn =
+          builtInConcepts.has(
+            canonicalName
+          );
 
 
         /*
-        Create concept if it
-        doesn't exist yet.
+        Identity
         */
 
-        if (
-          !existing
-            .concepts[
-              concept
-            ]
-        ) {
-
-          existing
-            .concepts[
-              concept
-            ] = {
-
-              concept,
-
-              writingEncounters:
-                0,
-
-              writingErrors:
-                0,
-
-              minorErrors:
-                0,
-
-              moderateErrors:
-                0,
-
-              majorErrors:
-                0,
-
-              priorityCount:
-                0,
-
-              lastSeen:
-                null,
-
-              evidence:
-                []
-
-            };
-
-        }
+        merged.name =
+          canonicalName;
 
 
-        const item =
-          existing
-            .concepts[
-              concept
-            ];
+        merged.concept =
+          merged.concept ||
+          sourceRecord.concept ||
+          canonicalName;
 
 
-        item.writingEncounters =
-          (
-            item.writingEncounters ||
-            0
-          ) + 1;
+        merged.label =
+          merged.label ||
+          sourceRecord.label ||
+          sourceRecord.concept ||
+          canonicalName;
 
 
-        item.writingErrors =
-          (
-            item.writingErrors ||
-            0
-          ) + 1;
+        merged.category =
+          merged.category ||
+          sourceRecord.category ||
+          "language";
 
 
-        const severity =
-          error.severity ||
-          "minor";
+        /*
+        Writing counters
+        */
+
+        merged.writingEncounters =
+          mergeNumber(
+            merged.writingEncounters,
+            sourceRecord.writingEncounters
+          );
 
 
-        if (
-          severity ===
-          "major"
-        ) {
+        merged.writingErrors =
+          mergeNumber(
+            merged.writingErrors,
+            sourceRecord.writingErrors
+          );
 
-          item.majorErrors =
-            (
-              item.majorErrors ||
-              0
-            ) + 1;
 
-        }
+        merged.minorErrors =
+          mergeNumber(
+            merged.minorErrors,
+            sourceRecord.minorErrors
+          );
 
-        else if (
-          severity ===
-          "moderate"
-        ) {
 
-          item.moderateErrors =
-            (
-              item.moderateErrors ||
-              0
-            ) + 1;
+        merged.moderateErrors =
+          mergeNumber(
+            merged.moderateErrors,
+            sourceRecord.moderateErrors
+          );
+
+
+        merged.majorErrors =
+          mergeNumber(
+            merged.majorErrors,
+            sourceRecord.majorErrors
+          );
+
+
+        merged.priorityCount =
+          mergeNumber(
+            merged.priorityCount,
+            sourceRecord.priorityCount
+          );
+
+
+        /*
+        Discovery metadata
+        */
+
+        if (isBuiltIn) {
+
+          merged.origin =
+            "built_in";
+
+
+          merged.discoveryCount =
+            0;
+
+
+          merged.discoveredAt =
+            null;
+
+
+          merged.learningTopic =
+            true;
 
         }
 
         else {
 
-          item.minorErrors =
-            (
-              item.minorErrors ||
-              0
-            ) + 1;
+          merged.origin =
+            "discovered";
+
+
+          merged.discoveryCount =
+            mergeNumber(
+              merged.discoveryCount,
+              sourceRecord.discoveryCount
+            );
+
+
+          merged.discoveredAt =
+            mergeEarliestDate(
+              merged.discoveredAt,
+              sourceRecord.discoveredAt
+            );
+
+
+          merged.promoted =
+            merged.promoted === true ||
+            sourceRecord.promoted === true;
+
+
+          merged.promotedAt =
+            mergeEarliestDate(
+              merged.promotedAt,
+              sourceRecord.promotedAt
+            );
+
+
+          merged.learningTopic =
+            merged.promoted === true ||
+            sourceRecord.learningTopic ===
+              true;
 
         }
 
 
-        if (
-          priorityConcepts.has(
-            concept
+        /*
+        Last seen
+        */
+
+        merged.lastSeen =
+          mergeLatestDate(
+            merged.lastSeen,
+            sourceRecord.lastSeen
+          );
+
+
+        /*
+        Evidence history
+        */
+
+        const targetEvidence =
+          Array.isArray(
+            merged.evidence
           )
-        ) {
+            ? merged.evidence
+            : [];
 
-          item.priorityCount =
-            (
-              item.priorityCount ||
-              0
-            ) + 1;
+
+        const sourceEvidence =
+          Array.isArray(
+            sourceRecord.evidence
+          )
+            ? sourceRecord.evidence
+            : [];
+
+
+        merged.evidence =
+          [
+            ...targetEvidence,
+            ...sourceEvidence
+          ]
+            .sort(
+              (a, b) => {
+
+                const aTime =
+                  new Date(
+                    a?.recordedAt ||
+                    0
+                  )
+                    .getTime();
+
+
+                const bTime =
+                  new Date(
+                    b?.recordedAt ||
+                    0
+                  )
+                    .getTime();
+
+
+                return aTime -
+                  bTime;
+
+              }
+            )
+            .slice(-20);
+
+
+        return merged;
+
+      };
+
+
+    /*
+    Build a clean canonical concept map.
+
+    This migration runs every time evidence is recorded,
+    making the operation safe for users who already have
+    old localStorage data.
+    */
+
+    const canonicalConcepts = {};
+
+
+    Object.entries(
+      existing.concepts
+    )
+      .forEach(
+        ([oldKey, oldConcept]) => {
+
+          const canonicalName =
+            normalizeConceptName(
+              oldConcept?.name ||
+              oldConcept?.concept ||
+              oldKey
+            );
+
+
+          if (!canonicalName) {
+
+            return;
+
+          }
+
+
+          canonicalConcepts[
+            canonicalName
+          ] =
+            mergeConceptRecords(
+              canonicalConcepts[
+                canonicalName
+              ],
+              oldConcept,
+              canonicalName
+            );
+
+        }
+      );
+
+
+    existing.concepts =
+      canonicalConcepts;
+
+
+    /*
+    ==================================================
+    OBSERVATIONS IN THIS EVALUATION
+    ==================================================
+
+    discoveryCount means:
+
+      "How many separate evaluations identified this
+       concept?"
+
+    It does NOT mean:
+
+      "How many individual errors had this concept?"
+
+    Therefore, if the AI returns two errors for the same
+    concept in one evaluation, discoveryCount increases
+    only once.
+    ==================================================
+    */
+
+    const conceptsObserved =
+      new Set();
+
+
+    errors.forEach(
+      error => {
+
+        const rawConcept =
+          error?.concept;
+
+
+        if (!rawConcept) {
+
+          return;
 
         }
 
 
-        item.lastSeen =
+        const concept =
+          normalizeConceptName(
+            rawConcept
+          );
+
+
+        if (!concept) {
+
+          return;
+
+        }
+
+
+        const isBuiltIn =
+          builtInConcepts.has(
+            concept
+          );
+
+
+        const now =
           new Date()
             .toISOString();
+
+
+        /*
+        ==================================================
+        CREATE CONCEPT
+        ==================================================
+        */
+
+        if (
+          !existing.concepts[
+            concept
+          ]
+        ) {
+
+          existing.concepts[
+            concept
+          ] = {
+
+            concept:
+              rawConcept,
+
+            name:
+              concept,
+
+            label:
+              String(
+                rawConcept
+              ).trim(),
+
+            category:
+              "language",
+
+            origin:
+              isBuiltIn
+                ? "built_in"
+                : "discovered",
+
+            discoveryCount:
+              0,
+
+            discoveredAt:
+              null,
+
+            promoted:
+              false,
+
+            promotedAt:
+              null,
+
+            learningTopic:
+              isBuiltIn,
+
+            writingEncounters:
+              0,
+
+            writingErrors:
+              0,
+
+            minorErrors:
+              0,
+
+            moderateErrors:
+              0,
+
+            majorErrors:
+              0,
+
+            priorityCount:
+              0,
+
+            lastSeen:
+              null,
+
+            evidence:
+              []
+
+          };
+
+        }
+
+
+        const item =
+          existing.concepts[
+            concept
+          ];
+
+
+        /*
+        ==================================================
+        ENSURE CURRENT SCHEMA
+        ==================================================
+        */
+
+        item.name =
+          concept;
+
+
+        item.concept =
+          item.concept ||
+          rawConcept;
+
+
+        item.label =
+          item.label ||
+          String(
+            rawConcept
+          ).trim();
+
+
+        item.category =
+          item.category ||
+          "language";
+
+
+        item.writingEncounters =
+          Number(
+            item.writingEncounters ||
+            0
+          );
+
+
+        item.writingErrors =
+          Number(
+            item.writingErrors ||
+            0
+          );
+
+
+        item.minorErrors =
+          Number(
+            item.minorErrors ||
+            0
+          );
+
+
+        item.moderateErrors =
+          Number(
+            item.moderateErrors ||
+            0
+          );
+
+
+        item.majorErrors =
+          Number(
+            item.majorErrors ||
+            0
+          );
+
+
+        item.priorityCount =
+          Number(
+            item.priorityCount ||
+            0
+          );
 
 
         if (
@@ -1287,16 +2052,190 @@ function recordWritingLearningEvidence(
         }
 
 
+        /*
+        ==================================================
+        DISCOVERY
+        ==================================================
+        */
+
+        if (isBuiltIn) {
+
+          item.origin =
+            "built_in";
+
+
+          item.discoveryCount =
+            0;
+
+
+          item.discoveredAt =
+            null;
+
+
+          item.learningTopic =
+            true;
+
+        }
+
+        else {
+
+          item.origin =
+            "discovered";
+
+
+          item.discoveryCount =
+            Number(
+              item.discoveryCount ||
+              0
+            );
+
+
+          if (
+            !conceptsObserved.has(
+              concept
+            )
+          ) {
+
+            item.discoveryCount +=
+              1;
+
+
+            if (
+              !item.discoveredAt
+            ) {
+
+              item.discoveredAt =
+                now;
+
+            }
+
+
+            conceptsObserved.add(
+              concept
+            );
+
+          }
+
+
+          item.promoted =
+            item.promoted ===
+            true;
+
+
+          item.promotedAt =
+            item.promotedAt ||
+            null;
+
+
+          item.learningTopic =
+            item.promoted ===
+            true;
+
+        }
+
+
+        /*
+        ==================================================
+        WRITING EVIDENCE
+        ==================================================
+        */
+
+        item.writingEncounters +=
+          1;
+
+
+        item.writingErrors +=
+          1;
+
+
+        /*
+        ==================================================
+        SEVERITY
+        ==================================================
+        */
+
+        const severity =
+          error.severity ||
+          "minor";
+
+
+        if (
+          severity ===
+          "major"
+        ) {
+
+          item.majorErrors +=
+            1;
+
+        }
+
+        else if (
+          severity ===
+          "moderate"
+        ) {
+
+          item.moderateErrors +=
+            1;
+
+        }
+
+        else {
+
+          item.minorErrors +=
+            1;
+
+        }
+
+
+        /*
+        ==================================================
+        PRIORITY SIGNAL
+        ==================================================
+        */
+
+        if (
+          normalizedPriorityConcepts
+            .has(
+              concept
+            )
+        ) {
+
+          item.priorityCount +=
+            1;
+
+        }
+
+
+        /*
+        ==================================================
+        LAST SEEN
+        ==================================================
+        */
+
+        item.lastSeen =
+          now;
+
+
+        /*
+        ==================================================
+        EVIDENCE HISTORY
+        ==================================================
+        */
+
         item.evidence.push({
 
           source:
             "writing",
 
           taskId:
-            task.id,
+            task?.id ||
+            null,
 
           level:
-            task.level,
+            task?.level ||
+            null,
+
+          concept,
 
           severity,
 
@@ -1307,15 +2246,10 @@ function recordWritingLearningEvidence(
             error.correction,
 
           recordedAt:
-            item.lastSeen
+            now
 
         });
 
-
-        /*
-        Keep localStorage from
-        growing forever.
-        */
 
         if (
           item.evidence.length >
@@ -1332,13 +2266,19 @@ function recordWritingLearningEvidence(
     );
 
 
+    /*
+    ==================================================
+    SAVE PROFILE
+    ==================================================
+    */
+
     existing.updatedAt =
       new Date()
         .toISOString();
 
 
     localStorage.setItem(
-      storageKey,
+      profileStorageKey,
 
       JSON.stringify(
         existing

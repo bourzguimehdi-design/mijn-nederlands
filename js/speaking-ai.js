@@ -1409,7 +1409,8 @@ function finishSpeakingAssessment() {
 
     assessmentVersion: 1,
 
-    skill: "speaking",
+    skill:
+      "speaking",
 
     completedAt,
 
@@ -1423,6 +1424,17 @@ function finishSpeakingAssessment() {
   ------------------------------------------
   SAVE
   ------------------------------------------
+
+  Save the speaking assessment first.
+
+  Only after the assessment has been
+  successfully persisted do we create a
+  progress snapshot.
+
+  This ensures that ProgressEngine sees
+  the newly completed speaking assessment
+  when it rebuilds the learner profile.
+  ------------------------------------------
   */
 
   try {
@@ -1430,6 +1442,39 @@ function finishSpeakingAssessment() {
     Storage.saveSpeakingAssessment(
       result
     );
+
+
+    /*
+    ------------------------------------------
+    SAVE PROGRESS SNAPSHOT
+    ------------------------------------------
+
+    ProgressEngine.getProgress() refreshes
+    ProfileEngine internally.
+
+    Therefore we do not need a separate
+    ProfileEngine.refresh() here.
+    ------------------------------------------
+    */
+
+    if (
+      typeof ProgressEngine !==
+        "undefined" &&
+      typeof ProgressEngine
+        .saveSnapshot ===
+        "function"
+    ) {
+
+      ProgressEngine.saveSnapshot();
+
+    } else {
+
+      console.warn(
+        "Progress snapshot engine is unavailable."
+      );
+
+    }
+
 
   } catch (error) {
 
@@ -1455,13 +1500,6 @@ function finishSpeakingAssessment() {
   showSpeakingScreen(
     "speakingComplete"
   );
-
-
-  /*
-  Profile/dashboard integration will use
-  the saved assessment. We keep this
-  controller independent of profile logic.
-  */
 
 }
 

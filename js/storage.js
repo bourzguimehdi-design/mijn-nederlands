@@ -31,6 +31,11 @@ const Storage = {
   PRACTICE_HISTORY_KEY:
     "mijnNederlandsPracticeHistory",
 
+      PROGRESS_KEY:
+    "mijnNederlandsProgress",
+
+  PROGRESS_HISTORY_KEY:
+    "mijnNederlandsProgressHistory",
 
   /*
   ==================================================
@@ -833,17 +838,317 @@ const Storage = {
       );
   },
 
+  /*
+  ==================================================
+  PROGRESS SNAPSHOTS
+  ==================================================
 
+  ProgressEngine calculates learner progress.
+
+  Storage only persists snapshots of that calculated
+  progress so that development over time can be
+  compared later.
+
+  A snapshot should normally be saved after meaningful
+  learner activity such as:
+
+  - placement assessment
+  - writing assessment
+  - speaking assessment
+  - practice session
+  ==================================================
+  */
+
+  saveProgressSnapshot(progress) {
+
+    if (!progress) {
+
+      console.warn(
+        "No progress snapshot supplied."
+      );
+
+      return null;
+
+    }
+
+
+    const generatedAt =
+      progress.generatedAt ||
+      new Date().toISOString();
+
+
+    const savedAt =
+      new Date().toISOString();
+
+
+    const savedSnapshot = {
+
+      ...progress,
+
+      generatedAt,
+
+      savedAt
+
+    };
+
+
+    /*
+    ------------------------------------------
+    LOAD HISTORY
+    ------------------------------------------
+    */
+
+    const history =
+      this.getProgressHistory();
+
+
+    /*
+    ------------------------------------------
+    PREVENT EXACT DUPLICATES
+    ------------------------------------------
+
+    generatedAt identifies one ProgressEngine
+    calculation.
+
+    This prevents accidentally saving the exact
+    same calculated snapshot twice.
+    ------------------------------------------
+    */
+
+    const alreadyExists =
+      history.some(
+        item =>
+          item.generatedAt ===
+          savedSnapshot.generatedAt
+      );
+
+
+    if (!alreadyExists) {
+
+      history.push(
+        savedSnapshot
+      );
+
+    }
+
+
+    /*
+    ------------------------------------------
+    KEEP CHRONOLOGICAL ORDER
+    ------------------------------------------
+    */
+
+    history.sort(
+      (a, b) =>
+        this.getResultTime(a) -
+        this.getResultTime(b)
+    );
+
+
+    /*
+    ------------------------------------------
+    SAVE HISTORY
+    ------------------------------------------
+    */
+
+    localStorage.setItem(
+      this.PROGRESS_HISTORY_KEY,
+      JSON.stringify(history)
+    );
+
+
+    /*
+    ------------------------------------------
+    SAVE LATEST SNAPSHOT
+    ------------------------------------------
+    */
+
+    localStorage.setItem(
+      this.PROGRESS_KEY,
+      JSON.stringify(savedSnapshot)
+    );
+
+
+    return savedSnapshot;
+
+  },
+
+
+  getProgressSnapshot() {
+
+    /*
+    Prefer the latest history item.
+
+    This keeps the latest snapshot and history
+    consistent even if old application versions
+    stored data differently.
+    */
+
+    const history =
+      this.getProgressHistory();
+
+
+    if (history.length > 0) {
+
+      return history[
+        history.length - 1
+      ];
+
+    }
+
+
+    try {
+
+      const stored =
+        localStorage.getItem(
+          this.PROGRESS_KEY
+        );
+
+
+      return stored
+        ? JSON.parse(stored)
+        : null;
+
+
+    } catch (error) {
+
+      console.warn(
+        "Could not read progress snapshot.",
+        error
+      );
+
+
+      return null;
+
+    }
+
+  },
+
+
+  getProgressHistory() {
+
+    try {
+
+      const stored =
+        localStorage.getItem(
+          this.PROGRESS_HISTORY_KEY
+        );
+
+
+      if (!stored) {
+
+        return [];
+
+      }
+
+
+      const history =
+        JSON.parse(stored);
+
+
+      if (!Array.isArray(history)) {
+
+        return [];
+
+      }
+
+
+      /*
+      Always expose progress history in
+      chronological order.
+      */
+
+      return history
+        .slice()
+        .sort(
+          (a, b) =>
+            this.getResultTime(a) -
+            this.getResultTime(b)
+        );
+
+
+    } catch (error) {
+
+      console.warn(
+        "Could not read progress history.",
+        error
+      );
+
+
+      return [];
+
+    }
+
+  },
+
+
+  getLatestProgressSnapshot() {
+
+    const history =
+      this.getProgressHistory();
+
+
+    if (history.length > 0) {
+
+      return history[
+        history.length - 1
+      ];
+
+    }
+
+
+    return this.getProgressSnapshot();
+
+  },
+
+
+  getPreviousProgressSnapshots() {
+
+    return this
+      .getProgressHistory()
+      .slice()
+      .reverse();
+
+  },
+
+
+  clearProgressSnapshot() {
+
+    localStorage.removeItem(
+      this.PROGRESS_KEY
+    );
+
+  },
+
+
+  clearAllProgressData() {
+
+    localStorage.removeItem(
+      this.PROGRESS_KEY
+    );
+
+
+    localStorage.removeItem(
+      this.PROGRESS_HISTORY_KEY
+    );
+
+  },
   /*
   ==================================================
   SHARED HELPERS
   ==================================================
   */
 
-  getResultTime(result) {
+    getResultTime(result) {
+
+    if (!result) {
+      return 0;
+    }
+
 
     const value =
       result.completedAt ||
+      result.generatedAt ||
       result.savedAt ||
       result.migratedAt;
 
@@ -857,8 +1162,8 @@ const Storage = {
     return Number.isFinite(time)
       ? time
       : 0;
-  }
 
+  }
 };
 
 

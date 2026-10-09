@@ -1180,11 +1180,12 @@ function finishWritingAssessment() {
 
 
   Storage.saveWritingAssessment(
-    result
-  );
+  result
+);
 
+ProfileEngine.refresh();
 
-  ProfileEngine.refresh();
+ProgressEngine.saveSnapshot();
 
 
 } catch (error) {
@@ -1301,9 +1302,27 @@ function showResults() {
   );
 
 
-  Storage.savePlacementResult(
-    result
-  );
+  try {
+
+    Storage.savePlacementResult(
+      result
+    );
+
+
+    ProfileEngine.refresh();
+
+
+    ProgressEngine.saveSnapshot();
+
+
+  } catch (error) {
+
+    console.warn(
+      "Could not save placement progress.",
+      error
+    );
+
+  }
 
 
   window.scrollTo(

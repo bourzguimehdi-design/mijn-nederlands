@@ -74,11 +74,53 @@ const StudyPlanEngine = {
     */
 
 
-    const priorities =
-      ProfileEngine.getPriorityConcepts(
-        learner,
-        10
-      );
+    /*
+------------------------------------------
+ACTIVE CURRICULUM CONCEPTS
+------------------------------------------
+
+Only concepts that are part of the learner's
+active curriculum may enter study-plan
+scheduling.
+
+This includes:
+
+- built-in learning topics
+- discovered concepts after promotion
+
+Unpromoted discovered/assessment concepts
+remain evidence only and cannot enter the
+study plan.
+*/
+
+const priorities =
+  Object.values(
+    learner.concepts || {}
+  )
+    .filter(
+      concept =>
+        concept &&
+        concept.learningTopic === true
+    )
+    .sort(
+      (a, b) => {
+
+        const scoreA =
+          ProfileEngine
+            .getConceptPriorityScore(
+              a
+            );
+
+        const scoreB =
+          ProfileEngine
+            .getConceptPriorityScore(
+              b
+            );
+
+        return scoreB - scoreA;
+
+      }
+    );
 
 
     const adaptivePriorities =
@@ -305,38 +347,7 @@ const StudyPlanEngine = {
             It can be removed later.
             */
 
-            console.log(
-              "[PLAN SCORE]",
-              {
-                concept:
-                  concept.name,
-
-                mastery,
-
-                masteryNeed,
-
-                recentSuccesses,
-
-                recentFailures,
-
-                recentSignal,
-
-                lastPracticeAt:
-                  concept.lastPracticeAt,
-
-                daysSincePractice:
-                  Math.round(
-                    daysSincePractice * 10
-                  ) / 10,
-
-                recencyBonus,
-
-                adaptiveScore:
-                  Math.round(
-                    adaptiveScore * 10
-                  ) / 10
-              }
-            );
+           
 
 
             return {
@@ -577,85 +588,30 @@ const StudyPlanEngine = {
 
 
     /*
-    ------------------------------------------
-    4. KNM
-    ------------------------------------------
+    KNM and spaced review are not yet implemented as interactive
+    activities. Replace their time with working skill sessions.
+    Distinct IDs avoid ambiguity in daily completion tracking.
     */
-
-    if (
-      learner.skills &&
-      learner.skills.knm
-    ) {
-
-      this.addActivity(
-        plan,
-        {
-          id:
-            "knm-daily",
-
-          type:
-            "knm",
-
-          icon:
-            "🇳🇱",
-
-          title:
-            "KNM",
-
-          subtitle:
-            learner.skills.knm.assessed
-              ? "Knowledge of Dutch society"
-              : "Start building your knowledge of Dutch society",
-
-          minutes:
-            isWeekend
-              ? 20
-              : 15,
-
-          priority:
-            learner.skills.knm.assessed
-              ? "normal"
-              : "high",
-
-          skill:
-            "knm"
-        }
-      );
-
-    }
-
-
-    /*
-    ------------------------------------------
-    5. REVIEW
-    ------------------------------------------
-    */
-
-    this.addActivity(
-      plan,
-      {
-        id:
-          "daily-review",
-
-        type:
-          "review",
-
-        icon:
-          "🔁",
-
-        title:
-          "Review",
-
-        subtitle:
-          "Revisit vocabulary and recent mistakes",
-
-        minutes:
-          5,
-
-        priority:
-          "normal"
-      }
+    const alreadyUsed = new Set(
+      plan.activities.filter(a => a.skill).map(a => a.skill)
     );
+    const rotation = ["listening", "reading", "vocabulary", "grammar", "speaking", "writing"];
+    const dayOffset = Math.floor(date.getTime() / 86400000) % rotation.length;
+    const ordered = rotation.slice(dayOffset).concat(rotation.slice(0, dayOffset));
+    const supplements = ordered.filter(skill => !alreadyUsed.has(skill));
+    [15, 5].forEach((minutes, index) => {
+      const skill = supplements[index] || ordered[index];
+      this.addActivity(plan, {
+        id: `extra-${index}-${skill}`,
+        type: "skill",
+        icon: this.getSkillIcon(skill),
+        title: this.formatConcept(skill),
+        subtitle: "Additional Dutch practice (KNM and review are in development)",
+        minutes,
+        priority: "normal",
+        skill
+      });
+    });
 
 
     /*
@@ -742,10 +698,20 @@ const StudyPlanEngine = {
     ------------------------------------------
     */
 
-    this.fitToTime(
-      plan
-    );
+    this.fitToTime(plan);
 
+    // Use the full available study budget with functioning activities.
+    // fitToTime only reduces over-budget plans, so distribute any surplus.
+    let spare = Math.max(0, plan.availableMinutes - plan.plannedMinutes);
+    let i = 0;
+    while (spare > 0 && plan.activities.length) {
+      const activity = plan.activities[i % plan.activities.length];
+      const increment = Math.min(5, spare);
+      activity.minutes += increment;
+      plan.plannedMinutes += increment;
+      spare -= increment;
+      i++;
+    }
 
     return plan;
 
