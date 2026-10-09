@@ -794,4 +794,2655 @@ button:active {
   font-size: 12px;
   font-weight: 500;
   color: var(--muted);
+}/* ==================================================
+   PRACTICE UI
+   ================================================== */
+
+
+/*
+--------------------------------------------------
+SCREEN / SHELL
+--------------------------------------------------
+*/
+
+.practice-shell {
+  width: 100%;
 }
+
+
+.practice-card {
+  margin-top: 20px;
+  padding: 0;
+}
+
+
+/*
+--------------------------------------------------
+HEADER
+--------------------------------------------------
+*/
+
+.practice-header {
+  margin-bottom: 20px;
+}
+
+
+.practice-header h1 {
+  margin-bottom: 6px;
+}
+
+
+.practice-header .small {
+  margin-top: 0;
+}
+
+
+/*
+--------------------------------------------------
+SKILL + LEVEL
+--------------------------------------------------
+*/
+
+.practice-skill-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+
+.practice-skill-name {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+
+  color: var(--muted);
+}
+
+
+.practice-skill-level {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 42px;
+
+  padding: 6px 10px;
+
+  background: #f2f4f7;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+PROGRESS
+--------------------------------------------------
+*/
+
+.practice-progress {
+  margin-bottom: 24px;
+}
+
+
+.practice-progress-bar {
+  width: 100%;
+  height: 7px;
+
+  overflow: hidden;
+
+  background: #eaecf0;
+
+  border-radius: 999px;
+}
+
+
+.practice-progress-fill {
+  height: 100%;
+
+  background: var(--ink);
+
+  border-radius: inherit;
+
+  transition: width 0.3s ease;
+}
+
+
+.practice-progress-label {
+  margin-top: 9px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: var(--muted);
+}
+
+
+/*
+--------------------------------------------------
+SECTION LABEL
+--------------------------------------------------
+*/
+
+.practice-card-label {
+  margin-bottom: 10px;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+
+  color: var(--muted);
+}
+
+
+/*
+--------------------------------------------------
+INSTRUCTION
+--------------------------------------------------
+*/
+
+.practice-instruction {
+  margin: 0 0 16px;
+
+  font-size: 15px;
+  line-height: 1.55;
+
+  color: var(--muted);
+}
+
+
+/*
+--------------------------------------------------
+READING / LISTENING CONTEXT
+--------------------------------------------------
+
+This is deliberately similar to .reading-text
+from the assessment UI.
+
+The context needs to look like material the
+learner should study, not ordinary body text.
+--------------------------------------------------
+*/
+
+.practice-context {
+  margin: 16px 0 22px;
+
+  padding: 18px;
+
+  background: var(--soft);
+
+  border: 1px solid #eceef1;
+
+  border-radius: 14px;
+
+  font-size: 16px;
+  line-height: 1.7;
+
+  white-space: pre-wrap;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+QUESTION
+--------------------------------------------------
+*/
+
+.practice-question {
+  margin: 22px 0 16px;
+
+  font-size: 22px;
+  line-height: 1.35;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+MULTIPLE CHOICE
+--------------------------------------------------
+*/
+
+.practice-options {
+  display: grid;
+
+  gap: 10px;
+
+  margin: 8px 0 18px;
+}
+
+
+/*
+The whole label behaves like the answer card.
+*/
+
+.practice-option {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  width: 100%;
+
+  padding: 14px 15px;
+
+  background: white;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 13px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+
+.practice-option:hover {
+  background: var(--soft);
+}
+
+
+.practice-option:active {
+  transform: scale(0.995);
+}
+
+
+/*
+Native radio button.
+
+We keep it visible so selection is obvious and
+keyboard/browser accessibility still works.
+*/
+
+.practice-option-input {
+  width: 18px;
+  height: 18px;
+
+  margin: 2px 0 0;
+
+  flex-shrink: 0;
+
+  accent-color: var(--ink);
+
+  cursor: pointer;
+}
+
+
+.practice-option-text {
+  min-width: 0;
+
+  font-size: 15px;
+  line-height: 1.45;
+
+  color: var(--ink);
+}
+
+
+/*
+Selected answer gets a stronger card outline.
+*/
+
+.practice-option:has(
+  .practice-option-input:checked
+) {
+  background: #f8f9fa;
+
+  border-color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+CHECK ANSWER BUTTON
+--------------------------------------------------
+*/
+
+.practice-primary-button {
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 15px 18px;
+
+  border: none;
+  border-radius: 13px;
+
+  background: var(--ink);
+
+  color: white;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+}
+
+
+.practice-primary-button:hover {
+  background: #25334d;
+}
+
+
+.practice-primary-button:active {
+  transform: scale(0.99);
+}
+
+
+.practice-primary-button:disabled {
+  opacity: 0.55;
+
+  cursor: default;
+
+  transform: none;
+}
+
+
+.practice-check-button {
+  margin-top: 6px;
+}
+
+
+/*
+--------------------------------------------------
+TEXT ANSWER
+--------------------------------------------------
+*/
+
+.practice-answer-area {
+  margin-top: 14px;
+}
+
+
+.practice-answer-input {
+  width: 100%;
+  min-height: 130px;
+
+  padding: 15px;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 14px;
+
+  background: white;
+
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.55;
+
+  color: var(--ink);
+
+  resize: vertical;
+
+  outline: none;
+}
+
+
+.practice-answer-input:focus {
+  border-color: var(--ink);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(23, 32, 42, 0.06);
+}
+
+
+/*
+--------------------------------------------------
+HINT
+--------------------------------------------------
+
+Hints should be available without competing with
+the actual question.
+--------------------------------------------------
+*/
+
+.practice-hint {
+  margin-top: 20px;
+
+  padding: 12px 14px;
+
+  background: #fcfcfd;
+
+  border-left: 3px solid #d0d5dd;
+
+  border-radius: 0 10px 10px 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: var(--muted);
+}
+
+
+.practice-hint strong {
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+EXPLANATION / LEARN STAGE
+--------------------------------------------------
+*/
+
+.practice-explanation {
+  margin: 12px 0 20px;
+
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+
+.practice-rule {
+  margin: 18px 0;
+
+  padding: 16px;
+
+  background: var(--soft);
+
+  border-radius: 14px;
+}
+
+
+.practice-rule strong {
+  display: block;
+
+  margin-bottom: 5px;
+}
+
+
+.practice-rule p {
+  margin: 0;
+
+  line-height: 1.6;
+}
+
+
+.practice-examples {
+  margin: 22px 0;
+}
+
+
+.practice-examples h3 {
+  margin: 0 0 10px;
+
+  font-size: 15px;
+}
+
+
+.practice-example {
+  padding: 11px 0;
+
+  border-bottom: 1px solid #eee;
+
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+
+.practice-example:last-child {
+  border-bottom: none;
+}
+
+
+/*
+--------------------------------------------------
+FEEDBACK
+--------------------------------------------------
+*/
+
+.practice-feedback {
+  margin-top: 22px;
+
+  padding: 17px;
+
+  border-radius: 14px;
+
+  line-height: 1.55;
+}
+
+
+.practice-feedback h3 {
+  margin: 0 0 12px;
+
+  font-size: 18px;
+}
+
+
+.practice-feedback p {
+  margin: 9px 0;
+}
+
+
+.practice-feedback-correct {
+  background: var(--success);
+}
+
+
+.practice-feedback-review {
+  background: #fff6ed;
+}
+
+
+/*
+The Continue button sits inside feedback.
+*/
+
+.practice-feedback
+.practice-primary-button {
+  margin-top: 16px;
+}
+
+
+/*
+--------------------------------------------------
+COMPLETION
+--------------------------------------------------
+*/
+
+.practice-complete-score {
+  margin: 18px 0 8px;
+
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+
+/*
+--------------------------------------------------
+LOADING / ERROR
+--------------------------------------------------
+*/
+
+.practice-loading {
+  padding: 60px 10px;
+
+  text-align: center;
+}
+
+
+.practice-error {
+  padding: 18px;
+
+  background: #fef3f2;
+
+  border-radius: 14px;
+}
+
+
+/*
+--------------------------------------------------
+MOBILE
+--------------------------------------------------
+*/
+
+@media (max-width: 520px) {
+
+  .practice-card {
+    margin-top: 18px;
+  }
+
+
+  .practice-progress {
+    margin-bottom: 20px;
+  }
+
+
+  .practice-context {
+    padding: 16px;
+
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+
+  .practice-question {
+    margin-top: 19px;
+
+    font-size: 20px;
+    line-height: 1.35;
+  }
+
+
+  .practice-option {
+    padding: 13px;
+  }
+
+
+  .practice-option-text {
+    font-size: 15px;
+  }
+
+
+  .practice-primary-button {
+    padding: 14px 16px;
+  }
+
+}
+
+
+/*
+--------------------------------------------------
+VERY SMALL SCREENS
+--------------------------------------------------
+*/
+
+@media (max-width: 380px) {
+
+  .practice-skill-meta {
+    margin-bottom: 15px;
+  }
+
+
+  .practice-context {
+    padding: 14px;
+  }
+
+
+  .practice-question {
+    font-size: 19px;
+  }
+
+
+  .practice-option {
+    gap: 10px;
+
+    padding: 12px;
+  }
+
+}/* ==================================================
+   TODAY'S PLAN — UI REFINEMENT
+   ================================================== */
+
+
+/*
+--------------------------------------------------
+PLAN SECTIONS
+--------------------------------------------------
+*/
+
+.dashboard-plan-section {
+  width: 100%;
+}
+
+
+.dashboard-focus-section {
+  margin-bottom: 24px;
+}
+
+
+.dashboard-practice-section {
+  display: grid;
+  gap: 10px;
+}
+
+
+/*
+--------------------------------------------------
+SECTION LABELS
+--------------------------------------------------
+*/
+
+.dashboard-plan-section-label,
+.dashboard-focus-label {
+  font-size: 12px;
+  line-height: 1.2;
+
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+
+  text-transform: uppercase;
+
+  color: var(--muted);
+}
+
+
+.dashboard-plan-section-label {
+  margin:
+    0
+    0
+    2px
+    2px;
+}
+
+
+.dashboard-focus-label {
+  margin-bottom: 7px;
+}
+
+
+/*
+--------------------------------------------------
+ACTIVITY CARDS
+--------------------------------------------------
+*/
+
+.dashboard-activity {
+  display: grid;
+
+  grid-template-columns:
+    52px
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 14px;
+
+  width: 100%;
+
+  min-height: 92px;
+
+  padding:
+    16px
+    18px;
+
+  margin: 0;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #e1e4e8;
+
+  border-radius: 15px;
+
+  color: var(--ink);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.1s ease;
+}
+
+
+.dashboard-activity:hover {
+  background: #fafbfc;
+
+  border-color: #cfd4da;
+}
+
+
+.dashboard-activity:active {
+  transform: scale(0.995);
+}
+
+
+/*
+--------------------------------------------------
+FOCUS CARD
+--------------------------------------------------
+*/
+
+.dashboard-activity-focus {
+  min-height: 112px;
+
+  padding:
+    18px;
+
+  background: var(--soft);
+
+  border-color: #dfe3e8;
+}
+
+
+.dashboard-activity-focus:hover {
+  background: #f3f5f7;
+
+  border-color: #cbd1d8;
+}
+
+
+/*
+--------------------------------------------------
+ICON
+--------------------------------------------------
+*/
+
+.dashboard-activity-icon {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 52px;
+  height: 52px;
+
+  font-size: 27px;
+  line-height: 1;
+
+  flex-shrink: 0;
+}
+
+
+/*
+KNM currently uses the text "NL" rather
+than an emoji. Keep it visually balanced.
+*/
+
+.dashboard-activity-icon {
+  font-weight: 700;
+}
+
+
+/*
+--------------------------------------------------
+MAIN CONTENT
+--------------------------------------------------
+*/
+
+.dashboard-activity-main {
+  min-width: 0;
+}
+
+
+.dashboard-activity-title {
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 6px;
+
+  margin: 0;
+
+  font-size: 18px;
+  line-height: 1.3;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+.dashboard-activity-number {
+  flex-shrink: 0;
+}
+
+
+.dashboard-activity-subtitle {
+  margin-top: 4px;
+
+  font-size: 14px;
+  line-height: 1.4;
+
+  font-weight: 400;
+
+  color: var(--muted);
+}
+
+
+/*
+--------------------------------------------------
+TIME
+--------------------------------------------------
+*/
+
+.dashboard-activity-time {
+  padding-left: 10px;
+
+  white-space: nowrap;
+
+  font-size: 14px;
+  line-height: 1;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+FOCUS TYPOGRAPHY
+--------------------------------------------------
+*/
+
+.dashboard-activity-focus
+.dashboard-activity-title {
+  font-size: 19px;
+}
+
+
+.dashboard-activity-focus
+.dashboard-activity-subtitle {
+  max-width: 330px;
+}
+
+
+/*
+--------------------------------------------------
+SPACE BETWEEN PRACTICE CARDS
+--------------------------------------------------
+*/
+
+.dashboard-practice-section
+.dashboard-activity {
+  margin: 0;
+}
+
+
+/*
+--------------------------------------------------
+MOBILE
+--------------------------------------------------
+*/
+
+@media (max-width: 520px) {
+
+  .dashboard-focus-section {
+    margin-bottom: 21px;
+  }
+
+
+  .dashboard-practice-section {
+    gap: 9px;
+  }
+
+
+  .dashboard-activity {
+    grid-template-columns:
+      44px
+      minmax(0, 1fr)
+      auto;
+
+    gap: 11px;
+
+    min-height: 82px;
+
+    padding:
+      14px
+      14px;
+
+    border-radius: 14px;
+  }
+
+
+  .dashboard-activity-focus {
+    min-height: 104px;
+
+    padding:
+      16px
+      14px;
+  }
+
+
+  .dashboard-activity-icon {
+    width: 44px;
+    height: 44px;
+
+    font-size: 24px;
+  }
+
+
+  .dashboard-activity-title {
+    gap: 5px;
+
+    font-size: 17px;
+  }
+
+
+  .dashboard-activity-focus
+  .dashboard-activity-title {
+    font-size: 18px;
+  }
+
+
+  .dashboard-activity-subtitle {
+    margin-top: 3px;
+
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+
+  .dashboard-activity-time {
+    padding-left: 5px;
+
+    font-size: 13px;
+  }
+
+
+  .dashboard-plan-section-label,
+  .dashboard-focus-label {
+    font-size: 11px;
+  }
+
+}
+
+
+/*
+--------------------------------------------------
+VERY SMALL SCREENS
+--------------------------------------------------
+*/
+
+@media (max-width: 380px) {
+
+  .dashboard-activity {
+    grid-template-columns:
+      38px
+      minmax(0, 1fr)
+      auto;
+
+    gap: 9px;
+
+    padding:
+      13px
+      11px;
+  }
+
+
+  .dashboard-activity-icon {
+    width: 38px;
+    height: 38px;
+
+    font-size: 22px;
+  }
+
+
+  .dashboard-activity-title {
+    font-size: 16px;
+  }
+
+
+  .dashboard-activity-focus
+  .dashboard-activity-title {
+    font-size: 17px;
+  }
+
+
+  .dashboard-activity-subtitle {
+    font-size: 12px;
+  }
+
+
+  .dashboard-activity-time {
+    font-size: 12px;
+  }
+
+}/* ==================================================
+   PRACTICE UI — CLEANUP
+   ================================================== */
+
+
+/*
+--------------------------------------------------
+PRACTICE SHELL
+--------------------------------------------------
+*/
+
+.practice-shell {
+  width: 100%;
+  max-width: 760px;
+
+  margin: 0 auto;
+
+  padding:
+    24px
+    24px
+    48px;
+}
+
+
+/*
+--------------------------------------------------
+HEADER
+--------------------------------------------------
+*/
+
+.practice-header {
+  margin-bottom: 22px;
+}
+
+
+.practice-eyebrow {
+  margin-bottom: 6px;
+
+  font-size: 11px;
+  line-height: 1.2;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+
+  color: var(--muted);
+}
+
+
+.practice-header h1 {
+  margin: 0;
+
+  font-size: 28px;
+  line-height: 1.15;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+.practice-header p {
+  margin:
+    6px
+    0
+    0;
+
+  font-size: 14px;
+  line-height: 1.4;
+
+  color: var(--muted);
+}
+
+
+/*
+--------------------------------------------------
+PROGRESS
+--------------------------------------------------
+*/
+
+.practice-progress {
+  margin-bottom: 24px;
+}
+
+
+.practice-progress-bar {
+  width: 100%;
+  height: 6px;
+
+  overflow: hidden;
+
+  background: #e9ebef;
+
+  border-radius: 999px;
+}
+
+
+.practice-progress-fill {
+  height: 100%;
+
+  background: var(--ink);
+
+  border-radius: inherit;
+
+  transition:
+    width 0.25s ease;
+}
+
+
+.practice-progress-label {
+  margin-top: 8px;
+
+  font-size: 13px;
+  line-height: 1.3;
+
+  font-weight: 600;
+
+  color: var(--muted);
+}
+
+
+/*
+--------------------------------------------------
+MAIN PRACTICE CARD
+--------------------------------------------------
+*/
+
+.practice-card {
+  width: 100%;
+
+  padding:
+    28px;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #e2e5e9;
+
+  border-radius: 18px;
+}
+
+
+/*
+--------------------------------------------------
+SKILL META
+--------------------------------------------------
+*/
+
+.practice-skill-meta {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 18px;
+}
+
+
+.practice-skill-name {
+  font-size: 13px;
+  line-height: 1;
+
+  font-weight: 700;
+
+  color: var(--muted);
+}
+
+
+.practice-skill-level {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 34px;
+  height: 26px;
+
+  padding:
+    0
+    9px;
+
+  background: #f1f3f6;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  line-height: 1;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+PRACTICE LABEL
+--------------------------------------------------
+*/
+
+.practice-card-label {
+  margin-bottom: 12px;
+
+  font-size: 11px;
+  line-height: 1.2;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  color: var(--muted);
+
+  text-transform: uppercase;
+}
+
+
+/*
+--------------------------------------------------
+INSTRUCTION
+--------------------------------------------------
+*/
+
+.practice-instruction {
+  margin:
+    0
+    0
+    18px;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+READING / LISTENING CONTEXT
+--------------------------------------------------
+
+The context is supporting material, not the
+question itself. Give it its own visual area.
+--------------------------------------------------
+*/
+
+.practice-context {
+  margin:
+    0
+    0
+    24px;
+
+  padding:
+    18px
+    20px;
+
+  background: #f7f8fa;
+
+  border:
+    1px solid
+    #eceef1;
+
+  border-radius: 14px;
+
+  font-size: 16px;
+  line-height: 1.65;
+
+  color: var(--ink);
+
+  white-space: pre-line;
+}
+
+
+/*
+--------------------------------------------------
+QUESTION
+--------------------------------------------------
+*/
+
+.practice-question {
+  margin:
+    0
+    0
+    22px;
+
+  max-width: 680px;
+
+  font-size: 24px;
+  line-height: 1.3;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+MULTIPLE CHOICE
+--------------------------------------------------
+*/
+
+.practice-options {
+  display: grid;
+
+  gap: 10px;
+
+  margin-top: 4px;
+}
+
+
+.practice-option {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  width: 100%;
+
+  min-height: 58px;
+
+  padding:
+    14px
+    16px;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #d9dde3;
+
+  border-radius: 13px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.practice-option:hover {
+  background: #fafbfc;
+
+  border-color: #bcc3cc;
+}
+
+
+/*
+Hide the browser radio visually, but keep it
+accessible and usable by the existing JS.
+*/
+
+.practice-option-input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+
+.practice-option-text {
+  display: flex;
+
+  align-items: center;
+
+  width: 100%;
+
+  font-size: 16px;
+  line-height: 1.4;
+
+  color: var(--ink);
+}
+
+
+/*
+Selected answer
+*/
+
+.practice-option:has(
+  .practice-option-input:checked
+) {
+  background: #f2f4f7;
+
+  border-color: var(--ink);
+
+  box-shadow:
+    inset 0 0 0 1px
+    var(--ink);
+}
+
+
+/*
+Small selection marker
+*/
+
+.practice-option-text::before {
+  content: "";
+
+  width: 18px;
+  height: 18px;
+
+  margin-right: 13px;
+
+  flex-shrink: 0;
+
+  border:
+    1.5px solid
+    #aeb5bf;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+}
+
+
+.practice-option-input:checked
++
+.practice-option-text::before {
+  border:
+    5px solid
+    var(--ink);
+}
+
+
+/*
+Keyboard accessibility
+*/
+
+.practice-option:has(
+  .practice-option-input:focus-visible
+) {
+  outline:
+    2px solid
+    var(--ink);
+
+  outline-offset: 2px;
+}
+
+
+/*
+--------------------------------------------------
+CHECK BUTTON
+--------------------------------------------------
+*/
+
+.practice-check-button {
+  width: 100%;
+
+  margin-top: 18px;
+}
+
+
+.practice-primary-button {
+  min-height: 50px;
+
+  padding:
+    13px
+    20px;
+
+  border: 0;
+
+  border-radius: 12px;
+
+  background: var(--ink);
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 15px;
+  line-height: 1.2;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.1s ease;
+}
+
+
+.practice-primary-button:hover {
+  opacity: 0.92;
+}
+
+
+.practice-primary-button:active {
+  transform: scale(0.99);
+}
+
+
+.practice-primary-button:disabled {
+  opacity: 0.45;
+
+  cursor: default;
+}
+
+
+/*
+--------------------------------------------------
+TEXT ANSWERS
+--------------------------------------------------
+*/
+
+.practice-answer-area {
+  display: grid;
+
+  gap: 14px;
+}
+
+
+.practice-answer-input {
+  width: 100%;
+
+  min-height: 120px;
+
+  padding:
+    15px
+    16px;
+
+  resize: vertical;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #d9dde3;
+
+  border-radius: 13px;
+
+  font-family: inherit;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  color: var(--ink);
+
+  outline: none;
+}
+
+
+.practice-answer-input:focus {
+  border-color: var(--ink);
+
+  box-shadow:
+    0 0 0 1px
+    var(--ink);
+}
+
+
+.practice-answer-input::placeholder {
+  color: #9aa1aa;
+}
+
+
+/*
+--------------------------------------------------
+HINT
+--------------------------------------------------
+*/
+
+.practice-hint {
+  margin-top: 20px;
+
+  padding-top: 16px;
+
+  border-top:
+    1px solid
+    #eceef1;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  color: var(--muted);
+}
+
+
+.practice-hint strong {
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+FEEDBACK
+--------------------------------------------------
+*/
+
+.practice-feedback {
+  margin-top: 22px;
+
+  padding:
+    18px;
+
+  border-radius: 14px;
+}
+
+
+.practice-feedback h3 {
+  margin:
+    0
+    0
+    10px;
+
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+
+.practice-feedback p {
+  margin:
+    8px
+    0;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+.practice-feedback-correct {
+  background: #f4f7f5;
+
+  border:
+    1px solid
+    #dce6df;
+}
+
+
+.practice-feedback-review {
+  background: #faf7f3;
+
+  border:
+    1px solid
+    #ebe1d5;
+}
+
+
+/*
+--------------------------------------------------
+TABLET / MOBILE
+--------------------------------------------------
+*/
+
+@media (max-width: 640px) {
+
+  .practice-shell {
+    padding:
+      18px
+      16px
+      36px;
+  }
+
+
+  .practice-header {
+    margin-bottom: 18px;
+  }
+
+
+  .practice-header h1 {
+    font-size: 24px;
+  }
+
+
+  .practice-progress {
+    margin-bottom: 18px;
+  }
+
+
+  .practice-card {
+    padding:
+      20px
+      18px;
+
+    border-radius: 16px;
+  }
+
+
+  .practice-context {
+    margin-bottom: 20px;
+
+    padding:
+      15px
+      16px;
+
+    font-size: 15px;
+    line-height: 1.6;
+
+    border-radius: 12px;
+  }
+
+
+  .practice-question {
+    margin-bottom: 18px;
+
+    font-size: 21px;
+    line-height: 1.3;
+  }
+
+
+  .practice-instruction {
+    margin-bottom: 15px;
+
+    font-size: 15px;
+  }
+
+
+  .practice-options {
+    gap: 9px;
+  }
+
+
+  .practice-option {
+    min-height: 56px;
+
+    padding:
+      13px
+      14px;
+
+    border-radius: 12px;
+  }
+
+
+  .practice-option-text {
+    font-size: 15px;
+  }
+
+
+  .practice-primary-button {
+    min-height: 48px;
+  }
+
+}
+
+
+/*
+--------------------------------------------------
+VERY SMALL SCREENS
+--------------------------------------------------
+*/
+
+@media (max-width: 380px) {
+
+  .practice-shell {
+    padding:
+      15px
+      12px
+      30px;
+  }
+
+
+  .practice-card {
+    padding:
+      18px
+      14px;
+  }
+
+
+  .practice-header h1 {
+    font-size: 22px;
+  }
+
+
+  .practice-question {
+    font-size: 19px;
+  }
+
+
+  .practice-context,
+  .practice-option-text,
+  .practice-answer-input {
+    font-size: 14px;
+  }
+
+}/* ==================================================
+   PRACTICE EXPLANATION / MINI LESSON
+   ================================================== */
+
+
+/*
+--------------------------------------------------
+EXPLANATION CARD
+--------------------------------------------------
+*/
+
+.practice-card h2 {
+  margin:
+    0
+    0
+    14px;
+
+  font-size: 24px;
+  line-height: 1.25;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+MAIN EXPLANATION
+--------------------------------------------------
+*/
+
+.practice-explanation {
+  margin:
+    0
+    0
+    20px;
+
+  max-width: 680px;
+
+  font-size: 16px;
+  line-height: 1.6;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+REMEMBER / RULE BOX
+--------------------------------------------------
+*/
+
+.practice-rule {
+  margin:
+    20px
+    0;
+
+  padding:
+    16px
+    18px;
+
+  background: #f7f8fa;
+
+  border:
+    1px solid
+    #eceef1;
+
+  border-radius: 14px;
+}
+
+
+.practice-rule strong {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 14px;
+  line-height: 1.3;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+.practice-rule p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.6;
+
+  color: var(--ink);
+}
+
+
+/*
+--------------------------------------------------
+EXAMPLES
+--------------------------------------------------
+*/
+
+.practice-examples {
+  margin-top: 22px;
+}
+
+
+.practice-examples h3 {
+  margin:
+    0
+    0
+    10px;
+
+  font-size: 15px;
+  line-height: 1.3;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+.practice-example {
+  padding:
+    11px
+    0;
+
+  border-bottom:
+    1px solid
+    #eceef1;
+
+  font-size: 15px;
+  line-height: 1.45;
+
+  color: var(--ink);
+}
+
+
+.practice-example:last-child {
+  border-bottom: 0;
+}
+
+
+/*
+--------------------------------------------------
+START PRACTICE BUTTON
+--------------------------------------------------
+*/
+
+.practice-examples
++
+.practice-primary-button {
+  width: 100%;
+
+  margin-top: 24px;
+}
+
+
+/*
+Also covers lessons with no examples.
+*/
+
+.practice-card
+>
+.practice-primary-button {
+  width: 100%;
+
+  margin-top: 24px;
+}
+
+
+/*
+--------------------------------------------------
+MOBILE
+--------------------------------------------------
+*/
+
+@media (max-width: 640px) {
+
+  .practice-card h2 {
+    margin-bottom: 12px;
+
+    font-size: 21px;
+  }
+
+
+  .practice-explanation {
+    margin-bottom: 18px;
+
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+
+  .practice-rule {
+    margin:
+      18px
+      0;
+
+    padding:
+      14px
+      15px;
+
+    border-radius: 12px;
+  }
+
+
+  .practice-rule p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+
+  .practice-examples {
+    margin-top: 18px;
+  }
+
+
+  .practice-example {
+    padding:
+      10px
+      0;
+
+    font-size: 14px;
+  }
+
+
+  .practice-card
+  >
+  .practice-primary-button {
+    margin-top: 20px;
+  }
+
+}/* ==================================================
+   PRACTICE QUESTION — DENSITY REFINEMENT
+   ================================================== */
+
+
+/*
+--------------------------------------------------
+QUESTION CARD
+--------------------------------------------------
+*/
+
+.practice-card {
+  padding: 26px 28px;
+}
+
+
+/*
+--------------------------------------------------
+QUESTION
+--------------------------------------------------
+*/
+
+.practice-question {
+  margin-bottom: 18px;
+
+  font-size: 23px;
+  line-height: 1.3;
+}
+
+
+/*
+--------------------------------------------------
+ANSWER OPTIONS
+--------------------------------------------------
+*/
+
+.practice-options {
+  gap: 10px;
+}
+
+
+.practice-option {
+  min-height: 64px;
+
+  padding:
+    12px
+    16px;
+
+  border-radius: 12px;
+}
+
+
+.practice-option-text {
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+
+/*
+Keep the selection control visible but compact.
+*/
+
+.practice-option-text::before {
+  width: 18px;
+  height: 18px;
+
+  margin-right: 13px;
+}
+
+
+/*
+--------------------------------------------------
+CHECK ANSWER
+--------------------------------------------------
+*/
+
+.practice-check-button {
+  min-height: 50px;
+
+  margin-top: 16px;
+}
+
+
+/*
+--------------------------------------------------
+HINT
+--------------------------------------------------
+*/
+
+.practice-hint {
+  margin-top: 18px;
+
+  padding:
+    14px
+    16px;
+
+  background: #fafbfc;
+
+  border:
+    1px solid
+    #eceef1;
+
+  border-radius: 11px;
+
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+
+/*
+--------------------------------------------------
+MOBILE
+--------------------------------------------------
+*/
+
+@media (max-width: 640px) {
+
+  .practice-card {
+    padding:
+      20px
+      18px;
+  }
+
+
+  .practice-question {
+    margin-bottom: 16px;
+
+    font-size: 21px;
+  }
+
+
+  .practice-option {
+    min-height: 58px;
+
+    padding:
+      11px
+      14px;
+  }
+
+
+  .practice-option-text {
+    font-size: 15px;
+  }
+
+
+  .practice-check-button {
+    min-height: 48px;
+
+    margin-top: 14px;
+  }
+
+}/* ==================================================
+   PRACTICE FEEDBACK — FINAL POLISH
+   ================================================== */
+
+.practice-feedback {
+  margin-top: 20px;
+
+  padding:
+    20px
+    22px;
+
+  border-radius: 15px;
+}
+
+
+.practice-feedback h3 {
+  margin:
+    0
+    0
+    16px;
+
+  font-size: 20px;
+  line-height: 1.25;
+
+  font-weight: 800;
+}
+
+
+.practice-feedback p {
+  margin:
+    9px
+    0;
+
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+
+.practice-feedback p strong {
+  font-weight: 800;
+}
+
+
+/*
+Give the explanation a little separation from
+the answer/correction information.
+*/
+
+.practice-feedback p:nth-of-type(3) {
+  margin-top: 16px;
+}
+
+
+/*
+Continue button
+*/
+
+.practice-feedback
+.practice-primary-button {
+  width: 100%;
+
+  margin-top: 18px;
+
+  min-height: 48px;
+}
+
+
+/*
+Incorrect / review state
+*/
+
+.practice-feedback-review {
+  background: #faf8f5;
+
+  border:
+    1px solid
+    #e7ded2;
+}
+
+
+/*
+Correct state
+*/
+
+.practice-feedback-correct {
+  background: #f5f8f6;
+
+  border:
+    1px solid
+    #dce6df;
+}
+
+
+@media (max-width: 640px) {
+
+  .practice-feedback {
+    padding:
+      18px;
+
+    border-radius: 13px;
+  }
+
+
+  .practice-feedback h3 {
+    margin-bottom: 14px;
+
+    font-size: 18px;
+  }
+
+
+  .practice-feedback p {
+    font-size: 14px;
+  }
+
+}/* ==================================================
+   PRACTICE COMPLETION
+   ================================================== */
+
+.practice-complete-card {
+  padding:
+    28px;
+}
+
+
+/*
+--------------------------------------------------
+SCORE
+--------------------------------------------------
+*/
+
+.practice-result-summary {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  margin-top: 22px;
+
+  padding:
+    20px;
+
+  background: #f7f8fa;
+
+  border:
+    1px solid
+    #eceef1;
+
+  border-radius: 14px;
+}
+
+
+.practice-result-score {
+  flex-shrink: 0;
+
+  font-size: 38px;
+  line-height: 1;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+.practice-result-details {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.practice-result-details strong {
+  font-size: 16px;
+  line-height: 1.3;
+
+  color: var(--ink);
+}
+
+
+.practice-result-details span {
+  font-size: 14px;
+  line-height: 1.4;
+
+  color: var(--muted);
+}
+
+
+/*
+--------------------------------------------------
+RESULT MESSAGE
+--------------------------------------------------
+*/
+
+.practice-result-message {
+  margin-top: 22px;
+}
+
+
+.practice-result-message > strong {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 17px;
+  line-height: 1.3;
+
+  color: var(--ink);
+}
+
+
+.practice-result-message p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.55;
+
+  color: var(--muted);
+}
+
+
+/*
+--------------------------------------------------
+REVIEW SUMMARY
+--------------------------------------------------
+*/
+
+.practice-review-summary {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  margin-top: 22px;
+
+  padding:
+    16px
+    18px;
+
+  background: #faf8f5;
+
+  border:
+    1px solid
+    #e7ded2;
+
+  border-radius: 13px;
+}
+
+
+.practice-review-count {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 38px;
+  height: 38px;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #e2e5e9;
+
+  border-radius: 50%;
+
+  font-size: 16px;
+  line-height: 1;
+
+  font-weight: 800;
+
+  color: var(--ink);
+}
+
+
+.practice-review-summary strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 14px;
+  line-height: 1.3;
+
+  color: var(--ink);
+}
+
+
+.practice-review-summary p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.45;
+
+  color: var(--muted);
+}
+
+
+/*
+Perfect practice
+*/
+
+.practice-review-summary-clear {
+  background: #f5f8f6;
+
+  border-color: #dce6df;
+}
+
+
+/*
+--------------------------------------------------
+BUTTON
+--------------------------------------------------
+*/
+
+.practice-complete-button {
+  width: 100%;
+
+  margin-top: 24px;
+}
+
+
+/*
+--------------------------------------------------
+MOBILE
+--------------------------------------------------
+*/
+
+@media (max-width: 640px) {
+
+  .practice-complete-card {
+    padding:
+      20px
+      18px;
+  }
+
+
+  .practice-result-summary {
+    gap: 14px;
+
+    margin-top: 18px;
+
+    padding:
+      16px;
+  }
+
+
+  .practice-result-score {
+    font-size: 32px;
+  }
+
+
+  .practice-result-details strong {
+    font-size: 15px;
+  }
+
+
+  .practice-result-message {
+    margin-top: 18px;
+  }
+
+
+  .practice-review-summary {
+    margin-top: 18px;
+
+    padding:
+      14px;
+  }
+
+
+  .practice-complete-button {
+    margin-top: 20px;
+  }
+
+}
+/* Completed activities in the daily learning plan */
+.dashboard-activity-done { opacity: .7; }
+.dashboard-activity-done .dashboard-activity-title { text-decoration: none; }
