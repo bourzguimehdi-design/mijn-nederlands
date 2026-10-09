@@ -422,6 +422,12 @@ const Dashboard = {
       const number =
         originalIndex + 1;
 
+        const completed =
+  this.isActivityComplete(activity);
+
+if (completed) {
+  row.classList.add("dashboard-activity-completed");
+}
 
       row.innerHTML = `
 
@@ -480,11 +486,9 @@ const Dashboard = {
         </div>
 
 
-        <div
-          class="dashboard-activity-time"
-        >
-          ${activity.minutes} min
-        </div>
+       <div class="dashboard-activity-time">
+  ${completed ? "✓ Completed" : `${activity.minutes} min`}
+</div>
 
       `;
 
