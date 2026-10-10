@@ -3446,3 +3446,32 @@ MOBILE
 /* Completed activities in the daily learning plan */
 .dashboard-activity-done { opacity: .7; }
 .dashboard-activity-done .dashboard-activity-title { text-decoration: none; }
+
+/* Structured curriculum (additive to the existing dashboard). */
+.curriculum-entry { margin: 20px 0 8px; padding: 20px; }
+.curriculum-entry p { color: var(--muted); margin: 8px 0 16px; }
+.curriculum-header, .curriculum-lesson { padding: 4px 0 30px; }
+.curriculum-back { border: 0; background: transparent; padding: 8px 0 18px; font: inherit; color: #205d9c; cursor: pointer; }
+.curriculum-tabs { display: flex; gap: 8px; margin: 20px 0 12px; }
+.curriculum-tab { flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: white; font-weight: 700; cursor: pointer; }
+.curriculum-tab.selected { background: #e9f1ff; border-color: #5e87cc; }
+.curriculum-count { color: var(--muted); font-size: 14px; }
+.curriculum-list { display: grid; gap: 10px; }
+.curriculum-topic { width: 100%; display: flex; align-items: center; text-align: left; gap: 12px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 15px; cursor: pointer; font: inherit; }
+.curriculum-topic:hover { border-color: #719ad0; }
+.curriculum-topic-number { display: grid; place-items: center; flex: 0 0 30px; height: 30px; background: #eef2f7; border-radius: 50%; font-weight: 700; }
+.curriculum-topic-text { flex: 1; min-width: 0; }
+.curriculum-topic-text strong, .curriculum-topic-text small { display: block; }
+.curriculum-topic-text small { margin-top: 4px; color: var(--muted); line-height: 1.4; }
+.curriculum-topic-status { font-size: 11px; color: #476780; max-width: 82px; text-align: right; }
+.curriculum-panel { padding: 18px; margin: 18px 0; }
+.curriculum-example { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.curriculum-example:last-child { border-bottom: 0; }
+.curriculum-example strong, .curriculum-example span { display: block; }
+.curriculum-example span { margin-top: 4px; color: var(--muted); font-size: 14px; }
+.curriculum-question { display: block; margin: 16px 0; }
+.curriculum-question strong { display: block; margin-bottom: 8px; }
+.curriculum-question input { width: 100%; border: 1px solid #b9c4d1; border-radius: 8px; padding: 12px; font: inherit; }
+.curriculum-feedback { padding: 14px; margin-top: 12px; background: #f3f7fa; border-radius: 10px; }
+.curriculum-feedback-line { font-size: 14px; }
+.curriculum-feedback-line span { color: var(--muted); }
