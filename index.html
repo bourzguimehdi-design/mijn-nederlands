@@ -41,6 +41,7 @@
 <main>
 
   <section id="curriculum" class="hidden" aria-label="Dutch curriculum"></section>
+<section id="a2Studio" class="hidden" aria-label="A2 Learning Studio"><div id="a2StudioContent"></div></section>
 
   <!-- DASHBOARD -->
 
@@ -191,6 +192,7 @@
     <p class="small" id="curriculumDashboardStatus"></p>
     <button class="primary" type="button" onclick="CurriculumEngine.openNext('A2')">Continue next A2 lesson →</button>
     <button class="primary" type="button" onclick="CurriculumEngine.open('A2')">Explore lessons →</button>
+    <button class="primary" type="button" onclick="A2Studio.render()">Open A2 Learning Studio →</button>
   </div>
 
   <!-- PROFILE -->
@@ -1506,7 +1508,15 @@
 <script src="js/study-plan-engine.js?v=20261009-update1"></script>
 <script src="data/curriculum.js?v=1"></script>
 <script src="data/lesson-guides.js?v=2"></script>
-<script src="js/curriculum-engine.js?v=2"></script>
+<script src="data/a2-depth.js?v=3"></script>
+<script src="data/a2-vocabulary.js?v=3"></script>
+<script src="data/a2-conversations.js?v=3"></script>
+<script src="data/a2-mock-tasks.js?v=3"></script>
+<script src="js/a2-vocabulary-engine.js?v=3"></script>
+<script src="js/a2-conversation.js?v=3"></script>
+<script src="js/a2-mock-exam.js?v=3"></script>
+<script src="js/a2-studio.js?v=3"></script>
+<script src="js/curriculum-engine.js?v=3"></script>
 
 <!-- AI WRITING CONTROLLER -->
 

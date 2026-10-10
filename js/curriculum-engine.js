@@ -107,6 +107,8 @@ const CurriculumEngine = {
     const guide = extra.rules?.length ? `<div class="card curriculum-panel"><h2>Step by step</h2><ol class="curriculum-rules">${extra.rules.map(rule => `<li>${this.escape(rule)}</li>`).join('')}</ol></div>` : '';
     const pitfalls = extra.mistakes?.length ? `<div class="card curriculum-panel"><h2>Common mistakes</h2>${extra.mistakes.map(m => `<p class="curriculum-mistake"><strong>✗ ${this.escape(m.wrong)}</strong><br><span>✓ ${this.escape(m.right)}</span><br>${this.escape(m.why)}</p>`).join('')}</div>` : '';
     const practicePrompt = `<div class="card curriculum-panel"><h2>Use it yourself</h2><p>Before the check, say or write two new Dutch sentences using this topic. Compare them with the examples above. For personalized corrections, choose AI practice below.</p>${extra.task ? `<p><strong>Challenge:</strong> ${this.escape(extra.task)}</p>` : ''}</div>`;
+    const depth = item.level === 'A2' && typeof A2Depth !== 'undefined' ? A2Depth[item.id] : null;
+    const deeper = depth ? `<div class="card curriculum-panel"><h2>Guided learning steps</h2><ol class="curriculum-rules">${depth.steps.map(step => `<li>${this.escape(step)}</li>`).join('')}</ol><h3>Translate into Dutch</h3><p>Try these without looking at the examples, then reveal the model answers.</p>${depth.translationDrills.map(drill => `<details class="curriculum-mistake"><summary>${this.escape(drill.prompt)}</summary><p lang="nl">${this.escape(drill.answer)}</p></details>`).join('')}<p><strong>Independent challenge:</strong> ${this.escape(depth.challenge)}</p></div>` : '';
     const checks = item.checks.map((q, index) => `<label class="curriculum-question"><strong>${index + 1}. ${this.escape(q.prompt)}</strong><input type="text" autocomplete="off" data-answer="${index}" placeholder="Your answer" aria-label="Answer ${index + 1}" /></label>`).join('');
     root.innerHTML = `<div class="curriculum-lesson">
       <button type="button" class="curriculum-back" id="curriculumToCatalog">← ${item.level} topics</button>
@@ -114,7 +116,7 @@ const CurriculumEngine = {
       <h1>${this.escape(item.title)}</h1><p class="subtitle">${this.escape(item.goal)}</p>
       <div class="card curriculum-panel"><h2>Understand</h2><p>${this.escape(item.explanation)}</p></div>
       <div class="card curriculum-panel"><h2>Examples</h2>${examples}</div>
-      ${guide}${pitfalls}${practicePrompt}
+      ${guide}${pitfalls}${deeper}${practicePrompt}
       <div class="card curriculum-panel"><h2>Check your understanding</h2>
       <p class="small">Enter the missing word for blanks (___), or a complete sentence. Aim for both correct. Capitalization and final punctuation are ignored.</p>
       ${checks}<button type="button" class="primary" id="curriculumCheck">Check answers</button>
