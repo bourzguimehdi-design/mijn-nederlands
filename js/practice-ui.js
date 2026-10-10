@@ -72,7 +72,15 @@ async startFromActivity(activity) {
     "Starting practice from activity:",
     activity
   );
-
+// Curriculum sessions target the selected lesson level; ordinary
+// adaptive sessions retain their existing profile-derived level.
+if (activity.source === "curriculum_practice" &&
+    ["A1", "A2", "B1"].includes(activity.level)) {
+  session.level = activity.level;
+}
+// Preserve daily-plan activity metadata.
+session.source = activity.source || "daily_plan";
+session.dailyActivityId = activity.id || null;
 
   console.log(
     "Created practice session:",
@@ -1163,7 +1171,34 @@ renderQuestion(
                   rows="4"
                   placeholder="Write your answer here..."
                 ></textarea>
+${skill === "speaking" ? `
+  <div class="practice-speaking-controls">
+    <button
+      id="practice-record-start"
+      type="button"
+      onclick="PracticeUI.startSpeakingAnswer()"
+    >
+      🎤 Start recording
+    </button>
 
+    <button
+      id="practice-record-stop"
+      type="button"
+      onclick="PracticeUI.stopSpeakingAnswer()"
+      hidden
+    >
+      ⏹ Stop recording
+    </button>
+
+    <p
+      id="practice-record-status"
+      role="status"
+      aria-live="polite"
+    >
+      Record your answer in Dutch, or type it below.
+    </p>
+  </div>
+` : ""}
 
                 <button
                   class="practice-primary-button"
@@ -1268,7 +1303,94 @@ renderQuestion(
     `;
   },
 
+async startSpeakingAnswer() {
+  const startButton =
+    document.getElementById("practice-record-start");
 
+  const stopButton =
+    document.getElementById("practice-record-stop");
+
+  const status =
+    document.getElementById("practice-record-status");
+
+  if (!startButton || !stopButton) return;
+
+  startButton.disabled = true;
+
+  try {
+    await SpeakingRecorder.start();
+
+    startButton.hidden = true;
+    stopButton.hidden = false;
+
+    if (status) {
+      status.textContent = "🔴 Recording... Speak Dutch.";
+    }
+  } catch (error) {
+    startButton.disabled = false;
+
+    if (status) {
+      status.textContent =
+        error.message || "Microphone unavailable.";
+    }
+  }
+},
+
+async stopSpeakingAnswer() {
+  const startButton =
+    document.getElementById("practice-record-start");
+
+  const stopButton =
+    document.getElementById("practice-record-stop");
+
+  const status =
+    document.getElementById("practice-record-status");
+
+  const answerField =
+    document.getElementById("practice-text-answer");
+
+  if (!stopButton || !answerField) return;
+
+  stopButton.disabled = true;
+
+  try {
+    const recording = await SpeakingRecorder.stop();
+
+    if (status) {
+      status.textContent = "Transcribing your Dutch...";
+    }
+
+    const result =
+      await MijnNederlandsAPI.transcribeSpeaking(recording);
+
+    const transcript =
+      String(result.transcript || "").trim();
+
+    if (!transcript) {
+      throw new Error("No speech was recognized. Please retry.");
+    }
+
+    answerField.value = transcript;
+
+    if (status) {
+      status.textContent =
+        "Transcription ready. Review your answer, then press Check answer.";
+    }
+  } catch (error) {
+    if (status) {
+      status.textContent =
+        error.message || "Recording failed. You can type your answer.";
+    }
+  } finally {
+    if (startButton) {
+      startButton.hidden = false;
+      startButton.disabled = false;
+    }
+
+    stopButton.hidden = true;
+    stopButton.disabled = false;
+  }
+},
   /*
   ==================================================
   ANSWER SUBMISSION
@@ -2278,16 +2400,13 @@ if (hasOptions) {
   ==================================================
   */
 
-  renderComplete() {
-
-  const root =
-    this.getRoot();
-
+ 
+renderComplete() {
+  const root = this.getRoot();
 
   if (!root) {
     return;
   }
-
 
   /*
   ==================================================
@@ -2295,34 +2414,17 @@ if (hasOptions) {
   ==================================================
   */
 
-  const total =
-    this.answers.length;
+  const total = this.answers.length;
 
+  const correct = this.answers.filter(
+    answer => answer.correct === true
+  ).length;
 
-  const correct =
-    this.answers.filter(
-      answer =>
-        answer.correct
-    ).length;
+  const incorrect = Math.max(0, total - correct);
 
-
-  const incorrect =
-    Math.max(
-      0,
-      total - correct
-    );
-
-
-  const score =
-    total > 0
-      ? Math.round(
-          (
-            correct /
-            total
-          ) * 100
-        )
-      : 0;
-
+  const score = total > 0
+    ? Math.round((correct / total) * 100)
+    : 0;
 
   /*
   ==================================================
@@ -2330,48 +2432,32 @@ if (hasOptions) {
   ==================================================
   */
 
-  const session =
-    this.currentSession ||
-    {};
-
+  const session = this.currentSession || {};
 
   const practiceType =
     session.practiceType ||
-    (
-      session.skill
-        ? "skill"
-        : "concept"
-    );
+    (session.skill ? "skill" : "concept");
 
+  const concept = practiceType === "concept"
+    ? (
+        session.concept ||
+        this.generatedPractice?.concept ||
+        null
+      )
+    : null;
 
-  const concept =
-    practiceType === "concept"
-      ? (
-          session.concept ||
-          this.generatedPractice
-            ?.concept ||
-          null
-        )
-      : null;
-
-
-  const skill =
-    practiceType === "skill"
-      ? (
-          session.skill ||
-          this.generatedPractice
-            ?.skill ||
-          null
-        )
-      : null;
-
+  const skill = practiceType === "skill"
+    ? (
+        session.skill ||
+        this.generatedPractice?.skill ||
+        null
+      )
+    : null;
 
   const level =
     session.level ||
-    this.generatedPractice
-      ?.level ||
+    this.generatedPractice?.level ||
     null;
-
 
   /*
   ==================================================
@@ -2379,26 +2465,16 @@ if (hasOptions) {
   ==================================================
   */
 
-  const target =
-    concept ||
-    skill ||
-    null;
+  const target = concept || skill || null;
 
-
-  const targetLabel =
-    target
-      ? String(target)
-          .replaceAll(
-            "_",
-            " "
-          )
-          .replace(
-            /\b\w/g,
-            character =>
-              character.toUpperCase()
-          )
-      : "this topic";
-
+  const targetLabel = target
+    ? String(target)
+        .replaceAll("_", " ")
+        .replace(
+          /\b\w/g,
+          character => character.toUpperCase()
+        )
+    : "this topic";
 
   /*
   ==================================================
@@ -2408,146 +2484,249 @@ if (hasOptions) {
 
   let savedResult = this.completedResult;
 
-  if (!savedResult && total > 0 &&
-    typeof Storage !==
-      "undefined" &&
-    typeof Storage
-      .savePracticeResult ===
-      "function"
+  if (
+    !savedResult &&
+    total > 0 &&
+    typeof Storage !== "undefined" &&
+    typeof Storage.savePracticeResult === "function"
   ) {
-
     const practiceResult = {
-
       id:
         session.id ||
-        `practice_${
-          concept ||
-          skill ||
-          "unknown"
-        }_${Date.now()}`,
+        `practice_${concept || skill || "unknown"}_${Date.now()}`,
 
-
-      type:
-        practiceType === "skill"
-          ? "skill_practice"
-          : "concept_practice",
-
+      type: practiceType === "skill"
+        ? "skill_practice"
+        : "concept_practice",
 
       practiceType,
-
       concept,
-
       skill,
-
-
       level,
-
 
       title:
         session.title ||
-        this.generatedPractice
-          ?.title ||
+        this.generatedPractice?.title ||
         null,
 
-
-      minutes:
-        session.minutes ||
-        null,
-
+      minutes: session.minutes || null,
 
       correct,
-
       total,
-
       score,
 
+      answers: this.answers.map(answer => ({
+        ...answer
+      })),
 
-      answers:
-        this.answers.map(
-          answer => ({
-            ...answer
-          })
+      source: session.source || null,
+
+      dailyPlanDate:
+        typeof Dashboard !== "undefined" &&
+        Dashboard.activeActivity
+          ? Dashboard.getTodayKey()
+          : null,
+
+      dailyActivityId:
+        session.dailyActivityId ||
+        (
+          typeof Dashboard !== "undefined" &&
+          Dashboard.activeActivity
+            ? Dashboard.activeActivity.id
+            : null
         ),
 
-
-      dailyPlanDate: typeof Dashboard !== "undefined" && Dashboard.activeActivity
-        ? Dashboard.getTodayKey() : null,
-      dailyActivityId: typeof Dashboard !== "undefined" && Dashboard.activeActivity
-        ? Dashboard.activeActivity.id : null,
-      completedAt:
-        new Date()
-          .toISOString()
-
+      completedAt: new Date().toISOString()
     };
 
-
     try {
-
-      savedResult =
-        Storage
-          .savePracticeResult(
-            practiceResult
-          );
-
+      savedResult = Storage.savePracticeResult(
+        practiceResult
+      );
 
       console.log(
         "Practice result saved:",
         savedResult
       );
+
       if (savedResult) {
         this.completedResult = savedResult;
+
+        /*
+        ================================================
+        SPACED REPETITION
+        ================================================
+        */
+
+        if (
+          typeof SpacedReviewEngine !== "undefined"
+        ) {
+          if (session.source === "spaced_review") {
+            /*
+            --------------------------------------------
+            COMPLETE SCHEDULED REVIEW
+            --------------------------------------------
+            */
+
+            try {
+              const reviewedConcept =
+                SpacedReviewEngine.normalizeConcept(
+                  session.concept
+                );
+
+              const answers = Array.isArray(
+                savedResult.answers
+              )
+                ? savedResult.answers
+                : [];
+
+              const taggedAnswers = answers.filter(
+                answer =>
+                  Array.isArray(answer.concepts) &&
+                  answer.concepts.some(
+                    tag =>
+                      SpacedReviewEngine.normalizeConcept(
+                        tag
+                      ) === reviewedConcept
+                  )
+              );
+
+              /*
+              Use all graded answers only when
+              there are no matching concept tags
+              and the session is concept-focused.
+              */
+
+              const relevantAnswers =
+                taggedAnswers.length > 0
+                  ? taggedAnswers
+                  : practiceType === "concept" &&
+                    reviewedConcept
+                    ? answers
+                    : [];
+
+              const gradedAnswers =
+                relevantAnswers.filter(
+                  answer =>
+                    typeof answer.correct === "boolean"
+                );
+
+              if (
+                reviewedConcept &&
+                gradedAnswers.length > 0
+              ) {
+                const correctCount =
+                  gradedAnswers.filter(
+                    answer => answer.correct === true
+                  ).length;
+
+                const accuracy =
+                  correctCount / gradedAnswers.length;
+
+                const updated =
+                  SpacedReviewEngine.completeReview({
+                    concept: reviewedConcept,
+                    correct: accuracy >= 0.8,
+                    resultId: savedResult.id,
+                    date: new Date(
+                      savedResult.completedAt
+                    )
+                  });
+
+                console.log(
+                  "Spaced review completed:",
+                  {
+                    concept: reviewedConcept,
+                    accuracy,
+                    updated
+                  }
+                );
+              } else {
+                console.warn(
+                  "Review schedule not advanced: " +
+                  "no reliable graded answers."
+                );
+              }
+            } catch (error) {
+              console.error(
+                "Could not update spaced review schedule:",
+                error
+              );
+            }
+          } else {
+            /*
+            --------------------------------------------
+            REGISTER ORDINARY PRACTICE MISTAKES
+            --------------------------------------------
+            */
+
+            try {
+              const registered =
+                SpacedReviewEngine.registerMistakes(
+                  savedResult,
+                  new Date(
+                    savedResult.completedAt
+                  )
+                );
+
+              console.log(
+                "Spaced review mistakes registered:",
+                registered
+              );
+            } catch (error) {
+              console.error(
+                "Spaced review registration failed:",
+                error
+              );
+            }
+          }
+        }
+
+        /*
+        ================================================
+        COMPLETE DAILY PLAN ACTIVITY
+        ================================================
+        */
+
         if (typeof Dashboard !== "undefined") {
           Dashboard.completeActivity(savedResult);
         }
       }
 
+      /*
+      ==================================================
+      SAVE PROGRESS SNAPSHOT
+      ==================================================
+      */
 
       if (
         savedResult &&
-        typeof ProgressEngine !==
-          "undefined" &&
-        typeof ProgressEngine
-          .saveSnapshot ===
-          "function"
+        typeof ProgressEngine !== "undefined" &&
+        typeof ProgressEngine.saveSnapshot === "function"
       ) {
-
         const progressSnapshot =
-          ProgressEngine
-            .saveSnapshot();
-
+          ProgressEngine.saveSnapshot();
 
         console.log(
           "Progress snapshot saved after practice:",
           progressSnapshot
         );
-
-      } else if (
-        savedResult
-      ) {
-
+      } else if (savedResult) {
         console.warn(
           "Progress snapshot engine is unavailable."
         );
-
       }
-
     } catch (error) {
-
       console.error(
         "Could not save practice result or progress snapshot:",
         error
       );
-
     }
-
-  } else {
-
+  } else if (!savedResult) {
     console.warn(
-      "Practice Storage is not available."
+      "Practice Storage is not available or no answers were recorded."
     );
-
   }
-
 
   /*
   ==================================================
@@ -2558,47 +2737,23 @@ if (hasOptions) {
   let resultHeading;
   let resultMessage;
 
-
-  if (
-    score >= 90
-  ) {
-
-    resultHeading =
-      "Excellent work";
-
+  if (score >= 90) {
+    resultHeading = "Excellent work";
     resultMessage =
       `You showed strong control of ${targetLabel}.`;
-
-  } else if (
-    score >= 75
-  ) {
-
-    resultHeading =
-      "Good progress";
-
+  } else if (score >= 75) {
+    resultHeading = "Good progress";
     resultMessage =
       `You're building solid control of ${targetLabel}.`;
-
-  } else if (
-    score >= 60
-  ) {
-
-    resultHeading =
-      "Keep building";
-
+  } else if (score >= 60) {
+    resultHeading = "Keep building";
     resultMessage =
       `${targetLabel} still needs some practice.`;
-
   } else {
-
-    resultHeading =
-      "Worth reviewing";
-
+    resultHeading = "Worth reviewing";
     resultMessage =
       `We'll keep ${targetLabel} in your practice rotation.`;
-
   }
-
 
   /*
   ==================================================
@@ -2607,113 +2762,71 @@ if (hasOptions) {
   */
 
   root.innerHTML = `
-
     <div class="practice-shell">
 
       ${this.renderHeader()}
 
-
       <div class="practice-progress">
-
         <div class="practice-progress-bar">
-
           <div
             class="practice-progress-fill"
             style="width: 100%"
           ></div>
-
         </div>
-
       </div>
 
-
-      <section
-        class="practice-card practice-complete-card"
-      >
+      <section class="practice-card practice-complete-card">
 
         <div class="practice-card-label">
           COMPLETE
         </div>
 
-
         <h2>
           Practice complete
         </h2>
 
+        <div class="practice-result-summary">
 
-        <div
-          class="practice-result-summary"
-        >
-
-          <div
-            class="practice-result-score"
-          >
+          <div class="practice-result-score">
             ${score}%
           </div>
 
-
-          <div
-            class="practice-result-details"
-          >
-
+          <div class="practice-result-details">
             <strong>
               ${correct} of ${total} correct
             </strong>
 
             <span>
-              ${this.escapeHTML(
-                targetLabel
-              )}
-
+              ${this.escapeHTML(targetLabel)}
               ${
                 level
-                  ? ` · ${this.escapeHTML(
-                      String(level)
-                    )}`
+                  ? ` · ${this.escapeHTML(String(level))}`
                   : ""
               }
             </span>
-
           </div>
 
         </div>
 
-
-        <div
-          class="practice-result-message"
-        >
-
+        <div class="practice-result-message">
           <strong>
-            ${this.escapeHTML(
-              resultHeading
-            )}
+            ${this.escapeHTML(resultHeading)}
           </strong>
 
           <p>
-            ${this.escapeHTML(
-              resultMessage
-            )}
+            ${this.escapeHTML(resultMessage)}
           </p>
-
         </div>
-
 
         ${
           incorrect > 0
             ? `
-
-              <div
-                class="practice-review-summary"
-              >
-
-                <div
-                  class="practice-review-count"
-                >
+              <div class="practice-review-summary">
+                <div class="practice-review-count">
                   ${incorrect}
                 </div>
 
                 <div>
-
                   <strong>
                     ${
                       incorrect === 1
@@ -2725,30 +2838,20 @@ if (hasOptions) {
                   <p>
                     ${
                       savedResult
-                        ? `Your mistakes were saved and can be used to adapt future practice.`
-                        : `These answers are worth reviewing again.`
+                        ? "Your mistakes were saved and can be used to adapt future practice."
+                        : "These answers are worth reviewing again."
                     }
                   </p>
-
                 </div>
-
               </div>
-
             `
             : `
-
-              <div
-                class="practice-review-summary practice-review-summary-clear"
-              >
-
-                <div
-                  class="practice-review-count"
-                >
+              <div class="practice-review-summary practice-review-summary-clear">
+                <div class="practice-review-count">
                   ✓
                 </div>
 
                 <div>
-
                   <strong>
                     No mistakes to review
                   </strong>
@@ -2756,36 +2859,42 @@ if (hasOptions) {
                   <p>
                     You answered every exercise correctly.
                   </p>
-
                 </div>
-
               </div>
-
             `
         }
 
-
-        ${savedResult && typeof Dashboard !== "undefined" && Dashboard.getNextActivity()
-          ? `<button class="practice-primary-button practice-complete-button"
-                type="button" onclick="Dashboard.continueTodayPlan()">
+        ${
+          savedResult &&
+          typeof Dashboard !== "undefined" &&
+          Dashboard.getNextActivity()
+            ? `
+              <button
+                class="practice-primary-button practice-complete-button"
+                type="button"
+                onclick="Dashboard.continueTodayPlan()"
+              >
                 Continue Today's Plan →
-              </button>`
-          : ""}
-        <button class="practice-primary-button practice-complete-button"
-          type="button" onclick="PracticeUI.close()">
+              </button>
+            `
+            : ""
+        }
+
+        <button
+          class="practice-primary-button practice-complete-button"
+          type="button"
+          onclick="PracticeUI.close()"
+        >
           Back to dashboard
         </button>
 
       </section>
-
     </div>
-
   `;
 
-
   this.showScreen();
-
 },
+
 
 
   /*

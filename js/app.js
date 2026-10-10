@@ -1631,6 +1631,7 @@ function hideAllSections() {
     "writingComplete",
     "results",
     "dashboard",
+    "curriculum",
     "moduleComingSoon",
   ]
     .forEach(

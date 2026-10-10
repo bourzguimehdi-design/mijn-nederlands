@@ -118,17 +118,48 @@ const Dashboard = {
 
   render() {
 
-    this.renderGoal();
+  this.renderGoal();
+  this.renderPlan();
+  this.renderStartButton();
+  this.renderSkills();
+  this.renderFocusAreas();
+  this.renderProgress();
 
-    this.renderPlan();
+},
 
-    this.renderSkills();
+renderStartButton() {
 
-    this.renderFocusAreas();
+  const button =
+    document.getElementById("dashboardStartButton");
 
-    this.renderProgress();
+  if (!button || !this.plan?.activities) {
+    return;
+  }
 
-  },
+  const activities = this.plan.activities;
+
+  const completedCount = activities.filter(
+    activity => this.isActivityComplete(activity)
+  ).length;
+
+  if (activities.length > 0 && completedCount === activities.length) {
+
+    button.textContent = "✓ Today's plan completed";
+    button.disabled = true;
+
+  } else if (completedCount > 0) {
+
+    button.textContent = "Continue today's plan";
+    button.disabled = false;
+
+  } else {
+
+    button.textContent = "Start today's plan";
+    button.disabled = false;
+
+  }
+
+},
 
 
   /*
@@ -1707,9 +1738,15 @@ if (completed) {
           (Number(concept.moderateErrors || 0) + Number(concept.majorErrors || 0) > 0)) ||
         Number(concept.recentPracticeFailures || 0) >= 3
       );
-      const launch = needsLesson && typeof ErrorLessonEngine !== "undefined"
-        ? ErrorLessonEngine.startLesson(activity.concept)
-        : PracticeUI.startFromActivity(activity);
+      const isScheduledReview =
+  activity.source === "spaced_review";
+
+const launch =
+  !isScheduledReview &&
+  needsLesson &&
+  typeof ErrorLessonEngine !== "undefined"
+    ? ErrorLessonEngine.startLesson(activity.concept)
+    : PracticeUI.startFromActivity(activity);
       Promise.resolve(launch)
         .catch(
           error => {

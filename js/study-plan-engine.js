@@ -374,8 +374,37 @@ const priorities =
       adaptivePriorities.length > 0
     ) {
 
-      const concept =
-        adaptivePriorities[0];
+      // Prefer due reviews that belong to the active curriculum.
+const dueReviews =
+  typeof SpacedReviewEngine !== "undefined"
+    ? SpacedReviewEngine.getDueReviews(date)
+    : [];
+
+const dueConcept = dueReviews
+  .map(review => {
+    const matchingConcept = adaptivePriorities.find(
+      item =>
+        SpacedReviewEngine.normalizeConcept(item.name) ===
+        review.concept
+    );
+
+    return matchingConcept
+      ? { review, concept: matchingConcept }
+      : null;
+  })
+  .filter(Boolean)
+  .sort((a, b) => {
+    const dateComparison =
+      a.review.nextReviewDate.localeCompare(
+        b.review.nextReviewDate
+      );
+
+    return dateComparison ||
+      b.concept.adaptiveScore - a.concept.adaptiveScore;
+  })[0];
+
+const concept =
+  dueConcept?.concept || adaptivePriorities[0];
 
 
       /*
@@ -430,23 +459,30 @@ const priorities =
         plan,
         {
           id:
-            `focus-${concept.name}`,
+  dueConcept
+    ? `review-${concept.name}`
+    : `focus-${concept.name}`,
 
-          type:
-            "concept",
+type:
+  "concept",
 
-          icon:
-            "🎯",
+source:
+  dueConcept
+    ? "spaced_review"
+    : "adaptive_focus",
 
-          title:
-            this.formatConcept(
-              concept.name
-            ),
+icon:
+  dueConcept ? "🔁" : "🎯",
 
-          subtitle:
-            this.getConceptReason(
-              concept
-            ),
+title:
+  dueConcept
+    ? `Review: ${this.formatConcept(concept.name)}`
+    : this.formatConcept(concept.name),
+
+subtitle:
+  dueConcept
+    ? "Spaced repetition — reinforce previous mistakes"
+    : this.getConceptReason(concept),
 
           minutes:
             conceptMinutes,
