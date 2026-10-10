@@ -40,6 +40,8 @@
 
 <main>
 
+  <section id="curriculum" class="hidden" aria-label="Dutch curriculum"></section>
+
   <!-- DASHBOARD -->
 
 <section
@@ -173,12 +175,21 @@
 
 
   <button
-    class="primary"
-    onclick="startTodayPlan()"
-  >
-    Start today's plan
-  </button>
+  id="dashboardStartButton"
+  class="primary"
+  type="button"
+  onclick="startTodayPlan()"
+>
+  Start today's plan
+</button>
 
+
+  <div class="card curriculum-entry">
+    <div class="skill-label">YOUR LEARNING PATH</div>
+    <h2>Structured A1 → A2 → B1 lessons</h2>
+    <p>Build a strong foundation with short explanations, examples and topic checks.</p>
+    <button class="primary" type="button" onclick="CurriculumEngine.open('A2')">Explore lessons →</button>
+  </div>
 
   <!-- PROFILE -->
 
@@ -1478,7 +1489,7 @@
 <!-- PRACTICE ENGINE -->
 <script src="js/practice-engine.js?v=1"></script>
 
-<script src="js/practice-ui.js?v=3"></script>
+<script src="js/practice-ui.js?v=7"></script>
 
 <!-- APP -->
 <script src="js/app.js?v=2"></script>
@@ -1489,7 +1500,10 @@
 <script src="js/progress-engine.js"></script>
 
 <!-- STUDY PLAN -->
+ <script src="js/spaced-review-engine.js?v=2"></script>
 <script src="js/study-plan-engine.js?v=20261009-update1"></script>
+<script src="data/curriculum.js?v=1"></script>
+<script src="js/curriculum-engine.js?v=1"></script>
 
 <!-- AI WRITING CONTROLLER -->
 
@@ -1503,7 +1517,7 @@
 
 <!-- DASHBOARD -->
 
-<script src="js/dashboard.js?v=5"></script><script>
+<script src="js/dashboard.js?v=6"></script><script>
 
 
   initializeApp();
