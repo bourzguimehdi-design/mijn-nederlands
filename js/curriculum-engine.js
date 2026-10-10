@@ -22,6 +22,30 @@ const CurriculumEngine = {
   },
   save(data) { localStorage.setItem(this.KEY, JSON.stringify(data)); },
   find(id) { return DutchCurriculum.find(item => item.id === id); },
+  nextLesson(level = 'A2') {
+    const lessons = DutchCurriculum.filter(item => item.level === level);
+    const progress = this.load();
+    return lessons.find(item => !progress[item.id]?.passed) || null;
+  },
+  openNext(level = 'A2') {
+    this.open(level);
+    const next = this.nextLesson(level);
+    if (next) this.openLesson(next.id);
+  },
+  isCorrectAnswer(question, input) {
+    const given = this.normalize(input);
+    const expected = this.normalize(question.answer);
+    if (given === expected) return true;
+    if (!given || !question.prompt.includes('___')) return false;
+    const template = question.prompt.replace(/^Complete:\s*/i, '')
+      .replace(/\s*\([^)]*\)\s*$/g, '').trim();
+    return given === this.normalize(template.replace('___', question.answer));
+  },
+  getLearningStatus(level = 'A2') {
+    const stats = this.stats(level);
+    const next = this.nextLesson(level);
+    return { ...stats, nextId: next?.id || null, nextTitle: next?.title || null };
+  },
   stats(level) {
     const items = DutchCurriculum.filter(item => item.level === level);
     const progress = this.load();
@@ -64,7 +88,10 @@ const CurriculumEngine = {
       <p class="subtitle">Learn a topic, check your understanding, then practice it. Checks track lesson progress, not certified CEFR proficiency.</p>
       <div class="curriculum-tabs">${tabs}</div>
       <p class="curriculum-count"><strong>${stat.passed} / ${stat.total}</strong> topic checks passed · ${stat.checked} attempted</p>
+      ${this.nextLesson(level) ? `<button type="button" class="primary" id="curriculumNext">Continue learning: ${this.escape(this.nextLesson(level).title)} →</button>` : `<p>All ${level} topic checks passed. Keep practicing to maintain your skills.</p>`}
     </div><div class="curriculum-list">${cards}</div>`;
+    const nextButton = root.querySelector('#curriculumNext');
+    if (nextButton) nextButton.onclick = () => this.openNext(level);
     root.querySelector('[data-back="dashboard"]').onclick = () => Dashboard.open();
     root.querySelectorAll('[data-level]').forEach(btn => btn.onclick = () => this.renderCatalog(btn.dataset.level));
     root.querySelectorAll('[data-topic]').forEach(btn => btn.onclick = () => this.openLesson(btn.dataset.topic));
@@ -76,6 +103,10 @@ const CurriculumEngine = {
     this.currentId = id;
     const progress = this.load()[id];
     const examples = item.examples.map(pair => `<div class="curriculum-example"><strong lang="nl">${this.escape(pair.nl)}</strong><span>${this.escape(pair.en)}</span></div>`).join('');
+    const extra = (typeof DutchLessonGuides !== 'undefined' && DutchLessonGuides[item.id]) || {};
+    const guide = extra.rules?.length ? `<div class="card curriculum-panel"><h2>Step by step</h2><ol class="curriculum-rules">${extra.rules.map(rule => `<li>${this.escape(rule)}</li>`).join('')}</ol></div>` : '';
+    const pitfalls = extra.mistakes?.length ? `<div class="card curriculum-panel"><h2>Common mistakes</h2>${extra.mistakes.map(m => `<p class="curriculum-mistake"><strong>✗ ${this.escape(m.wrong)}</strong><br><span>✓ ${this.escape(m.right)}</span><br>${this.escape(m.why)}</p>`).join('')}</div>` : '';
+    const practicePrompt = `<div class="card curriculum-panel"><h2>Use it yourself</h2><p>Before the check, say or write two new Dutch sentences using this topic. Compare them with the examples above. For personalized corrections, choose AI practice below.</p>${extra.task ? `<p><strong>Challenge:</strong> ${this.escape(extra.task)}</p>` : ''}</div>`;
     const checks = item.checks.map((q, index) => `<label class="curriculum-question"><strong>${index + 1}. ${this.escape(q.prompt)}</strong><input type="text" autocomplete="off" data-answer="${index}" placeholder="Your answer" aria-label="Answer ${index + 1}" /></label>`).join('');
     root.innerHTML = `<div class="curriculum-lesson">
       <button type="button" class="curriculum-back" id="curriculumToCatalog">← ${item.level} topics</button>
@@ -83,11 +114,12 @@ const CurriculumEngine = {
       <h1>${this.escape(item.title)}</h1><p class="subtitle">${this.escape(item.goal)}</p>
       <div class="card curriculum-panel"><h2>Understand</h2><p>${this.escape(item.explanation)}</p></div>
       <div class="card curriculum-panel"><h2>Examples</h2>${examples}</div>
+      ${guide}${pitfalls}${practicePrompt}
       <div class="card curriculum-panel"><h2>Check your understanding</h2>
-      <p class="small">Two short checks. Aim for both correct. Capitalization and final punctuation are ignored.</p>
+      <p class="small">Enter the missing word for blanks (___), or a complete sentence. Aim for both correct. Capitalization and final punctuation are ignored.</p>
       ${checks}<button type="button" class="primary" id="curriculumCheck">Check answers</button>
       <div id="curriculumFeedback" aria-live="polite"></div></div>
-      ${progress ? `<p class="small">Previous check: ${progress.lastScore}/2 correct${progress.passed ? ' · passed' : ''}</p>` : ''}
+      ${progress ? `<p class="small">Previous check: ${progress.lastScore}/${item.checks.length} correct${progress.passed ? ' · passed' : ''}</p>` : ''}
       <button type="button" class="primary" id="curriculumPractice">Practice this topic with AI →</button>
       <p class="small">AI practice requires your existing Worker connection. Completing this short check does not replace a full proficiency assessment.</p>
     </div>`;
@@ -102,7 +134,7 @@ const CurriculumEngine = {
     let score = 0;
     const details = item.checks.map((q, i) => {
       const answer = root.querySelector(`[data-answer="${i}"]`)?.value || '';
-      const good = this.normalize(answer) === this.normalize(q.answer);
+      const good = this.isCorrectAnswer(q, answer);
       if (good) score++;
       return `<p class="curriculum-feedback-line">${good ? '✓' : '✗'} ${this.escape(q.prompt)}<br><span>Expected: ${this.escape(q.answer || '(no ending)')}</span></p>`;
     });
@@ -117,7 +149,7 @@ const CurriculumEngine = {
     };
     try { this.save(progress); }
     catch (error) { console.error('Could not save curriculum check:', error); }
-    root.querySelector('#curriculumFeedback').innerHTML = `<div class="curriculum-feedback"><strong>${score}/${item.checks.length} correct</strong>${details.join('')}</div>`;
+    root.querySelector('#curriculumFeedback').innerHTML = `<div class="curriculum-feedback"><strong>${score}/${item.checks.length} correct</strong>${details.join('')}${score === item.checks.length ? '<p>✓ Topic check passed. Try AI practice to apply it in new situations.</p>' : '<p>Review the examples and try again. Previous passes are retained.</p>'}</div>`;
   },
   startPractice(id) {
     const item = this.find(id);

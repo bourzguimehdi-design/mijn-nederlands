@@ -117,6 +117,13 @@ const Dashboard = {
   */
 
   render() {
+    // Show next unpassed A2 topic without changing the saved daily plan.
+    const lessonStatus = document.getElementById('curriculumDashboardStatus');
+    if (lessonStatus && typeof CurriculumEngine !== 'undefined') {
+      const status = CurriculumEngine.getLearningStatus('A2');
+      lessonStatus.textContent = `${status.passed}/${status.total} A2 topic checks passed` +
+        (status.nextTitle ? ` · Next: ${status.nextTitle}` : ' · All topic checks passed');
+    }
 
   this.renderGoal();
   this.renderPlan();

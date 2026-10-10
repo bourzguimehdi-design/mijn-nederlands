@@ -187,7 +187,9 @@
   <div class="card curriculum-entry">
     <div class="skill-label">YOUR LEARNING PATH</div>
     <h2>Structured A1 → A2 → B1 lessons</h2>
-    <p>Build a strong foundation with short explanations, examples and topic checks.</p>
+    <p>Follow your next A2 topic, learn the rules, avoid common mistakes, and practise with AI.</p>
+    <p class="small" id="curriculumDashboardStatus"></p>
+    <button class="primary" type="button" onclick="CurriculumEngine.openNext('A2')">Continue next A2 lesson →</button>
     <button class="primary" type="button" onclick="CurriculumEngine.open('A2')">Explore lessons →</button>
   </div>
 
@@ -1503,7 +1505,8 @@
  <script src="js/spaced-review-engine.js?v=2"></script>
 <script src="js/study-plan-engine.js?v=20261009-update1"></script>
 <script src="data/curriculum.js?v=1"></script>
-<script src="js/curriculum-engine.js?v=1"></script>
+<script src="data/lesson-guides.js?v=2"></script>
+<script src="js/curriculum-engine.js?v=2"></script>
 
 <!-- AI WRITING CONTROLLER -->
 

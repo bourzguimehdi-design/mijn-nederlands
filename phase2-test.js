@@ -1,0 +1,11 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const store=new Map();const ctx=vm.createContext({console,Date,JSON,String,Number,Object,Array,Set,localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},document:{getElementById:()=>null}});
+for(const file of ['data/curriculum.js','data/lesson-guides.js','js/curriculum-engine.js'])vm.runInContext(fs.readFileSync(file,'utf8'),ctx);
+const e=vm.runInContext('CurriculumEngine',ctx);
+assert(e.isCorrectAnswer({prompt:'Complete: Ik ___ gisteren gewerkt.',answer:'heb'},'heb'));
+assert(e.isCorrectAnswer({prompt:'Complete: Ik ___ gisteren gewerkt.',answer:'heb'},'Ik heb gisteren gewerkt.'));
+assert(!e.isCorrectAnswer({prompt:'Complete: Ik ___ gisteren gewerkt.',answer:'heb'},'Ik ben gisteren gewerkt.'));
+assert.strictEqual(e.nextLesson('A2').id,vm.runInContext('DutchCurriculum.find(x=>x.level==="A2").id',ctx));
+const first=e.nextLesson('A2');e.save({[first.id]:{passed:true,lastScore:2}});assert.notStrictEqual(e.nextLesson('A2').id,first.id);
+assert(vm.runInContext('DutchLessonGuides.perfect_tense.rules.length',ctx)>=4);
+console.log('PASS: flexible fill-in grading, next lesson sequencing, optional grammar guidance, preserved progress');

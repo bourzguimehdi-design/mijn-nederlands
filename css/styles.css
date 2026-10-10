@@ -3475,3 +3475,11 @@ MOBILE
 .curriculum-feedback { padding: 14px; margin-top: 12px; background: #f3f7fa; border-radius: 10px; }
 .curriculum-feedback-line { font-size: 14px; }
 .curriculum-feedback-line span { color: var(--muted); }
+
+/* Phase 2 guided learning additions */
+.curriculum-rules { padding-left: 1.4rem; line-height: 1.7; }
+.curriculum-rules li { margin-bottom: .65rem; }
+.curriculum-mistake { padding: 12px 0; border-bottom: 1px solid var(--border); line-height: 1.6; }
+.curriculum-mistake:last-child { border-bottom: none; }
+.curriculum-mistake span { color: #17623d; font-weight: 600; }
+#curriculumNext { margin-top: 12px; }
