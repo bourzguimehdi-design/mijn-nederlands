@@ -1632,6 +1632,7 @@ function hideAllSections() {
     "results",
     "dashboard",
     "curriculum",
+    "a2Studio",
     "moduleComingSoon",
   ]
     .forEach(

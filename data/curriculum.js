@@ -1000,3 +1000,655 @@ const DutchCurriculum = [
     ]
   }
 ];
+
+// Phase 6 additional A2 coverage: additive IDs, existing progress is retained.
+DutchCurriculum.push(...[
+  {
+    "id": "separable_verbs_a2",
+    "level": "A2",
+    "title": "Separable verbs",
+    "goal": "Use opstaan, meenemen and terugbellen in main clauses and infinitives.",
+    "explanation": "In a main clause, the prefix usually moves to the end: Ik sta om zeven uur op. With an infinitive it stays together: Ik wil vroeg opstaan.",
+    "examples": [
+      {
+        "nl": "Ik bel je morgen terug.",
+        "en": "I will call you back tomorrow."
+      },
+      {
+        "nl": "Wij nemen onze spullen mee.",
+        "en": "We take our things with us."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik ___ om zeven uur op. (opstaan)",
+        "answer": "sta"
+      },
+      {
+        "prompt": "Complete: Ik wil morgen vroeg ___. (opstaan)",
+        "answer": "opstaan"
+      }
+    ]
+  },
+  {
+    "id": "negation_niet_geen",
+    "level": "A2",
+    "title": "Negation: niet and geen",
+    "goal": "Say what you do not do or do not have.",
+    "explanation": "Use geen with indefinite nouns: Ik heb geen auto. Use niet for verbs, adjectives and definite things: Ik werk vandaag niet.",
+    "examples": [
+      {
+        "nl": "Ik heb geen afspraak.",
+        "en": "I do not have an appointment."
+      },
+      {
+        "nl": "De winkel is niet open.",
+        "en": "The shop is not open."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik heb ___ fiets.",
+        "answer": "geen"
+      },
+      {
+        "prompt": "Complete: Ik kom vandaag ___.",
+        "answer": "niet"
+      }
+    ]
+  },
+  {
+    "id": "object_pronouns",
+    "level": "A2",
+    "title": "Object pronouns",
+    "goal": "Use me, je, hem, haar, ons and ze in daily exchanges.",
+    "explanation": "Use object pronouns for the person receiving an action: Ik bel hem. Zij helpt ons.",
+    "examples": [
+      {
+        "nl": "Ik zie haar morgen.",
+        "en": "I will see her tomorrow."
+      },
+      {
+        "nl": "Kun je me helpen?",
+        "en": "Can you help me?"
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik bel ___. (him)",
+        "answer": "hem"
+      },
+      {
+        "prompt": "Complete: Kun je ___ helpen? (me)",
+        "answer": "me"
+      }
+    ]
+  },
+  {
+    "id": "possessives",
+    "level": "A2",
+    "title": "Possessive words",
+    "goal": "Talk about belongings and relationships.",
+    "explanation": "Use mijn, jouw/je, zijn, haar, ons/onze, jullie and hun. Ons with singular het words; onze with de words and plurals.",
+    "examples": [
+      {
+        "nl": "Dat is mijn tas.",
+        "en": "That is my bag."
+      },
+      {
+        "nl": "Dit is ons huis.",
+        "en": "This is our house."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Dit is ___ huis. (our)",
+        "answer": "ons"
+      },
+      {
+        "prompt": "Complete: Dat is ___ fiets. (my)",
+        "answer": "mijn"
+      }
+    ]
+  },
+  {
+    "id": "question_words",
+    "level": "A2",
+    "title": "Questions and clarification",
+    "goal": "Ask and answer wie, wat, waar, wanneer, waarom and hoe.",
+    "explanation": "Start information questions with a question word, then the conjugated verb: Wanneer begint de les?",
+    "examples": [
+      {
+        "nl": "Hoe laat vertrekt de trein?",
+        "en": "What time does the train leave?"
+      },
+      {
+        "nl": "Waarom ben je te laat?",
+        "en": "Why are you late?"
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: ___ vertrekt de trein? (when)",
+        "answer": "Wanneer"
+      },
+      {
+        "prompt": "Complete: ___ heet je? (how)",
+        "answer": "Hoe"
+      }
+    ]
+  },
+  {
+    "id": "numbers_prices",
+    "level": "A2",
+    "title": "Numbers, prices and quantities",
+    "goal": "Understand prices, dates, measurements and amounts.",
+    "explanation": "Dutch prices use a comma for decimals. Ask Hoeveel kost het? and Hoeveel heb je nodig?",
+    "examples": [
+      {
+        "nl": "Het kost twaalf euro vijftig.",
+        "en": "It costs twelve euros fifty."
+      },
+      {
+        "nl": "Ik wil twee kilo appels.",
+        "en": "I want two kilos of apples."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: ___ kost dit?",
+        "answer": "Hoeveel"
+      },
+      {
+        "prompt": "Complete: Ik wil twee ___ appels. (kilos)",
+        "answer": "kilo"
+      }
+    ]
+  },
+  {
+    "id": "transport_travel",
+    "level": "A2",
+    "title": "Transport and travel",
+    "goal": "Buy tickets, ask about delays and navigate journeys.",
+    "explanation": "Use vertrekken, aankomen, overstappen, vertraging and perron to discuss travel.",
+    "examples": [
+      {
+        "nl": "De trein heeft tien minuten vertraging.",
+        "en": "The train is delayed ten minutes."
+      },
+      {
+        "nl": "Ik moet in Utrecht overstappen.",
+        "en": "I have to change trains in Utrecht."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: De trein heeft tien minuten ___.",
+        "answer": "vertraging"
+      },
+      {
+        "prompt": "Complete: Ik moet in Utrecht ___.",
+        "answer": "overstappen"
+      }
+    ]
+  },
+  {
+    "id": "restaurant_food",
+    "level": "A2",
+    "title": "Food, restaurants and ordering",
+    "goal": "Order food, ask about ingredients and make polite requests.",
+    "explanation": "Use Ik wil graag..., Mag ik...? and Heeft u...? for polite requests.",
+    "examples": [
+      {
+        "nl": "Mag ik de menukaart, alstublieft?",
+        "en": "May I have the menu, please?"
+      },
+      {
+        "nl": "Ik wil graag zonder kaas bestellen.",
+        "en": "I would like to order without cheese."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: ___ ik de rekening krijgen?",
+        "answer": "Mag"
+      },
+      {
+        "prompt": "Complete: Ik wil ___ koffie.",
+        "answer": "graag"
+      }
+    ]
+  },
+  {
+    "id": "family_relationships",
+    "level": "A2",
+    "title": "Family and relationships",
+    "goal": "Describe relatives and social arrangements.",
+    "explanation": "Use familie terms and simple connected descriptions: Mijn zus woont in Rotterdam en zij werkt daar.",
+    "examples": [
+      {
+        "nl": "Mijn broer is getrouwd.",
+        "en": "My brother is married."
+      },
+      {
+        "nl": "We bezoeken onze ouders zondag.",
+        "en": "We are visiting our parents Sunday."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Mijn ___ is de dochter van mijn ouders.",
+        "answer": "zus"
+      },
+      {
+        "prompt": "Complete: We bezoeken ___ ouders. (our)",
+        "answer": "onze"
+      }
+    ]
+  },
+  {
+    "id": "daily_routines",
+    "level": "A2",
+    "title": "Daily routines and frequency",
+    "goal": "Describe schedules, habits and recurring activities.",
+    "explanation": "Use elke dag, meestal, soms, nooit and vaak to describe how frequently you do something.",
+    "examples": [
+      {
+        "nl": "Ik sport meestal na het werk.",
+        "en": "I usually exercise after work."
+      },
+      {
+        "nl": "Op maandag begin ik vroeg.",
+        "en": "On Monday I start early."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik sport ___ na het werk. (usually)",
+        "answer": "meestal"
+      },
+      {
+        "prompt": "Complete: ___ maandag begin ik vroeg.",
+        "answer": "Op"
+      }
+    ]
+  },
+  {
+    "id": "weather_seasons",
+    "level": "A2",
+    "title": "Weather and seasons",
+    "goal": "Describe weather and make plans based on forecasts.",
+    "explanation": "Use Het regent, Het waait, Het is bewolkt and temperatures with graden.",
+    "examples": [
+      {
+        "nl": "Het regent vandaag.",
+        "en": "It is raining today."
+      },
+      {
+        "nl": "Morgen wordt het warmer.",
+        "en": "Tomorrow it will be warmer."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Het ___ vandaag. (rains)",
+        "answer": "regent"
+      },
+      {
+        "prompt": "Complete: Het is twintig ___.",
+        "answer": "graden"
+      }
+    ]
+  },
+  {
+    "id": "health_pharmacy",
+    "level": "A2",
+    "title": "Health and pharmacy",
+    "goal": "Describe symptoms and understand simple advice.",
+    "explanation": "Use Ik heb pijn aan..., sinds..., and Hoe vaak moet ik...? for symptoms and medicine instructions.",
+    "examples": [
+      {
+        "nl": "Ik heb sinds gisteren hoofdpijn.",
+        "en": "I have had a headache since yesterday."
+      },
+      {
+        "nl": "Hoe vaak moet ik dit innemen?",
+        "en": "How often should I take this?"
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik heb pijn ___ mijn rug.",
+        "answer": "aan"
+      },
+      {
+        "prompt": "Complete: Ik ben ___ gisteren ziek.",
+        "answer": "sinds"
+      }
+    ]
+  },
+  {
+    "id": "public_services",
+    "level": "A2",
+    "title": "Municipality and public services",
+    "goal": "Arrange appointments and ask about documents.",
+    "explanation": "Use gemeente, afspraak, identiteitsbewijs and formulier in everyday official situations.",
+    "examples": [
+      {
+        "nl": "Ik wil een afspraak maken bij de gemeente.",
+        "en": "I want to make an appointment at the municipality."
+      },
+      {
+        "nl": "Moet ik mijn paspoort meenemen?",
+        "en": "Do I need to bring my passport?"
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik wil een ___ maken.",
+        "answer": "afspraak"
+      },
+      {
+        "prompt": "Complete: Moet ik mijn paspoort ___?",
+        "answer": "meenemen"
+      }
+    ]
+  },
+  {
+    "id": "money_banking",
+    "level": "A2",
+    "title": "Banking and payments",
+    "goal": "Ask about payments, transfers and bank cards.",
+    "explanation": "Use betalen, pinnen, overmaken and rekening to discuss money.",
+    "examples": [
+      {
+        "nl": "Kan ik hier pinnen?",
+        "en": "Can I pay by card here?"
+      },
+      {
+        "nl": "Ik heb het geld overgemaakt.",
+        "en": "I transferred the money."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Kan ik hier ___?",
+        "answer": "pinnen"
+      },
+      {
+        "prompt": "Complete: Ik heb het geld ___.",
+        "answer": "overgemaakt"
+      }
+    ]
+  },
+  {
+    "id": "job_search",
+    "level": "A2",
+    "title": "Jobs and applications",
+    "goal": "Discuss work experience, hours and applying for jobs.",
+    "explanation": "Use solliciteren naar, ervaring met and beschikbaar zijn for job applications.",
+    "examples": [
+      {
+        "nl": "Ik heb ervaring met computers.",
+        "en": "I have experience with computers."
+      },
+      {
+        "nl": "Ik solliciteer naar deze functie.",
+        "en": "I am applying for this position."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik heb ervaring ___ computers.",
+        "answer": "met"
+      },
+      {
+        "prompt": "Complete: Ik solliciteer ___ deze functie.",
+        "answer": "naar"
+      }
+    ]
+  },
+  {
+    "id": "education_courses",
+    "level": "A2",
+    "title": "Courses and learning",
+    "goal": "Ask about classes, homework and study plans.",
+    "explanation": "Use inschrijven voor, huiswerk maken and oefenen met to discuss learning.",
+    "examples": [
+      {
+        "nl": "Ik schrijf me in voor de cursus.",
+        "en": "I register for the course."
+      },
+      {
+        "nl": "Ik oefen elke dag Nederlands.",
+        "en": "I practise Dutch every day."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik schrijf me in ___ de cursus.",
+        "answer": "voor"
+      },
+      {
+        "prompt": "Complete: Ik ___ elke dag Nederlands.",
+        "answer": "oefen"
+      }
+    ]
+  },
+  {
+    "id": "inviting_social",
+    "level": "A2",
+    "title": "Invitations and social plans",
+    "goal": "Invite, accept, decline and reschedule politely.",
+    "explanation": "Use Heb je zin om...?, Helaas kan ik niet and Zullen we...?",
+    "examples": [
+      {
+        "nl": "Heb je zin om zaterdag te wandelen?",
+        "en": "Do you feel like walking on Saturday?"
+      },
+      {
+        "nl": "Helaas kan ik morgen niet.",
+        "en": "Unfortunately I cannot tomorrow."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Heb je ___ om mee te gaan?",
+        "answer": "zin"
+      },
+      {
+        "prompt": "Complete: ___ we zondag afspreken?",
+        "answer": "Zullen"
+      }
+    ]
+  },
+  {
+    "id": "emergencies_safety",
+    "level": "A2",
+    "title": "Emergencies and safety",
+    "goal": "Explain urgent situations and follow basic safety instructions.",
+    "explanation": "Use Er is..., Bel..., Pas op! and simple imperatives in emergencies.",
+    "examples": [
+      {
+        "nl": "Er is brand in het gebouw.",
+        "en": "There is a fire in the building."
+      },
+      {
+        "nl": "Bel onmiddellijk de hulpdiensten.",
+        "en": "Call emergency services immediately."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Er ___ brand.",
+        "answer": "is"
+      },
+      {
+        "prompt": "Complete: ___ op!",
+        "answer": "Pas"
+      }
+    ]
+  },
+  {
+    "id": "complaints_service",
+    "level": "A2",
+    "title": "Complaints and customer service",
+    "goal": "Explain a problem, request help and describe an outcome.",
+    "explanation": "Use kapot, werkt niet, terugbrengen and een oplossing to discuss complaints.",
+    "examples": [
+      {
+        "nl": "Dit apparaat werkt niet.",
+        "en": "This device does not work."
+      },
+      {
+        "nl": "Kunt u mij een oplossing aanbieden?",
+        "en": "Can you offer me a solution?"
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Dit apparaat ___ niet.",
+        "answer": "werkt"
+      },
+      {
+        "prompt": "Complete: Kunt u mij ___?",
+        "answer": "helpen"
+      }
+    ]
+  },
+  {
+    "id": "sequence_storytelling",
+    "level": "A2",
+    "title": "Telling events in order",
+    "goal": "Explain what happened using simple time connectors.",
+    "explanation": "Use eerst, daarna, toen, vervolgens and uiteindelijk to put events in order.",
+    "examples": [
+      {
+        "nl": "Eerst ging ik naar de winkel.",
+        "en": "First I went to the shop."
+      },
+      {
+        "nl": "Daarna heb ik thuis gekookt.",
+        "en": "After that I cooked at home."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: ___ ging ik naar de winkel. (first)",
+        "answer": "Eerst"
+      },
+      {
+        "prompt": "Complete: ___ heb ik thuis gekookt. (afterwards)",
+        "answer": "Daarna"
+      }
+    ]
+  },
+  {
+    "id": "obligation_permission",
+    "level": "A2",
+    "title": "Obligation and permission",
+    "goal": "Explain what is allowed, required and possible.",
+    "explanation": "Use moeten for obligation, mogen for permission and kunnen for ability.",
+    "examples": [
+      {
+        "nl": "Je moet een kaartje kopen.",
+        "en": "You must buy a ticket."
+      },
+      {
+        "nl": "Mag ik hier parkeren?",
+        "en": "May I park here?"
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Je ___ een kaartje kopen. (must)",
+        "answer": "moet"
+      },
+      {
+        "prompt": "Complete: ___ ik hier parkeren?",
+        "answer": "Mag"
+      }
+    ]
+  },
+  {
+    "id": "conditional_als",
+    "level": "A2",
+    "title": "Conditions with als",
+    "goal": "Make simple conditional plans and explain consequences.",
+    "explanation": "With als, the conjugated verb goes to the end of the subordinate clause: Als het regent, blijf ik thuis.",
+    "examples": [
+      {
+        "nl": "Als ik tijd heb, bel ik je.",
+        "en": "If I have time, I will call you."
+      },
+      {
+        "nl": "Als het koud is, draag ik een jas.",
+        "en": "If it is cold, I wear a coat."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Als ik tijd ___, bel ik je.",
+        "answer": "heb"
+      },
+      {
+        "prompt": "Complete: Als het koud ___, draag ik een jas.",
+        "answer": "is"
+      }
+    ]
+  },
+  {
+    "id": "prepositions_time",
+    "level": "A2",
+    "title": "Time prepositions",
+    "goal": "Use om, op, in, sinds, voor and na with times and dates.",
+    "explanation": "Use om for clock times, op for days and in for months/seasons: om acht uur, op maandag, in oktober.",
+    "examples": [
+      {
+        "nl": "De les begint om negen uur.",
+        "en": "The lesson starts at nine."
+      },
+      {
+        "nl": "We spreken op vrijdag af.",
+        "en": "We meet on Friday."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: De les begint ___ negen uur.",
+        "answer": "om"
+      },
+      {
+        "prompt": "Complete: We spreken ___ vrijdag af.",
+        "answer": "op"
+      }
+    ]
+  },
+  {
+    "id": "phone_messages",
+    "level": "A2",
+    "title": "Phone calls and messages",
+    "goal": "Leave a message and request a callback.",
+    "explanation": "Use Met ... spreken, Kan ik ... spreken? and Wilt u terugbellen? for calls.",
+    "examples": [
+      {
+        "nl": "Kan ik mevrouw Jansen spreken?",
+        "en": "May I speak to Ms Jansen?"
+      },
+      {
+        "nl": "Wilt u mij terugbellen?",
+        "en": "Would you call me back?"
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Wilt u mij ___?",
+        "answer": "terugbellen"
+      },
+      {
+        "prompt": "Complete: Kan ik u morgen ___?",
+        "answer": "bellen"
+      }
+    ]
+  }
+]);

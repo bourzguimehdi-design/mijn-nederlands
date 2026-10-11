@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const context=vm.createContext({});vm.runInContext(fs.readFileSync('data/curriculum.js','utf8'),context);
+const topics=vm.runInContext('DutchCurriculum',context);
+const a2=topics.filter(x=>x.level==='A2');assert.equal(a2.length,46);
+assert.equal(new Set(topics.map(x=>x.id)).size,topics.length);
+assert(a2.every(x=>x.examples.length>=2&&x.checks.length===2));
+const app=fs.readFileSync('js/app.js','utf8');assert(app.includes('"a2Studio"'));
+const html=fs.readFileSync('index.html','utf8');assert(html.includes('js/a2-ai-conversation.js')&&html.includes('js/a2-phase6.js'));
+const worker=fs.readFileSync('worker-phase6.js','utf8');assert(worker.includes('/a2/conversation/turn'));
+assert(worker.indexOf('/a2/conversation/turn')<worker.indexOf('NOT FOUND'));
+const studio=fs.readFileSync('js/a2-phase6.js','utf8');assert(studio.includes('A2AIConversation.open'));
+console.log('PASS: 46 A2 topics, unique IDs, navigation fix, Worker endpoint, adaptive speaking integration');
