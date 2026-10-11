@@ -1,0 +1,16 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const data=new Map();let scheduled=[];
+const context={console,localStorage:{getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)},A2Phase63:{},SpacedReviewEngine:{registerMistakes:x=>{scheduled.push(x);return x.answers.length}},CurriculumEngine:{find:id=>({id})},document:{getElementById:()=>null}};
+vm.createContext(context);vm.runInContext(fs.readFileSync(__dirname+'/js/a2-phase64.js','utf8'),context);
+const session={completedAt:'2026-10-12T12:00:00Z',scenario:'doctor'};
+const feedback={corrections:[{original:'Ik gaat',suggested:'Ik ga',explanation:'Use ga.',category:'verb_conjugation'},{original:'ik ziek',suggested:'ik ben ziek',explanation:'A missing verb.',category:'sentence_structure'},{original:'Hallo',suggested:'Goedemorgen',explanation:'More formal.',category:'other'}]};
+const result=context.A2Phase63.registerFeedback(session,feedback);
+assert.equal(result.saved,3);assert.equal(result.registered,2);assert.deepEqual(Array.from(result.concepts),['verb_conjugation','sentence_structure']);
+const entries=JSON.parse(data.get('mijn_nederlands_a2_mistake_journal_v1'));
+assert.equal(entries[0].topicId,'verb_conjugation');assert.equal(entries[1].topicId,'subordinate_clauses');assert.equal(entries[2].concept,null);
+assert.equal(context.A2Phase63.registerFeedback(session,feedback).saved,0);
+const worker=fs.readFileSync(__dirname+'/worker.js','utf8');
+assert(worker.includes('const maxTurns = Number(body.maxTurns) === 12 ? 12 : 8'));
+assert(worker.includes('At turn ${maxTurns - 1} or later'));
+assert(fs.readFileSync(__dirname+'/js/a2-ai-conversation.js','utf8').includes('maxTurns:this.maxTurns'));
+console.log('Phase 7 bridge tests passed');

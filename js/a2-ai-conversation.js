@@ -16,7 +16,7 @@ const A2AIConversation = {
     root.innerHTML=`<button id="aiChatBack">← A2 Learning Studio</button><div class="skill-label">A2 · AI CONVERSATION</div><h1>${this.esc(this.scenario.title)}</h1><div class="card curriculum-panel"><p id="aiChatStatus" aria-live="polite">Preparing your next conversation turn…</p></div>`;
     root.querySelector('#aiChatBack').onclick=()=>A2Studio.render();
     try{
-      const response=await fetch(`${MijnNederlandsAPI.baseURL}/a2/conversation/turn`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:this.scenario.title,history:answer?this.history.slice(0,-1):this.history,response:answer,turn:this.turn})});
+      const response=await fetch(`${MijnNederlandsAPI.baseURL}/a2/conversation/turn`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:this.scenario.title,history:answer?this.history.slice(0,-1):this.history,response:answer,turn:this.turn,maxTurns:this.maxTurns})});
       const data=await response.json();if(!response.ok||data.status!=='success')throw Error(data.error||'Worker unavailable');
       const t=data.turn;this.history.push({role:'tutor',text:t.dutch});this.turn++;
       this.render(t);

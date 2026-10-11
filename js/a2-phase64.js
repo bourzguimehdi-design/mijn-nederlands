@@ -3,7 +3,17 @@ const A2Phase64 = {
   KEY: 'mijn_nederlands_a2_mistake_journal_v1',
   maxEntries: 250,
   load() { try { const x=JSON.parse(localStorage.getItem(this.KEY)||'[]'); return Array.isArray(x)?x:[]; } catch(_) { return []; } },
+  // Prefer the structured category supplied by the Worker; never infer from Dutch examples alone.
+  normalizedCategory(c) {
+    const raw=String(c?.category||c?.concept||'').trim().toLowerCase().replace(/[\s-]+/g,'_');
+    const aliases={inversion:'word_order',woordvolgorde:'word_order',sentence_order:'word_order',subordinate_clause:'sentence_structure',subordinate_clauses:'sentence_structure',past_participles:'past_participle',adjective_ending:'adjective_endings',de_het:'articles',article:'articles',preposition:'prepositions',modal_verbs:'modal_verbs',vocabulary:'vocabulary_choice',lexical_choice:'vocabulary_choice',verb_tense:'past_tense'};
+    const known=new Set(['word_order','sentence_structure','time_expressions','past_participle','perfect_tense','verb_conjugation','articles','prepositions','adjective_endings','modal_verbs','past_tense','pronouns','negation','connectors','plural','spelling','formal_register','vocabulary_choice']);
+    const category=aliases[raw]||raw;
+    return known.has(category)?category:null;
+  },
   conceptFor(c) {
+    const structured=this.normalizedCategory(c);
+    if(structured)return structured;
     const t=[c?.original,c?.suggested,c?.explanation].filter(x=>typeof x==='string').join(' ').toLowerCase();
     // Only match grammar-specific explanations; lexical examples alone are insufficient evidence.
     if (/subordinate.clause|bijzin|werkwoord.*eind|verb.*end of the (?:clause|sentence)|omdat.*(?:verb|werkwoord)|dat.*(?:verb|werkwoord)/.test(t)) return 'sentence_structure';
@@ -17,7 +27,7 @@ const A2Phase64 = {
     return null;
   },
   relatedTopic(concept) {
-    const map={sentence_structure:'subordinate_clauses',word_order:'inversion',time_expressions:'time_expressions',past_participle:'past_participle',perfect_tense:'perfect_tense',verb_conjugation:'verb_conjugation',articles:'articles',prepositions:'prepositions'};
+    const map={sentence_structure:'subordinate_clauses',word_order:'inversion',time_expressions:'time_expressions',past_participle:'past_participle',perfect_tense:'perfect_tense',verb_conjugation:'verb_conjugation',articles:'articles',prepositions:'prepositions',adjective_endings:'adjective_endings',modal_verbs:'modal_verbs',past_tense:'past_tense',pronouns:'pronouns',negation:'negation',connectors:'connectors',plural:'plurals',vocabulary_choice:'vocabulary_choice'};
     const id=map[concept]||concept;
     return typeof CurriculumEngine!=='undefined' && CurriculumEngine.find(id) ? id : null;
   },
