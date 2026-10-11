@@ -74,7 +74,8 @@ async startFromActivity(activity) {
   );
 // Curriculum sessions target the selected lesson level; ordinary
 // adaptive sessions retain their existing profile-derived level.
-if (activity.source === "curriculum_practice" &&
+if ((activity.source === "curriculum_practice" ||
+     activity.type === "skill") &&
     ["A1", "A2", "B1"].includes(activity.level)) {
   session.level = activity.level;
 }

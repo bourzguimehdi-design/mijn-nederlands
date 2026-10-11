@@ -549,7 +549,8 @@ subtitle:
             "normal",
 
           skill:
-            languageSkill
+            languageSkill,
+          level: "A2"
         }
       );
 
@@ -616,7 +617,8 @@ subtitle:
             "normal",
 
           skill:
-            secondSkill
+            secondSkill,
+          level: "A2"
         }
       );
 
@@ -628,24 +630,28 @@ subtitle:
     activities. Replace their time with working skill sessions.
     Distinct IDs avoid ambiguity in daily completion tracking.
     */
+    // Phase 4: one vocabulary slot maximum, including the weekend.
+    // Keep all other skills in rotation without repeating a skill.
     const alreadyUsed = new Set(
       plan.activities.filter(a => a.skill).map(a => a.skill)
     );
     const rotation = ["listening", "reading", "vocabulary", "grammar", "speaking", "writing"];
     const dayOffset = Math.floor(date.getTime() / 86400000) % rotation.length;
     const ordered = rotation.slice(dayOffset).concat(rotation.slice(0, dayOffset));
-    const supplements = ordered.filter(skill => !alreadyUsed.has(skill));
     [15, 5].forEach((minutes, index) => {
-      const skill = supplements[index] || ordered[index];
+      const skill = ordered.find(s => !alreadyUsed.has(s));
+      if (!skill) return;
+      alreadyUsed.add(skill);
       this.addActivity(plan, {
         id: `extra-${index}-${skill}`,
         type: "skill",
         icon: this.getSkillIcon(skill),
         title: this.formatConcept(skill),
-        subtitle: "Additional Dutch practice (KNM and review are in development)",
+        subtitle: "Additional A2 practice",
         minutes,
         priority: "normal",
-        skill
+        skill,
+        level: "A2"
       });
     });
 
@@ -686,9 +692,8 @@ subtitle:
       activity.
       */
 
-      if (
-        extraSkill
-      ) {
+      // Do not add a second vocabulary (or other duplicate skill) slot.
+      if (extraSkill && !alreadyUsed.has(extraSkill)) {
 
         this.addActivity(
           plan,
@@ -719,7 +724,8 @@ subtitle:
               "normal",
 
             skill:
-              extraSkill
+              extraSkill,
+            level: "A2"
           }
         );
 
