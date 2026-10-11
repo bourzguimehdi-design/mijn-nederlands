@@ -1,0 +1,10 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const store=new Map(); let reviewCalls=[];
+const ctx={console,localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},A2Phase63:{registerFeedback(){throw Error('not patched')}},SpacedReviewEngine:{registerMistakes:x=>{reviewCalls.push(x);return x.answers.length}},CurriculumEngine:{find:id=>({id})},document:{getElementById:()=>null}};
+vm.createContext(ctx);vm.runInContext(fs.readFileSync(__dirname+'/js/a2-phase64.js','utf8'),ctx);
+const s={completedAt:'2026-10-12T09:00:00Z',scenario:'weekend'};
+const f={corrections:[{original:'Daarom ik ga',suggested:'Daarom ga ik',explanation:'After daarom, use inversion: verb before the subject.'},{original:'ik ga de winkel',suggested:'ik ga naar de winkel',explanation:'Use the appropriate preposition.'},{original:'ik heb koffie',suggested:'ik drink koffie',explanation:'A more natural expression.'}]};
+let r=ctx.A2Phase63.registerFeedback(s,f);assert.equal(r.saved,3);assert.equal(r.registered,2);assert.equal(reviewCalls.length,1);assert.deepEqual(Array.from(r.concepts),['word_order','prepositions']);
+r=ctx.A2Phase63.registerFeedback(s,f);assert.equal(r.saved,0);assert.equal(reviewCalls.length,1);
+const entries=JSON.parse(store.get('mijn_nederlands_a2_mistake_journal_v1'));assert.equal(entries.length,3);assert.equal(entries[2].concept,null);assert.equal(entries[0].original,'Daarom ik ga');
+console.log('Phase 6.4 focused tests passed: correction journal, classification, unclassified preservation, duplicate prevention, review scheduling.');
