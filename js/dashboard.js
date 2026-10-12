@@ -125,6 +125,7 @@ const Dashboard = {
         (status.nextTitle ? ` · Next: ${status.nextTitle}` : ' · All topic checks passed');
     }
 
+  this.renderA2Overview();
   this.renderGoal();
   this.renderPlan();
   this.renderStartButton();
@@ -132,6 +133,29 @@ const Dashboard = {
   this.renderFocusAreas();
   this.renderProgress();
 
+},
+
+renderA2Overview() {
+  // Display-only aggregation: never mutate curriculum, reviews, journal or the saved plan.
+  const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = String(value); };
+  const status = typeof CurriculumEngine !== 'undefined' && typeof CurriculumEngine.getLearningStatus === 'function'
+    ? CurriculumEngine.getLearningStatus('A2') : null;
+  if (status) {
+    const total = Number(status.total) || 0;
+    const passed = Math.min(total, Math.max(0, Number(status.passed) || 0));
+    setText('a2OverviewCount', `${passed} / ${total} topic checks passed`);
+    setText('a2OverviewNext', status.nextTitle || 'All A2 topics checked');
+    const progress = document.getElementById('a2OverviewProgress');
+    if (progress) { progress.setAttribute('aria-valuemax', String(total)); progress.setAttribute('aria-valuenow', String(passed)); }
+    const bar = document.getElementById('a2OverviewBar');
+    if (bar) bar.style.width = `${total ? Math.round(100 * passed / total) : 0}%`;
+  }
+  const due = typeof SpacedReviewEngine !== 'undefined' && typeof SpacedReviewEngine.getDueReviews === 'function'
+    ? SpacedReviewEngine.getDueReviews() : [];
+  setText('a2OverviewDue', due.length);
+  setText('a2OverviewDueDetail', due.length ? 'Topics ready for another review.' : 'No reviews due right now.');
+  const mistakes = typeof A2Phase64 !== 'undefined' && typeof A2Phase64.load === 'function' ? A2Phase64.load() : [];
+  setText('a2OverviewMistakes', mistakes.length);
 },
 
 renderStartButton() {

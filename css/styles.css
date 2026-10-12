@@ -3483,3 +3483,20 @@ MOBILE
 .curriculum-mistake:last-child { border-bottom: none; }
 .curriculum-mistake span { color: #17623d; font-weight: 600; }
 #curriculumNext { margin-top: 12px; }
+
+/* A2-first dashboard; legacy data and renderers remain intact. */
+.a2-overview { margin: 20px 0 26px; }
+.a2-overview-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.a2-overview-heading h2 { margin:6px 0 12px; }
+.a2-overview-count { font-size:13px; font-weight:700; color:var(--muted); }
+.a2-overview-progress { height:9px; border-radius:99px; overflow:hidden; background:#e5ebf2; margin-bottom:18px; }
+.a2-overview-progress > div { background:#2563a6; height:100%; width:0; transition:width .2s ease; }
+.a2-overview-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.a2-overview-item { display:flex; flex-direction:column; align-items:flex-start; gap:9px; min-width:0; }
+.a2-overview-item strong { font-size:21px; overflow-wrap:anywhere; }
+.a2-overview-item p { flex:1; margin:0 0 6px; }
+.a2-overview-item button { margin-top:auto; }
+.dashboard-history { margin:24px 0; border:1px solid var(--border); border-radius:14px; padding:16px; }
+.dashboard-history > summary { cursor:pointer; font-weight:700; }
+.dashboard-history[open] > summary { margin-bottom:12px; }
+@media (max-width:720px) { .a2-overview-grid { grid-template-columns:1fr; } }

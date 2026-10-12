@@ -19,7 +19,7 @@
 
   <link
     rel="stylesheet"
-    href="css/styles.css?v=5"
+    href="css/styles.css?v=consolidation1"
   >
 
 </head>
@@ -57,16 +57,26 @@
     </div>
 
     <h1>
-      Your Dutch journey
+      Your A2 learning journey
     </h1>
 
     <p class="subtitle">
-      Your daily plan adapts to your
-      assessments and learning needs.
+      Continue your A2 lessons, review previous mistakes and practise every day.
     </p>
 
   </div>
 
+
+  <!-- A2-FIRST OVERVIEW: reads existing learning data, never rewrites it. -->
+  <section class="a2-overview" aria-label="A2 learning overview">
+    <div class="a2-overview-heading"><div><div class="skill-label">YOUR A2 COURSE</div><h2>Pick up where you left off</h2></div><span id="a2OverviewCount" class="a2-overview-count">—</span></div>
+    <div class="a2-overview-progress" role="progressbar" aria-label="A2 topic checks passed" aria-valuemin="0" aria-valuemax="46" aria-valuenow="0" id="a2OverviewProgress"><div id="a2OverviewBar"></div></div>
+    <div class="a2-overview-grid">
+      <div class="card a2-overview-item"><div class="skill-label">NEXT LESSON</div><strong id="a2OverviewNext">Loading…</strong><p class="small">Learn the topic, then complete its check.</p><button type="button" class="primary" onclick="CurriculumEngine.openNext('A2')">Continue lesson →</button></div>
+      <div class="card a2-overview-item"><div class="skill-label">REVIEWS DUE</div><strong id="a2OverviewDue">—</strong><p class="small" id="a2OverviewDueDetail">Based on your earlier practice.</p><button type="button" onclick="CurriculumEngine.open('A2')">Browse lessons →</button></div>
+      <div class="card a2-overview-item"><div class="skill-label">YOUR CORRECTIONS</div><strong id="a2OverviewMistakes">—</strong><p class="small">Saved AI feedback stays available in your lessons.</p><button type="button" onclick="A2Studio.render()">Practise in A2 Studio →</button></div>
+    </div>
+  </section>
 
   <!-- GOAL -->
 
@@ -195,6 +205,8 @@
     <button class="primary" type="button" onclick="A2Studio.render()">Open A2 Learning Studio →</button>
   </div>
 
+  <details class="dashboard-history" id="dashboardHistory"><summary>Historical assessments and detailed progress</summary>
+  <p class="small">These are historical skill estimates, not your A2 course completion.</p>
   <!-- PROFILE -->
 
   <div class="dashboard-section-heading dashboard-space-top">
@@ -275,6 +287,8 @@
 
   </div>
 
+
+  </details>
 
   <!-- ASSESSMENTS -->
 
@@ -1530,7 +1544,7 @@
 
 <!-- DASHBOARD -->
 
-<script src="js/dashboard.js?v=6"></script>
+<script src="js/dashboard.js?v=consolidation1"></script>
 <script src="js/a2-adaptive-phase5.js?v=20261011-phase5"></script>
 <script src="js/a2-ai-conversation.js?v=phase6"></script>
 <script src="js/a2-phase6.js?v=phase6"></script>
