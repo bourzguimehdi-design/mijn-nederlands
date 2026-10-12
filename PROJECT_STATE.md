@@ -79,3 +79,14 @@ Build a maintainable Dutch-learning application centered on a **complete 46-topi
 
 ## Session result
 2026-10-12: Baseline audit, test run, and continuity documentation completed. **No app source files were changed, no cleanup deployed, and no new Phase 7 release built.**
+
+
+## 2026-10-12 follow-up: safe cleanup audit prepared
+- User approved archiving unnecessary files and requested immediate progress.
+- Built an actual dependency inventory from source ZIP + bridge overlay: `index.html` script load order and loaded/unloaded JS, storage/planner touchpoints. See `DEPENDENCY_AUDIT.md` in cleanup audit ZIP.
+- Created opt-in `safe_cleanup.py`: default dry-run; `--apply` moves only untracked historical root backup folders and root ZIP files to `.local-archive/cleanup-TIMESTAMP/`; tracked files skipped; never deletes files. Does not touch JS, tests, Worker, or localStorage.
+- Source is a snapshot; actual live Codespaces branch and deployment not accessible to this session. User must run and report Git status before deeper consolidation.
+- Next: obtain current Codespaces snapshot after bridge and archive, build tests for runtime planner/journal/UI, then implement consolidated code and curriculum in verified releases.
+
+## Update — 2026-10-12, live checkout audit preparation
+User reports cleanup utility moved six historical folders and two ZIPs to `.local-archive`. Git status had untracked active JS and Worker files, plus two tracked deletions. Prior instructions to restore/stage/commit were given but execution has not been confirmed. A read-only `audit_live_repo.py` has been prepared to inspect actual Codespaces checkout; it is not yet executed there. No app refactor or deployment is verified in this step. See `SESSION_HANDOFF_2026-10-12.txt` for continuation.
