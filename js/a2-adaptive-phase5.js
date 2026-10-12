@@ -92,8 +92,8 @@ const A2AdaptivePhase5 = {
     const heading = document.createElement('h3'); heading.textContent = 'Your A2 learning focus';
     const progress = document.createElement('p'); progress.textContent = `${done}/${activities.length} daily activities completed · ${status.passed}/${status.total} A2 checks passed`;
     const next = document.createElement('p'); next.textContent = `Next topic: ${nextTitle} · Vocabulary due: ${due}`;
-    const note = document.createElement('p'); note.textContent = 'A2 checks are not an official B1-readiness assessment.';
-    summary.append(heading,progress,next,note);
+
+    summary.append(heading,progress,next);
   },
   install() {
     if (this.installed) return;
