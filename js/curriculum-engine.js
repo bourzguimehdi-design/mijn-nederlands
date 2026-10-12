@@ -74,7 +74,7 @@ const CurriculumEngine = {
     ).join('');
     const cards = DutchCurriculum.filter(item => item.level === level).map((item, i) => {
       const record = progress[item.id];
-      const status = record?.passed ? '✓ Check passed' : record?.lastScore !== undefined ? '↻ Practice again' : 'Not checked yet';
+      const status = record?.passed ? '✓ Quick check passed' : record?.lastScore !== undefined ? '↻ Practice again' : 'Not checked yet';
       return `<button type="button" class="curriculum-topic" data-topic="${this.escape(item.id)}">
         <span class="curriculum-topic-number">${i + 1}</span>
         <span class="curriculum-topic-text"><strong>${this.escape(item.title)}</strong><small>${this.escape(item.goal)}</small></span>
@@ -87,8 +87,8 @@ const CurriculumEngine = {
       <h1>Learning path</h1>
       <p class="subtitle">Learn a topic, check your understanding, then practice it. Checks track lesson progress, not certified CEFR proficiency.</p>
       <div class="curriculum-tabs">${tabs}</div>
-      <p class="curriculum-count"><strong>${stat.passed} / ${stat.total}</strong> topic checks passed · ${stat.checked} attempted</p>
-      ${this.nextLesson(level) ? `<button type="button" class="primary" id="curriculumNext">Continue learning: ${this.escape(this.nextLesson(level).title)} →</button>` : `<p>All ${level} topic checks passed. Keep practicing to maintain your skills.</p>`}
+      <p class="curriculum-count"><strong>${stat.passed} / ${stat.total}</strong> quick checks passed · ${stat.checked} attempted</p>
+      ${this.nextLesson(level) ? `<button type="button" class="primary" id="curriculumNext">Continue learning: ${this.escape(this.nextLesson(level).title)} →</button>` : `<p>All ${level} quick checks passed. Keep practicing to maintain your skills.</p>`}
     </div><div class="curriculum-list">${cards}</div>`;
     const nextButton = root.querySelector('#curriculumNext');
     if (nextButton) nextButton.onclick = () => this.openNext(level);
@@ -117,17 +117,20 @@ const CurriculumEngine = {
       <div class="card curriculum-panel"><h2>Understand</h2><p>${this.escape(item.explanation)}</p></div>
       <div class="card curriculum-panel"><h2>Examples</h2>${examples}</div>
       ${guide}${pitfalls}${deeper}${practicePrompt}
-      <div class="card curriculum-panel"><h2>Check your understanding</h2>
+      <div class="card curriculum-panel"><h2>Quick understanding check</h2>
       <p class="small">Enter the missing word for blanks (___), or a complete sentence. Aim for both correct. Capitalization and final punctuation are ignored.</p>
       ${checks}<button type="button" class="primary" id="curriculumCheck">Check answers</button>
       <div id="curriculumFeedback" aria-live="polite"></div></div>
       ${progress ? `<p class="small">Previous check: ${progress.lastScore}/${item.checks.length} correct${progress.passed ? ' · passed' : ''}</p>` : ''}
-      <button type="button" class="primary" id="curriculumPractice">Practice this topic with AI →</button>
-      <p class="small">AI practice requires your existing Worker connection. Completing this short check does not replace a full proficiency assessment.</p>
+      <button type="button" class="primary" id="curriculumPractice">Guided AI practice →</button>
+      <button type="button" class="primary" id="curriculumMastery">Finish lesson: AI assessment →</button>
+      <p class="small">The Daily Plan lesson completes after you finish the AI assessment, even if you do not pass. Your quick-check result is kept separately from mastery.</p>
+      <p class="small">AI practice requires your existing Worker connection. A quick check is not mastery. Use generated AI practice to apply the topic; a verified mastery assessment is a separate future step.</p>
     </div>`;
     root.querySelector('#curriculumToCatalog').onclick = () => this.renderCatalog(item.level);
     root.querySelector('#curriculumCheck').onclick = () => this.check(id);
     root.querySelector('#curriculumPractice').onclick = () => this.startPractice(id);
+    root.querySelector('#curriculumMastery').onclick = () => A2Mastery.start(id);
   },
   check(id) {
     const item = this.find(id);
@@ -151,7 +154,7 @@ const CurriculumEngine = {
     };
     try { this.save(progress); }
     catch (error) { console.error('Could not save curriculum check:', error); }
-    root.querySelector('#curriculumFeedback').innerHTML = `<div class="curriculum-feedback"><strong>${score}/${item.checks.length} correct</strong>${details.join('')}${score === item.checks.length ? '<p>✓ Topic check passed. Try AI practice to apply it in new situations.</p>' : '<p>Review the examples and try again. Previous passes are retained.</p>'}</div>`;
+    root.querySelector('#curriculumFeedback').innerHTML = `<div class="curriculum-feedback"><strong>${score}/${item.checks.length} correct</strong>${details.join('')}${score === item.checks.length ? '<p>✓ Quick check passed. This records understanding, not topic mastery. Complete fresh AI practice to demonstrate application.</p>' : '<p>Review the examples and try again. Previous passes are retained.</p>'}</div>`;
   },
   startPractice(id) {
     const item = this.find(id);

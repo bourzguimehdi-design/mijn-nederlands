@@ -129,7 +129,7 @@ const A2AdaptivePhase5 = {
       const result = originalCheck.call(this,id);
       const item = this.find(id);
       const progress = this.load()[id];
-      if (item && progress?.lastScore === item.checks.length) A2AdaptivePhase5.finish('lesson',id);
+      // A quick check records understanding; only a completed AI mastery attempt closes a planned lesson.
       return result;
     };
     const originalGrade = A2VocabularyEngine.grade;
