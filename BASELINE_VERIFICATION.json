@@ -1,0 +1,266 @@
+{
+  "branch": "feature/a2-integrated-upgrade",
+  "head": "852a71c",
+  "active_script_count": 38,
+  "active_untracked_count": 0,
+  "files": [
+    {
+      "path": "data/a2-conversations.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "39a130f86377db97d2ed46118d073560f501f6506969478e72304214ff8167f9"
+    },
+    {
+      "path": "data/a2-depth.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "262f82f710c0868591ddc4b13b1967d761b6c892d8d89aeb4a7d8a35c3d04f2a"
+    },
+    {
+      "path": "data/a2-mock-tasks.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "6e9bc072918eaf2a5fa057485165464108c161a574dc9f33d89b34394be5da1a"
+    },
+    {
+      "path": "data/a2-vocabulary.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "e8516777920da6a666ab2b72850ab054516706b17f2ed765910c52297a3c8fb9"
+    },
+    {
+      "path": "data/curriculum.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "d5c0320981d1f72c4203b159d34e37daaed2086eb5e511ef3407e08619e44821"
+    },
+    {
+      "path": "data/lesson-guides.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "823ae568d3af8225ff67d2b1351bfc59474b7599df58d2dcbc3bda7baa492b04"
+    },
+    {
+      "path": "data/listening-questions.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "a92f396cdc486d6a69842450cad3398db5fcc8b2a5bc34a5550b4327ee1c5a30"
+    },
+    {
+      "path": "data/placement-questions.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "69dbee879b1b42225a10ab35f5dd720016a8762883fc7ca93f422838ac70f1e8"
+    },
+    {
+      "path": "data/speaking-tasks.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "fdc0dfb890384a4f9ca2170637865af3caf97df2198540684ebb4890447cd76d"
+    },
+    {
+      "path": "data/writing-tasks.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "e5dd2a0999e8ba396c91b851118dbb72b9320ddeae1aa2f2af0e65365ee16413"
+    },
+    {
+      "path": "js/a2-adaptive-phase5.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "94dbac188730da03463ca8ab597d084429a3c540393ec265ab6c2a8806fd26da"
+    },
+    {
+      "path": "js/a2-ai-conversation.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "eb58b0f3d4a9ecb791d6c898f0df5a4584334cb77cb1585bbb4822c10f363976"
+    },
+    {
+      "path": "js/a2-conversation.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "6dcee47a41a346e8ce718fb791bec1b12ec3a7f6e40840fec14065e31cb3f75f"
+    },
+    {
+      "path": "js/a2-mock-exam.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "f74a4ceb397f76325e3eec5e74f044f212b3afe5ee151195c28a465280a2f485"
+    },
+    {
+      "path": "js/a2-phase6.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "8dd4ee9e858e803ae2515c2c7610e9bc82379cadfb16f238191315268fc7735b"
+    },
+    {
+      "path": "js/a2-phase61.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "d61c70441f5e64177252c369e11d5102d159d8c02a6e033bc3f28b8da197a96d"
+    },
+    {
+      "path": "js/a2-phase63.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "1f423d2e327f584c00cc6d382352475bb85bff244d840bc4dd6707aa72bfaa21"
+    },
+    {
+      "path": "js/a2-phase64.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "6584c498920b0d1fe39a1af3e801680b2b4cb091867b51896d98e7453f33c22e"
+    },
+    {
+      "path": "js/a2-studio.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "4436b33f8d492284915d30b2f9a073349416b69ee817369c353b1d16978559ef"
+    },
+    {
+      "path": "js/a2-vocabulary-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "fd829cc8e22c644e4f68b47ee4e1f18978a0c0709e303de1fec28f4e6c423f4b"
+    },
+    {
+      "path": "js/api.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "7e953d05575ac0abe616104bb800ea4b016a4f4671b4594ae87f9b619ab84ef6"
+    },
+    {
+      "path": "js/app.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "467e00c2892c5fad20dcd3865e8a557169c3c002f83d592db54b4f58b7f936f3"
+    },
+    {
+      "path": "js/assessment-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "c0424033adc4205c897fca6ee76886b5e18587a0e3acf43116bcd564c51a3132"
+    },
+    {
+      "path": "js/curriculum-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "c0a8a9414dabe4d5daf6c3aa524b0f64690a46d056a327b8043dda9956580a9c"
+    },
+    {
+      "path": "js/dashboard.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "58936a3354045c10f41c5c8bf2f71410aa8f1f56db3115c3671c603b529e5b13"
+    },
+    {
+      "path": "js/error-lesson-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "6a4fd26e6d560bf86813b443e575b969e1907fa1892c087c0fd9f5a0815e92ca"
+    },
+    {
+      "path": "js/practice-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "26084b79b2665118c18d036242f1c8d248e4eb7d93e8db079c3710053d8de411"
+    },
+    {
+      "path": "js/practice-ui.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "d771f9cf1b8933aeaf6dcda8ecd2d95c9c3d5b525fb98cdf29da840f6edb9cb7"
+    },
+    {
+      "path": "js/profile-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "13e93c0b1b1c61e94d4ed1d490ff6a30b773a0b9f858d35cb139b3edf3784211"
+    },
+    {
+      "path": "js/progress-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "a10abe0c429885b332a2d678da92a0a6313693d36259856f7853d1ad9060957d"
+    },
+    {
+      "path": "js/spaced-review-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "95f1977ac634051209fa45c82f0aaef0edcf9e3ddff948d626e51869df91683d"
+    },
+    {
+      "path": "js/speaking-ai.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "f94e9061ea5977197f5c34d6b73a1787fd059e631ead4abb54184efb7a333226"
+    },
+    {
+      "path": "js/speaking-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "c4042072f8c37fc3e921c3b0aafb0db62e7e86f0bc507ab41b271e36361a0615"
+    },
+    {
+      "path": "js/speaking-recorder.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "1d910c2dc4db52c477665df0c01a3dd321d60b17825439c36bd3ae45f251bd95"
+    },
+    {
+      "path": "js/storage.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "f2ae992aac1d530e773aedb565b147e62e625efe2584c8bf38281016cd7ecb63"
+    },
+    {
+      "path": "js/study-plan-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "224b74d64209d32f5e5ca6cc951ec8a70fed628ddf8afd307219b081ba353cf5"
+    },
+    {
+      "path": "js/writing-ai.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "0bc235e72ab2947ae73ba80a6cc68324abba01a43f993353d0b8d64502ca9a52"
+    },
+    {
+      "path": "js/writing-engine.js",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "af037f7f5ce04703eb7e01df7d9e6fe558f678afc2ffd4cd5cf7c7d3569975ec"
+    },
+    {
+      "path": "index.html",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "d8d3474839137ed95b6b7a100956d42663f5ab72e8983e1b75e5e76ffafdc2b1"
+    },
+    {
+      "path": "PROJECT_STATE.md",
+      "tracked": true,
+      "ignore_rule": null,
+      "sha256": "6eaa2966e2ab4089d6646d221e44c742cb0068bdfb2d156702ce57cffdf6350f"
+    }
+  ],
+  "worker_candidates": [
+    {
+      "path": "worker.js",
+      "sha256": "e6933a8741e3cc996cc025847c6d02250d7e3bb7598b0337428fd3b7abb11b73",
+      "tracked": false
+    },
+    {
+      "path": "cloudflare-worker/worker-phase6.js",
+      "sha256": "4283a6d7d102ba9e8f1e2e655b5aa692587eb6d166c4485fa4f472b3b25752ab",
+      "tracked": true
+    },
+    {
+      "path": "cloudflare-worker/worker-phase62.js",
+      "sha256": "3c2bbe34647927be38caed8fe248d907bc02dee916d76ac86cb2f381755c9812",
+      "tracked": false
+    }
+  ],
+  "git_status_before": " M PROJECT_STATE.md\n?? .baseline-tools/\n?? .consolidation/\n?? BASELINE_VERIFICATION.json\n?? LIVE_REPO_AUDIT.md\n?? PHASE2_GUIDE.md\n?? PHASE5_INSTALL.md\n?? \"ZIP file/\"\n?? cloudflare-worker/worker-phase62.js\n?? microphone-integration.txt\n?? phase2-preview/\n?? worker.js\n"
+}
