@@ -106,3 +106,10 @@ User reports cleanup utility moved six historical folders and two ZIPs to `.loca
 - User-uploaded newer Cloudflare Worker was patched separately and packaged for manual deployment; not committed as active Worker, not deployed or live-tested.
 - Correction-derived spaced reviews already use A2Phase64; AI nextPractice free-text suggestions are NOT automatically scheduled into Daily Plan. This remains a priority.
 - No localStorage reset or historical progress rewrite. Local Codespaces uncommitted changes may differ from GitHub branch: reconcile before pulling.
+
+## Optional speaking follow-up (2026-10-14)
+- Implemented in committed frontend: Speaking feedback now offers 'Practise my mistakes now' when feedback contains corrections or suggested practice. It launches an on-demand generated A2 concept lesson via existing PracticeUI using up to 3 validated corrections and up to 3 suggestions, with fresh-context instruction.
+- PracticeUI pins `a2_speaking_followup` to A2 and does not assign a Daily Plan activity ID; does not award A2 curriculum mastery. Existing practice engine handles question grading and normal error tracking.
+- `index.html` cache versions bumped. No Worker modification/deployment needed for this button; existing `/practice/generate` must be functional.
+- NOT yet live-tested in browser; no automated test suite run by assistant on GitHub commit. Do not claim user browser storage was verified. No automatic conversion of free-text suggestions into future scheduled tasks; existing correction-derived spaced reviews remain.
+- Local Codespaces `js/a2-ai-conversation.js` had uncommitted scenarioId change; preserve it when reconciling remote branch. Do not reset localStorage.
