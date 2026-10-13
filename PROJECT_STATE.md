@@ -99,3 +99,10 @@ User reports cleanup utility moved six historical folders and two ZIPs to `.loca
 - User wants Daily Plan derived from curriculum and personal mistakes, and balanced speaking/listening/reading/writing across week. Planner enhancement pending; do not claim complete.
 - Source for this release: latest uploaded tracked ZIP from before Consolidation 2; verify installed version before applying.
 - No Worker modifications or localStorage resets.
+
+
+## Speaking quality update — 2026-10-14
+- GitHub js/a2-ai-conversation.js now filters unchanged, unsupported and duplicate AI feedback corrections before journal registration; nextPractice is explicitly labelled unscheduled suggestions. Commit 077d2b6.
+- User-uploaded newer Cloudflare Worker was patched separately and packaged for manual deployment; not committed as active Worker, not deployed or live-tested.
+- Correction-derived spaced reviews already use A2Phase64; AI nextPractice free-text suggestions are NOT automatically scheduled into Daily Plan. This remains a priority.
+- No localStorage reset or historical progress rewrite. Local Codespaces uncommitted changes may differ from GitHub branch: reconcile before pulling.
