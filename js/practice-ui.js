@@ -76,6 +76,7 @@ async startFromActivity(activity) {
 // adaptive sessions retain their existing profile-derived level.
 if ((activity.source === "curriculum_practice" ||
      activity.source === "a2_mastery_assessment" ||
+     activity.source === "a2_speaking_followup" ||
      activity.type === "skill") &&
     ["A1", "A2", "B1"].includes(activity.level)) {
   session.level = activity.level;
@@ -84,7 +85,7 @@ if ((activity.source === "curriculum_practice" ||
 session.source = activity.source || "daily_plan";
 // The mastery bridge uses a descriptive lesson target, never a bare internal ID.
 session.masteryTopicId = activity.masteryTopicId || null;
-session.dailyActivityId = activity.id || null;
+session.dailyActivityId = activity.source === "a2_speaking_followup" ? null : (activity.id || null);
 
   console.log(
     "Created practice session:",
