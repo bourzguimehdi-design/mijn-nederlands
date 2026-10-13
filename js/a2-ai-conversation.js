@@ -51,6 +51,24 @@ const A2AIConversation = {
       }catch(e){error.textContent=e.message;button.disabled=false;button.textContent='🎤 Record response'}
     };
   },
+  cleanFeedback(feedback, history) {
+    const learner = (history || []).filter(h => h.role === 'learner').map(h => String(h.text || ''));
+    const normalize = value => String(value || '').normalize('NFC').toLocaleLowerCase('nl')
+      .replace(/[.,!?;:“”"'‘’\u2010-\u2015]/g, ' ').replace(/\s+/g, ' ').trim();
+    const utterances = learner.map(normalize).filter(Boolean);
+    const corrections = Array.isArray(feedback?.corrections) ? feedback.corrections : [];
+    const seen = new Set();
+    const valid = corrections.filter(c => {
+      const original = normalize(c?.original), suggested = normalize(c?.suggested);
+      if (!original || !suggested || original === suggested) return false;
+      if (!utterances.some(u => u === original || u.includes(original))) return false;
+      const key = original + '|' + suggested;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).slice(0, 4);
+    return {...feedback, corrections: valid};
+  },
   async finish(){
     if(this.busy)return;
     if(this.recording){try{this.recording.rec.stop();this.recording.stream.getTracks().forEach(t=>t.stop())}catch(_){}this.recording=null;}
@@ -68,7 +86,7 @@ const A2AIConversation = {
         const response=await fetch(`${MijnNederlandsAPI.baseURL}/a2/conversation/feedback`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:this.scenario.title,history:session.history})});
         const data=await response.json();
         if(!response.ok||data.status!=='success'||!data.feedback)throw Error(data.error||'Feedback unavailable');
-        feedback=data.feedback;
+        feedback=this.cleanFeedback(data.feedback, session.history);
         session.feedback=feedback;
         session.reviewTracking = typeof A2Phase63 !== 'undefined' ? A2Phase63.registerFeedback(session, feedback) : {registered:0,concepts:[]};
         try{const all=JSON.parse(localStorage.getItem(key)||'[]');const match=all.findLastIndex(x=>x.completedAt===session.completedAt&&x.scenario===session.scenario);if(match>=0){all[match]=session;localStorage.setItem(key,JSON.stringify(all));}}catch(e){console.warn('Feedback not saved',e)}
@@ -77,7 +95,7 @@ const A2AIConversation = {
     const items=(arr)=>Array.isArray(arr)&&arr.length?`<ul>${arr.slice(0,5).map(x=>`<li>${this.esc(String(x))}</li>`).join('')}</ul>`:'<p>No specific findings from this short conversation.</p>';
     const corrections=feedback?.corrections?.length?`<h3>Corrections and suggestions</h3>${feedback.corrections.slice(0,5).map(x=>`<div style="margin:12px 0"><p><strong>Your words:</strong> <span lang="nl">${this.esc(x.original||'')}</span></p><p><strong>Suggested:</strong> <span lang="nl">${this.esc(x.suggested||'')}</span></p><p>${this.esc(x.explanation||'')}</p></div>`).join('')}`:'<p>No specific grammar corrections identified.</p>';
     const reviewNote=feedback && session.reviewTracking ? `<p><strong>Mistake journal:</strong> ${Number(session.reviewTracking.saved||0)} correction(s) saved. ${session.reviewTracking.registered ? `${session.reviewTracking.registered} review category/categories scheduled: ${this.esc(session.reviewTracking.concepts.join(', '))}.` : 'No new spaced-review schedule was created (unclassified correction, duplicate, or already registered).'} </p>` : '';
-    const report=feedback?`<p>${this.esc(feedback.summary||'')}</p><h3>What went well</h3>${items(feedback.strengths)}<h3>What to improve</h3>${items(feedback.improvements)}${corrections}<h3>Next practice</h3>${items(feedback.nextPractice)}`:`<p><strong>AI feedback is unavailable${error?`: ${this.esc(error)}`:''}.</strong> Your conversation is saved. This is not a grammar assessment.</p><button id="a2RetryFeedback">Retry AI feedback</button>`;
+    const report=feedback?`<p>${this.esc(feedback.summary||'')}</p><h3>What went well</h3>${items(feedback.strengths)}<h3>What to improve</h3>${items(feedback.improvements)}${corrections}<h3>Suggested next practice</h3><p class="small">These are AI suggestions, not automatically scheduled tasks. Genuine corrections are saved to your mistake journal and eligible categories are added to spaced reviews.</p>${items(feedback.nextPractice)}`:`<p><strong>AI feedback is unavailable${error?`: ${this.esc(error)}`:''}.</strong> Your conversation is saved. This is not a grammar assessment.</p><button id="a2RetryFeedback">Retry AI feedback</button>`;
     root.innerHTML=`<button id="aiChatBack">← A2 Learning Studio</button><div class="skill-label">A2 · SPEAKING FEEDBACK</div><h1>${this.esc(this.scenario.title)}</h1><div class="card curriculum-panel"><p>You gave ${count} Dutch response${count===1?'':'s'}.</p>${report}${reviewNote}${count<3?'<p>At least three responses are required to complete a Daily Plan activity.</p>':''}<details><summary>Review conversation</summary>${session.history.map(h=>`<p><strong>${h.role==='learner'?'You':'Tutor'}:</strong> ${this.esc(h.text)}</p>`).join('')}</details><div class="a2-actions"><button id="aiChatAgain">Practise again</button><button id="aiChatDone" class="primary">Back to Daily Plan</button></div></div>`;
     root.querySelector('#aiChatBack').onclick=()=>A2Studio.render();
     root.querySelector('#aiChatAgain').onclick=()=>this.open(this.scenario.id);
