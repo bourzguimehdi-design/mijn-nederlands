@@ -69,6 +69,37 @@ const A2AIConversation = {
     }).slice(0, 4);
     return {...feedback, corrections: valid};
   },
+  // Optional generated A2 practice, separate from curriculum mastery and Daily Plan.
+  async practiseFeedback(session) {
+    if (!session?.feedback || typeof PracticeUI === 'undefined') return;
+    const feedback=session.feedback;
+    const corrections=Array.isArray(feedback.corrections) ? feedback.corrections.slice(0,3) : [];
+    const suggestions=Array.isArray(feedback.nextPractice) ? feedback.nextPractice.slice(0,3) : [];
+    const concepts=corrections.map(c => {
+      const category=typeof A2Phase64 !== 'undefined' ? A2Phase64.conceptFor(c) : null;
+      return {category, original:String(c.original||'').slice(0,200), suggested:String(c.suggested||'').slice(0,200), explanation:String(c.explanation||'').slice(0,250)};
+    });
+    if (!concepts.length && !suggestions.length) return;
+    const targets=concepts.map(c => [c.category||'Dutch A2 grammar', c.explanation, 'Learner wrote: '+c.original, 'Correction: '+c.suggested].join('. '));
+    const concept=[
+      'Personalized Dutch CEFR A2 follow-up lesson after a speaking conversation.',
+      'Teach the grammar behind these errors, then generate new guided exercises and feedback.',
+      'Use NEW everyday contexts and sentences, not copies of the conversation.',
+      'Targets: '+targets.concat(suggestions.map(String)).join(' | ').slice(0,1100)
+    ].join(' ');
+    const btn=document.getElementById('a2PractiseFeedback');
+    if(btn){btn.disabled=true;btn.textContent='Preparing your A2 lesson…';}
+    try {
+      await PracticeUI.startFromActivity({
+        type:'concept',source:'a2_speaking_followup',level:'A2',
+        minutes:12,concept,title:'Personalized A2 review from speaking'
+      });
+    } catch(e) {
+      if(btn){btn.disabled=false;btn.textContent='Practise my mistakes now';}
+      const status=document.getElementById('a2FollowupError');
+      if(status)status.textContent='Could not generate your lesson: '+e.message;
+    }
+  },
   async finish(){
     if(this.busy)return;
     if(this.recording){try{this.recording.rec.stop();this.recording.stream.getTracks().forEach(t=>t.stop())}catch(_){}this.recording=null;}
@@ -96,10 +127,12 @@ const A2AIConversation = {
     const corrections=feedback?.corrections?.length?`<h3>Corrections and suggestions</h3>${feedback.corrections.slice(0,5).map(x=>`<div style="margin:12px 0"><p><strong>Your words:</strong> <span lang="nl">${this.esc(x.original||'')}</span></p><p><strong>Suggested:</strong> <span lang="nl">${this.esc(x.suggested||'')}</span></p><p>${this.esc(x.explanation||'')}</p></div>`).join('')}`:'<p>No specific grammar corrections identified.</p>';
     const reviewNote=feedback && session.reviewTracking ? `<p><strong>Mistake journal:</strong> ${Number(session.reviewTracking.saved||0)} correction(s) saved. ${session.reviewTracking.registered ? `${session.reviewTracking.registered} review category/categories scheduled: ${this.esc(session.reviewTracking.concepts.join(', '))}.` : 'No new spaced-review schedule was created (unclassified correction, duplicate, or already registered).'} </p>` : '';
     const report=feedback?`<p>${this.esc(feedback.summary||'')}</p><h3>What went well</h3>${items(feedback.strengths)}<h3>What to improve</h3>${items(feedback.improvements)}${corrections}<h3>Suggested next practice</h3><p class="small">These are AI suggestions, not automatically scheduled tasks. Genuine corrections are saved to your mistake journal and eligible categories are added to spaced reviews.</p>${items(feedback.nextPractice)}`:`<p><strong>AI feedback is unavailable${error?`: ${this.esc(error)}`:''}.</strong> Your conversation is saved. This is not a grammar assessment.</p><button id="a2RetryFeedback">Retry AI feedback</button>`;
-    root.innerHTML=`<button id="aiChatBack">← A2 Learning Studio</button><div class="skill-label">A2 · SPEAKING FEEDBACK</div><h1>${this.esc(this.scenario.title)}</h1><div class="card curriculum-panel"><p>You gave ${count} Dutch response${count===1?'':'s'}.</p>${report}${reviewNote}${count<3?'<p>At least three responses are required to complete a Daily Plan activity.</p>':''}<details><summary>Review conversation</summary>${session.history.map(h=>`<p><strong>${h.role==='learner'?'You':'Tutor'}:</strong> ${this.esc(h.text)}</p>`).join('')}</details><div class="a2-actions"><button id="aiChatAgain">Practise again</button><button id="aiChatDone" class="primary">Back to Daily Plan</button></div></div>`;
+    root.innerHTML=`<button id="aiChatBack">← A2 Learning Studio</button><div class="skill-label">A2 · SPEAKING FEEDBACK</div><h1>${this.esc(this.scenario.title)}</h1><div class="card curriculum-panel"><p>You gave ${count} Dutch response${count===1?'':'s'}.</p>${report}${reviewNote}${feedback && ((feedback.corrections||[]).length || (feedback.nextPractice||[]).length) ? '<div class="a2-actions"><button id="a2PractiseFeedback" class="primary">Practise my mistakes now · A2 · 12 min</button></div><p class="small">Optional generated lesson and fresh exercises. Does not complete another Daily Plan task or award curriculum mastery.</p><p id="a2FollowupError" role="status"></p>' : ''}${count<3?'<p>At least three responses are required to complete a Daily Plan activity.</p>':''}<details><summary>Review conversation</summary>${session.history.map(h=>`<p><strong>${h.role==='learner'?'You':'Tutor'}:</strong> ${this.esc(h.text)}</p>`).join('')}</details><div class="a2-actions"><button id="aiChatAgain">Practise again</button><button id="aiChatDone" class="primary">Back to Daily Plan</button></div></div>`;
     root.querySelector('#aiChatBack').onclick=()=>A2Studio.render();
     root.querySelector('#aiChatAgain').onclick=()=>this.open(this.scenario.id);
     root.querySelector('#aiChatDone').onclick=()=>Dashboard.open();
+    const followup=root.querySelector('#a2PractiseFeedback');
+    if(followup)followup.onclick=()=>this.practiseFeedback(session);
     const retry=root.querySelector('#a2RetryFeedback');if(retry)retry.onclick=()=>{this.busy=false;this.finish();};
     if(count>=3&&typeof A2AdaptivePhase5!=='undefined'){
       const task=A2AdaptivePhase5.currentTask;
