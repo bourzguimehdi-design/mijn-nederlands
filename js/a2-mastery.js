@@ -23,9 +23,11 @@ const A2Mastery = {
     }
     const task=typeof A2AdaptivePhase5!=='undefined' ? A2AdaptivePhase5.currentTask : null;
     this.pending={id, dailyTask:task?.kind==='lesson' && task.studioId===id ? {...task} : null};
+    // Give the generator a human-readable A2 objective, not an opaque snake_case ID.
+    const target=`${lesson.title}. Goal: ${lesson.goal}. Focus: ${lesson.explanation}`;
     try {
       await PracticeUI.startFromActivity({
-        id:`a2-mastery-${id}-${Date.now()}`,type:'concept',concept:id,
+        id:`a2-mastery-${id}-${Date.now()}`,type:'concept',concept:target,masteryTopicId:id,
         minutes:9,level:'A2',source:'a2_mastery_assessment',title:`A2 assessment: ${lesson.title}`
       });
     } catch (error) {
@@ -37,12 +39,15 @@ const A2Mastery = {
   },
   record(result) {
     const p=this.pending;
-    if (!p || !result || result.source!=='a2_mastery_assessment' || result.concept!==p.id) return;
+    if (!p || !result || result.source!=='a2_mastery_assessment' || result.masteryTopicId!==p.id || result.level!=='A2') return;
     // Never award mastery from ungraded answers or too few exercises.
-    const graded=(Array.isArray(result.answers)?result.answers:[]).filter(a=>typeof a.correct==='boolean');
+    const answers=Array.isArray(result.answers)?result.answers:[];
+    const graded=answers.filter(a=>typeof a.correct==='boolean');
     const correct=graded.filter(a=>a.correct).length;
-    const eligible=graded.length>=5;
+    // At least five objectively graded items and no missing grades.
+    const eligible=graded.length>=5 && graded.length===answers.length;
     const passed=eligible && correct/graded.length>=0.8;
+    // A result can complete the daily task without awarding mastery.
     const all=this.read(), prev=all[p.id]||{};
     all[p.id]={...prev,mastered:prev.mastered===true||passed,attempts:(prev.attempts||0)+1,
       lastAttemptAt:new Date().toISOString(),lastScore:graded.length?Math.round(100*correct/graded.length):null,

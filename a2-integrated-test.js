@@ -9,7 +9,7 @@ for(const file of ['data/curriculum.js','data/a2-depth.js','data/a2-vocabulary.j
 }
 assert(vm.runInContext("DutchCurriculum.filter(x=>x.level==='A2').length",ctx)>=46);
 assert.equal(vm.runInContext("Object.keys(A2Depth).length",ctx),22);
-assert.equal(vm.runInContext("A2Vocabulary.length",ctx),43);
+assert.equal(vm.runInContext("A2Vocabulary.length",ctx)>=43,true);
 assert.equal(vm.runInContext("A2Conversations.length",ctx),5);
 assert.equal(vm.runInContext("A2MockTasks.length",ctx),4);
 const first=vm.runInContext("A2Vocabulary[0].id",ctx);

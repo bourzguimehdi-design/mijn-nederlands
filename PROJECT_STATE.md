@@ -92,10 +92,10 @@ Build a maintainable Dutch-learning application centered on a **complete 46-topi
 User reports cleanup utility moved six historical folders and two ZIPs to `.local-archive`. Git status had untracked active JS and Worker files, plus two tracked deletions. Prior instructions to restore/stage/commit were given but execution has not been confirmed. A read-only `audit_live_repo.py` has been prepared to inspect actual Codespaces checkout; it is not yet executed there. No app refactor or deployment is verified in this step. See `SESSION_HANDOFF_2026-10-12.txt` for continuation.
 
 
-## 2026-10-12: Consolidation 1 — A2-first dashboard (prepared, not yet installed)
-- Verified user-provided Git archive after baseline recovery (63 entries).
-- Adds A2 overview (passed topic checks / total, next lesson, due spaced reviews, saved corrections) using existing engines.
-- Moves historical skill estimates, focus areas, and aggregate progress into a collapsed disclosure; preserves their renderers and stored records.
-- Keeps Daily Plan engine, saved activity IDs, completed records, and all storage keys unchanged. No Worker changes.
-- Adds a focused display regression test. Six existing tests and the new test passed; Phase 7 bridge test cannot run from this tracked Git archive because untracked worker.js is absent. The same bridge test previously passed in Codespaces with worker.js present.
-- Next: install package, browser-check dashboard/mobile and Daily Plan, then refactor planner wrappers after reviewing live behavior.
+## 2026-10-12 A2 content release (pending installation)
+- User feedback: A2 ONLY; keep A2 dashboard and working Daily Plan; remove Dutch naturalisation goal card.
+- Add explicit A2 topics: colours/descriptions, clothing/getting dressed, locations/spatial words; add 15 vocabulary cards with stable new IDs.
+- Existing quick-check pass history remains intact; UI clarifies that quick checks are NOT mastery. Actual AI-verified mastery is NOT implemented yet.
+- User wants Daily Plan derived from curriculum and personal mistakes, and balanced speaking/listening/reading/writing across week. Planner enhancement pending; do not claim complete.
+- Source for this release: latest uploaded tracked ZIP from before Consolidation 2; verify installed version before applying.
+- No Worker modifications or localStorage resets.

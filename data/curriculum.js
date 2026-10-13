@@ -1651,4 +1651,140 @@ DutchCurriculum.push(...[
       }
     ]
   }
+,
+{
+  "id": "colours_and_descriptions",
+  "level": "A2",
+  "title": "Colours and describing things",
+  "goal": "Describe colours, sizes and patterns when shopping or talking about everyday objects.",
+  "explanation": "Colour adjectives: rood, blauw, groen, geel, zwart, wit, grijs, bruin, roze and paars. Before a de-noun, adjectives usually add -e: de rode jas. After een with a het-noun, the basic form is common: een blauw shirt. Compare: het blauwe shirt.",
+  "examples": [
+    {
+      "nl": "De rode jas is duur.",
+      "en": "The red coat is expensive."
+    },
+    {
+      "nl": "Ik zoek een blauw shirt.",
+      "en": "I am looking for a blue shirt."
+    }
+  ],
+  "checks": [
+    {
+      "prompt": "Complete: Ik draag een ___ shirt. (blue)",
+      "answer": "blauw"
+    },
+    {
+      "prompt": "Complete: De ___ broek is nieuw. (black)",
+      "answer": "zwarte"
+    }
+  ]
+},
+{
+  "id": "clothing_and_getting_dressed",
+  "level": "A2",
+  "title": "Clothes and getting dressed",
+  "goal": "Name common clothes and describe what you wear, buy or put on.",
+  "explanation": "Useful words: de broek, de jas, de jurk, het shirt, de schoenen, de sokken, de trui. Aankleden is separable: ik kleed me aan; in the perfect tense: ik heb me aangekleed. Aantrekken means to put on an item: ik trek mijn jas aan. Dragen means to wear.",
+  "examples": [
+    {
+      "nl": "Ik trek mijn schoenen aan.",
+      "en": "I put on my shoes."
+    },
+    {
+      "nl": "Zij draagt een warme trui.",
+      "en": "She is wearing a warm sweater."
+    }
+  ],
+  "checks": [
+    {
+      "prompt": "Complete: Ik trek mijn jas ___.",
+      "answer": "aan"
+    },
+    {
+      "prompt": "Complete: Zij draagt een warme ___. (sweater)",
+      "answer": "trui"
+    }
+  ]
+},
+{
+  "id": "locations_and_position",
+  "level": "A2",
+  "title": "Locations and position",
+  "goal": "Say where objects and people are using spatial words and prepositions.",
+  "explanation": "Place words: binnen (inside), buiten (outside), op (on), onder (under), in (in), naast (next to), tussen (between), voor (in front of), achter (behind), boven (above/upstairs), beneden (below/downstairs), tegenover (opposite). Use liggen for objects lying somewhere, staan for standing objects, and zitten for some contained locations.",
+  "examples": [
+    {
+      "nl": "De sleutels liggen op de tafel.",
+      "en": "The keys are on the table."
+    },
+    {
+      "nl": "De fiets staat naast het huis.",
+      "en": "The bicycle is next to the house."
+    }
+  ],
+  "checks": [
+    {
+      "prompt": "Complete: De kat zit ___ de tafel. (under)",
+      "answer": "onder"
+    },
+    {
+      "prompt": "Complete: De winkel is ___ het station. (opposite)",
+      "answer": "tegenover"
+    }
+  ]
+},
+{
+  "id": "food_meals_cooking",
+  "level": "A2",
+  "title": "Food, meals and cooking",
+  "goal": "Describe daily meals, groceries, ingredients, quantities and simple cooking steps.",
+  "explanation": "Use ontbijt, lunch and avondeten for meals; een kilo, een liter, een beetje and genoeg for quantities. Describe cooking with eerst, daarna and ten slotte. For example: Eerst snijd ik de groenten, daarna kook ik de rijst.",
+  "examples": [
+    {
+      "nl": "Ik eet meestal brood met kaas als ontbijt.",
+      "en": "I usually eat bread with cheese for breakfast."
+    },
+    {
+      "nl": "Eerst snijd ik de groenten, daarna maak ik de soep.",
+      "en": "First I chop the vegetables, then I make the soup."
+    }
+  ],
+  "checks": [
+    {
+      "prompt": "Complete: Ik eet brood als ___. (breakfast)",
+      "answer": "ontbijt"
+    },
+    {
+      "prompt": "Complete: Eerst snijd ik de groenten, ___ kook ik de soep.",
+      "answer": "daarna"
+    }
+  ]
+},
+{
+  "id": "furniture_home_rooms",
+  "level": "A2",
+  "title": "Furniture, rooms and the home",
+  "goal": "Describe rooms, furniture, where objects are placed and everyday household needs.",
+  "explanation": "Use de woonkamer, de slaapkamer, de keuken and de badkamer for rooms. Describe furniture with er staat (singular) and er staan (plural): In de woonkamer staat een bank. Er staan twee stoelen naast de tafel.",
+  "examples": [
+    {
+      "nl": "In mijn slaapkamer staat een bed naast de kast.",
+      "en": "There is a bed next to the wardrobe in my bedroom."
+    },
+    {
+      "nl": "We zetten de tafel bij het raam.",
+      "en": "We put the table by the window."
+    }
+  ],
+  "checks": [
+    {
+      "prompt": "Complete: In de woonkamer ___ een bank. (stands)",
+      "answer": "staat"
+    },
+    {
+      "prompt": "Complete: De kleding ligt in de ___. (wardrobe)",
+      "answer": "kast"
+    }
+  ]
+}
 ]);

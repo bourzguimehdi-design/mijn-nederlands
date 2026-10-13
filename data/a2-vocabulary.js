@@ -299,5 +299,195 @@ const A2Vocabulary = [
     "nl": "perron",
     "en": "platform",
     "example": "De trein staat op perron drie."
-  }
+  },
+{
+  "id": "a2-expansion-20261012-0",
+  "group": "Colours",
+  "nl": "rood",
+  "en": "red",
+  "example": "Mijn fiets is rood."
+},
+{
+  "id": "a2-expansion-20261012-1",
+  "group": "Colours",
+  "nl": "blauw",
+  "en": "blue",
+  "example": "Ik heb een blauw shirt."
+},
+{
+  "id": "a2-expansion-20261012-2",
+  "group": "Colours",
+  "nl": "groen",
+  "en": "green",
+  "example": "De groene jas is mooi."
+},
+{
+  "id": "a2-expansion-20261012-3",
+  "group": "Colours",
+  "nl": "zwart",
+  "en": "black",
+  "example": "Mijn schoenen zijn zwart."
+},
+{
+  "id": "a2-expansion-20261012-4",
+  "group": "Clothing",
+  "nl": "de jas",
+  "en": "coat",
+  "example": "Ik trek mijn jas aan."
+},
+{
+  "id": "a2-expansion-20261012-5",
+  "group": "Clothing",
+  "nl": "de broek",
+  "en": "trousers",
+  "example": "Deze broek is te groot."
+},
+{
+  "id": "a2-expansion-20261012-6",
+  "group": "Clothing",
+  "nl": "de schoenen",
+  "en": "shoes",
+  "example": "Mijn schoenen staan buiten."
+},
+{
+  "id": "a2-expansion-20261012-7",
+  "group": "Clothing",
+  "nl": "de trui",
+  "en": "sweater",
+  "example": "Ik draag een warme trui."
+},
+{
+  "id": "a2-expansion-20261012-8",
+  "group": "Clothing",
+  "nl": "zich aankleden",
+  "en": "to get dressed",
+  "example": "Ik kleed me snel aan."
+},
+{
+  "id": "a2-expansion-20261012-9",
+  "group": "Position",
+  "nl": "binnen",
+  "en": "inside",
+  "example": "De kinderen spelen binnen."
+},
+{
+  "id": "a2-expansion-20261012-10",
+  "group": "Position",
+  "nl": "buiten",
+  "en": "outside",
+  "example": "Mijn fiets staat buiten."
+},
+{
+  "id": "a2-expansion-20261012-11",
+  "group": "Position",
+  "nl": "onder",
+  "en": "under",
+  "example": "De kat zit onder de tafel."
+},
+{
+  "id": "a2-expansion-20261012-12",
+  "group": "Position",
+  "nl": "naast",
+  "en": "next to",
+  "example": "Ik zit naast mijn collega."
+},
+{
+  "id": "a2-expansion-20261012-13",
+  "group": "Position",
+  "nl": "tegenover",
+  "en": "opposite",
+  "example": "De winkel is tegenover het station."
+},
+{
+  "id": "a2-expansion-20261012-14",
+  "group": "Position",
+  "nl": "tussen",
+  "en": "between",
+  "example": "Het boek ligt tussen de kranten."
+}
+,
+{
+  "id": "a2-expansion-20261013-1",
+  "group": "Food",
+  "nl": "ontbijt",
+  "en": "breakfast",
+  "example": "Ik eet yoghurt als ontbijt."
+},
+{
+  "id": "a2-expansion-20261013-2",
+  "group": "Food",
+  "nl": "avondeten",
+  "en": "dinner",
+  "example": "Wij eten om zeven uur avondeten."
+},
+{
+  "id": "a2-expansion-20261013-3",
+  "group": "Food",
+  "nl": "ingrediënten",
+  "en": "ingredients",
+  "example": "Welke ingrediënten zitten in de soep?"
+},
+{
+  "id": "a2-expansion-20261013-4",
+  "group": "Food",
+  "nl": "boodschappen",
+  "en": "groceries",
+  "example": "Ik doe op zaterdag boodschappen."
+},
+{
+  "id": "a2-expansion-20261013-5",
+  "group": "Food",
+  "nl": "een kilo",
+  "en": "a kilogram",
+  "example": "Ik koop een kilo appels."
+},
+{
+  "id": "a2-expansion-20261013-6",
+  "group": "Food",
+  "nl": "snijden",
+  "en": "to cut",
+  "example": "Ik snijd de tomaten."
+},
+{
+  "id": "a2-expansion-20261013-7",
+  "group": "Home",
+  "nl": "de woonkamer",
+  "en": "living room",
+  "example": "De bank staat in de woonkamer."
+},
+{
+  "id": "a2-expansion-20261013-8",
+  "group": "Home",
+  "nl": "de slaapkamer",
+  "en": "bedroom",
+  "example": "Het bed staat in de slaapkamer."
+},
+{
+  "id": "a2-expansion-20261013-9",
+  "group": "Home",
+  "nl": "de kast",
+  "en": "wardrobe or cupboard",
+  "example": "Mijn kleren liggen in de kast."
+},
+{
+  "id": "a2-expansion-20261013-10",
+  "group": "Home",
+  "nl": "de bank",
+  "en": "sofa",
+  "example": "De bank staat naast de tafel."
+},
+{
+  "id": "a2-expansion-20261013-11",
+  "group": "Home",
+  "nl": "de stoel",
+  "en": "chair",
+  "example": "Er staan vier stoelen in de keuken."
+},
+{
+  "id": "a2-expansion-20261013-12",
+  "group": "Home",
+  "nl": "het raam",
+  "en": "window",
+  "example": "De tafel staat bij het raam."
+}
 ];

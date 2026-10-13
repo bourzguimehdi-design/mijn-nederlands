@@ -16,7 +16,7 @@ vm.runInContext(fs.readFileSync('js/a2-mastery.js','utf8'),context);
 function submit(answers){
   context.A2AdaptivePhase5.currentTask={kind:'lesson',studioId:'simple_past',date:'today',id:'plan-1'};
   vm.runInContext("A2Mastery.pending={id:'simple_past',dailyTask:{kind:'lesson',studioId:'simple_past',date:'today',id:'plan-1'}}",context);
-  context.Storage.savePracticeResult({id:'test-'+finished,source:'a2_mastery_assessment',concept:'simple_past',answers});
+  context.Storage.savePracticeResult({id:'test-'+finished,source:'a2_mastery_assessment',concept:'Simple past. Goal: describe past events.',masteryTopicId:'simple_past',level:'A2',answers});
   return new Promise(r=>setImmediate(r));
 }
 (async()=>{
