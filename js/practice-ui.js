@@ -3749,6 +3749,22 @@ renderComplete() {
   ==================================================
   */
 
+  // Separate concise learner-facing headings from verbose AI generation instructions.
+  displayTitle(session) {
+    const explicit = String(session?.title || "").trim();
+    if (explicit && explicit.length <= 90) return explicit;
+    const raw = String(session?.concept || session?.skill || "").trim();
+    if (!raw) return "Dutch practice";
+    if (/^Personalized Dutch CEFR A2 follow-up lesson/i.test(raw)) return "Your A2 grammar review";
+    // Curriculum concepts encode a short title before the learning goal.
+    const beforeGoal = raw.split(/\.\s+Goal\s*:/i)[0].trim();
+    if (beforeGoal && beforeGoal.length <= 85) return beforeGoal.replace(/[.!?]+$/, "");
+    // Other AI instructions must never become a multi-paragraph heading.
+    const first = raw.split(/[.!?]\s+/)[0].trim();
+    if (first && first.length <= 85 && !/^(Teach|Generate|Create|Use |Cover |Targets:|Personalized Dutch)/i.test(first)) return first;
+    return session?.practiceType === "skill" ? "Your Dutch skill practice" : "Your Dutch practice";
+  },
+
   renderHeader() {
 
     const session =
@@ -3764,10 +3780,7 @@ renderComplete() {
 
         <h1>
           ${this.escapeHTML(
-            session?.title ||
-            session?.concept ||
-            session?.skill ||
-            "Practice"
+            this.displayTitle(session)
           )}
         </h1>
 
