@@ -11,13 +11,14 @@ const A2Studio = {
     '<div class="card curriculum-panel"><h2>Your next lesson</h2><p>'+this.esc(status.nextTitle||'All A2 checks passed')+'</p><button class="primary" id="studioLesson">Continue A2 lesson →</button></div>'+
     '<div class="card curriculum-panel"><h2>A2 progress and B1 readiness</h2><p>'+status.passed+' of '+status.total+' A2 lesson checks passed.</p><p>Your daily practice is targeted at A2. B1 is not automatically unlocked by short lesson checks; reading, listening, writing, speaking and long-term retention also matter.</p></div>'+
     '<div class="card curriculum-panel"><h2>Vocabulary review</h2><p>'+due+' words due of '+A2Vocabulary.length+'</p><button class="primary" id="studioVocab">Review vocabulary →</button></div>'+
-    '<div class="card curriculum-panel"><h2>Guided conversations</h2><p>Multi-turn roleplay with Dutch prompts and listening. These are guided scenarios, not open-ended AI chat.</p><div id="studioChats"></div></div>'+
+    '<div class="card curriculum-panel"><h2>Guided conversations</h2><p>Multi-turn roleplay with Dutch prompts and listening. These are guided scenarios, not open-ended AI chat.</p><div id="studioChats"></div><button class="curriculum-topic" id="studioWordGuess">Raad het woord · A2 guessing game →</button></div>'+
     '<div class="card curriculum-panel"><h2>A2-style reading and listening</h2><p>Short practice samplers, not validated official exams. '+exams.length+' completed attempts.</p><div id="studioExams"></div></div>'+
     '<div class="card curriculum-panel"><h2>Writing and speaking</h2><p>Use the existing AI-evaluated writing and speaking assessments in the app. This studio does not change those assessment results.</p><button id="studioDashboard">Open dashboard →</button></div>';
    root.querySelector('#studioBack').onclick=()=>Dashboard.open();
    root.querySelector('#studioDashboard').onclick=()=>Dashboard.open();
    root.querySelector('#studioLesson').onclick=()=>CurriculumEngine.openNext('A2');
    root.querySelector('#studioVocab').onclick=()=>A2VocabularyEngine.open();
+   root.querySelector('#studioWordGuess').onclick=()=>A2WordGuess.open();
    root.querySelector('#studioChats').innerHTML=A2Conversations.map(s=>'<button class="curriculum-topic" data-scenario="'+this.esc(s.id)+'">'+this.esc(s.title)+' →</button>').join('');
    root.querySelectorAll('[data-scenario]').forEach(b=>b.onclick=()=>A2Conversation.open(b.dataset.scenario));
    root.querySelector('#studioExams').innerHTML=A2MockTasks.map(t=>'<button class="curriculum-topic" data-exam="'+this.esc(t.id)+'">'+this.esc(t.skill)+' · '+this.esc(t.title)+' →</button>').join('');
