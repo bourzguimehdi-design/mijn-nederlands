@@ -81,10 +81,16 @@ const A2AIConversation = {
     });
     if (!concepts.length && !suggestions.length) return;
     const targets=concepts.map(c => [c.category||'Dutch A2 grammar', c.explanation, 'Learner wrote: '+c.original, 'Correction: '+c.suggested].join('. '));
+    const topicNames=[...new Set(concepts.map(c => c.category).filter(Boolean))].slice(0,3);
+    const coverage=topicNames.length > 1
+      ? 'Cover EVERY listed error category with at least TWO distinct graded exercises per category, then use mixed questions for remaining exercises. Do not focus all questions on one category.'
+      : 'Give multiple varied exercises on the main weakness, with at least one transfer question in a new context.';
     const concept=[
       'Personalized Dutch CEFR A2 follow-up lesson after a speaking conversation.',
       'Teach the grammar behind these errors, then generate new guided exercises and feedback.',
+      coverage,
       'Use NEW everyday contexts and sentences, not copies of the conversation.',
+      'Error categories: '+topicNames.join(', ')+'.',
       'Targets: '+targets.concat(suggestions.map(String)).join(' | ').slice(0,1100)
     ].join(' ');
     const btn=document.getElementById('a2PractiseFeedback');
@@ -92,7 +98,7 @@ const A2AIConversation = {
     try {
       await PracticeUI.startFromActivity({
         type:'concept',source:'a2_speaking_followup',level:'A2',
-        minutes:12,concept,title:'Personalized A2 review from speaking'
+        minutes:12,concept,title:'Your A2 grammar review',followupTopics:topicNames
       });
     } catch(e) {
       if(btn){btn.disabled=false;btn.textContent='Practise my mistakes now';}
