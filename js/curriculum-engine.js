@@ -11,8 +11,10 @@ const CurriculumEngine = {
     })[ch]);
   },
   normalize(value) {
-    return String(value ?? '').trim().toLocaleLowerCase('nl-NL')
-      .replace(/\s+/g, ' ').replace(/[.!?]+$/g, '');
+    return String(value ?? '').normalize('NFC').trim().toLocaleLowerCase('nl-NL')
+      .replace(/\s+([,.!?;:])/g, '$1')
+      .replace(/[.!?]+$/g, '')
+      .replace(/\s+/g, ' ').trim();
   },
   load() {
     try {
