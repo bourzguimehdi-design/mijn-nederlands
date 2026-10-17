@@ -1786,5 +1786,83 @@ DutchCurriculum.push(...[
       "answer": "kast"
     }
   ]
+},
+{
+  "id": "separable_verbs_a2",
+  "level": "A2",
+  "title": "Separable verbs (scheidbare werkwoorden)",
+  "goal": "Use common separable verbs in main clauses, subordinate clauses, with modal verbs and in the perfect tense.",
+  "explanation": "Some Dutch verbs combine a prefix with a verb: binnenkomen (enter), aankomen (arrive), opstaan (get up), meenemen (take along), uitgaan (go out). In a normal main clause, the prefix moves to the end: Ik sta om zeven uur op. With a modal verb, keep the infinitive together: Ik wil vroeg opstaan. In a subordinate clause, the conjugated verb stays together at the end: Ik denk dat hij morgen aankomt. In the perfect tense, ge often comes between prefix and verb: Ik ben aangekomen; ik ben opgestaan. Watch meaning: aankomen means arrive, but binnenkomen means enter a room.",
+  "examples": [
+    {
+      "nl": "Mag ik binnenkomen?",
+      "en": "May I come in?"
+    },
+    {
+      "nl": "De trein komt om acht uur aan.",
+      "en": "The train arrives at eight."
+    },
+    {
+      "nl": "Ik neem mijn jas mee.",
+      "en": "I take my coat along."
+    },
+    {
+      "nl": "Ik denk dat zij vroeg opstaat.",
+      "en": "I think she gets up early."
+    }
+  ],
+  "checks": [
+    {
+      "prompt": "Complete: De trein komt om negen uur ___. (arrives)",
+      "answer": "aan"
+    },
+    {
+      "prompt": "Complete: Mag ik ___? (enter the room)",
+      "answer": "binnenkomen"
+    },
+    {
+      "prompt": "Complete: Ik sta elke ochtend om zeven uur ___.",
+      "answer": "op"
+    }
+  ]
+},
+{
+  "id": "fixed_preposition_verbs_a2",
+  "level": "A2",
+  "title": "Verbs with fixed prepositions",
+  "goal": "Choose the correct preposition after common verbs and ask simple questions using er + preposition.",
+  "explanation": "Some verbs require a particular preposition: wachten op (wait for), denken aan (think about), praten over (talk about), luisteren naar (listen to), zoeken naar (look for), beginnen met (start with), zorgen voor (take care of), geloven in (believe in). The preposition is part of the expression, not a separable verb prefix. Compare: Ik wacht op de bus; Ik denk aan mijn familie. With things, Dutch often uses er + preposition: Ik wacht erop. For people, use preposition + pronoun: Ik wacht op hem. Practise these as complete combinations.",
+  "examples": [
+    {
+      "nl": "Ik wacht op de bus.",
+      "en": "I am waiting for the bus."
+    },
+    {
+      "nl": "Wij praten over ons werk.",
+      "en": "We talk about our work."
+    },
+    {
+      "nl": "Zij luistert naar muziek.",
+      "en": "She listens to music."
+    },
+    {
+      "nl": "Ik begin met koken.",
+      "en": "I start cooking."
+    }
+  ],
+  "checks": [
+    {
+      "prompt": "Complete: Ik wacht ___ de trein.",
+      "answer": "op"
+    },
+    {
+      "prompt": "Complete: We praten ___ onze vakantie.",
+      "answer": "over"
+    },
+    {
+      "prompt": "Complete: Hij luistert ___ de radio.",
+      "answer": "naar"
+    }
+  ]
 }
 ]);
