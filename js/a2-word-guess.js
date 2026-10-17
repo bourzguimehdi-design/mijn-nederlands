@@ -35,6 +35,7 @@ const A2WordGuess = {
     root.querySelector('#wordGiveUp').onclick=()=>this.end(false);
     root.querySelector('#wordMic').onclick=async()=>{
       const error=root.querySelector('#wordError');
+      const recordedInput=root.querySelector('#wordInput');
       try {
         if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)throw Error('Microphone not supported');
         const stream=await navigator.mediaDevices.getUserMedia({audio:true});
@@ -45,7 +46,10 @@ const A2WordGuess = {
           const response=await fetch(MijnNederlandsAPI.baseURL+'/transcribe-speaking',{method:'POST',body:form});
           const data=await response.json();const text=data.transcription||data.text||data.transcript||'';
           if(!response.ok||!text)throw Error(data.error||'Transcription unavailable');
-          this.ask(text);
+          if(this.finished||!recordedInput.isConnected)return;
+          this.render('', 'Check the recognized text below, then send your question.');
+          const input=document.getElementById('wordInput');
+          input.value=String(text);input.focus();
         }catch(e){this.render('',e.message);}};
         rec.start();error.textContent='Recording… press Stop to send.';
         const btn=root.querySelector('#wordMic');btn.textContent='⏹ Stop';btn.onclick=()=>rec.stop();
