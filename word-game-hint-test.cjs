@@ -1,0 +1,16 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const source=fs.readFileSync(process.argv[2]||'js/a2-word-guess.js','utf8');
+let scrolled=0;
+const panel={hidden:true,textContent:'',scrollIntoView(){scrolled++;}};
+const draft={value:'Is het groen?'};
+const ctx={document:{getElementById(id){return id==='wordHintText'?panel:draft;}}};
+vm.createContext(ctx);vm.runInContext(source+'\nthis.game=A2WordGuess;',ctx);
+const g=ctx.game;g.secret=g.bank.find(x=>x.word==='wortel');
+g.render=()=>{throw Error('Hint must not rerender and erase draft');};
+g.showHint();assert.equal(panel.hidden,false);assert.equal(panel.textContent,'Hint: Het is vaak oranje.');
+assert.equal(draft.value,'Is het groen?');assert.equal(g.questions,0);assert.equal(g.history.length,0);
+g.showHint();assert(panel.textContent.includes('Categorie: groente.'));assert(panel.textContent.includes('Het is vaak oranje.'));
+g.showHint();assert.equal(g.hints,2);assert.equal(scrolled,3);
+g.finished=true;const text=panel.textContent;g.showHint();assert.equal(panel.textContent,text);
+assert(source.includes('this.esc(this.hintText)'));assert(source.includes("this.hintText='';"));
+console.log('PASS: visible inline hints, category escalation, persistent hint state, preserved draft, no question/history changes, finished-round guard. DOM stub used; live browser untested.');
