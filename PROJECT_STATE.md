@@ -113,3 +113,11 @@ User reports cleanup utility moved six historical folders and two ZIPs to `.loca
 - `index.html` cache versions bumped. No Worker modification/deployment needed for this button; existing `/practice/generate` must be functional.
 - NOT yet live-tested in browser; no automated test suite run by assistant on GitHub commit. Do not claim user browser storage was verified. No automatic conversion of free-text suggestions into future scheduled tasks; existing correction-derived spaced reviews remain.
 - Local Codespaces `js/a2-ai-conversation.js` had uncommitted scenarioId change; preserve it when reconciling remote branch. Do not reset localStorage.
+
+## 2026-10-17: A2 practice quality patch (committed)
+- CurriculumEngine.normalize removes whitespace before punctuation and ignores final punctuation/case as UI promises. Example `Waar woon je ?` matches `Waar woon je?`; wrong answers remain wrong. Historical checks untouched.
+- Speaking follow-up PracticeUI now assigns a short display title from the activity instead of showing the entire prompt. AI still receives detailed concept text.
+- A2AIConversation.practiseFeedback extracts up to three distinct correction categories and requests at least two graded exercises per category when multiple exist; remaining exercises mixed. This is prompt-level guidance, NOT programmatically enforced distribution. Feedback can include up to three correction examples and three suggestions.
+- index.html script query versions refreshed. New test `node a2-practice-quality-test.js` added but NOT executed in Codespaces by assistant. JavaScript syntax checked from GitHub source; all three edited JS scripts parsed successfully.
+- Changes made directly to GitHub branch `feature/a2-integrated-upgrade`, not automatically installed in local Codespaces. Safely fetch/rebase after checking local status; no reset/force pull. Never clear browser localStorage.
+- Planned but NOT implemented: `Raad het woord` A2 speaking guessing game with give-up, hints and AI feedback; separable verbs and fixed-preposition verbs A2 lessons; structured automatic scheduling of free-text nextPractice suggestions. The guessing game requires a stable hidden secret on the Worker side and explicit deployment/testing.
