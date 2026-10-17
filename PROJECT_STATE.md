@@ -136,3 +136,10 @@ User reports cleanup utility moved six historical folders and two ZIPs to `.loca
 - PASS locally: Worker syntax; node word-game-worker-test.mjs (mocked AI) covers eight words, enum mapping, invalid outputs, history/late turns, input/API failures, normal conversation route. Live factual accuracy, microphone, feedback/journal/reviews NOT verified. No Cloudflare deployment performed. No frontend change or localStorage change.
 - Limitations retained: client-held secret; frontend literal guess matching and async round controls; AI semantic truthfulness not deterministic. Broader vocabulary and server-owned rounds deferred.
 - Deploy the supplied candidate manually to mijn-nederlands-api after retaining the current deployed source/version. Existing frontend needs no fetch/rebase/cache reset for this Worker-only fix. Test carrot questions, no hints unless requested, ordinary roleplay, hints/give-up and feedback persistence. Roll back using prior Cloudflare version if needed.
+
+
+## 2026-10-17: Voice transcript review
+- User reports game improved after Worker deployment, but speech recognition seems worse. Screenshot contains 'Is het een fraude?' and 'Zij heeft een groen.' Actual audio unavailable, so intended words and recognition accuracy cannot be established.
+- Verified supplied Worker uses gpt-4o-transcribe, language nl, existing Dutch learner prompt. Last Worker patch left transcription unchanged.
+- Game frontend now places recognized text in the editable question field, shows a review message and waits for explicit send. Discards late transcription when original input is detached, preventing contamination after a view/round change. Cache version refreshed. No Worker redeployment needed for this frontend change.
+- PASS local syntax/static wiring check only; no live microphone testing or measured transcription accuracy improvement. No progress resets. User must safely sync Codespaces after checking local Git status, then hard refresh.
