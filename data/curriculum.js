@@ -1004,33 +1004,6 @@ const DutchCurriculum = [
 // Phase 6 additional A2 coverage: additive IDs, existing progress is retained.
 DutchCurriculum.push(...[
   {
-    "id": "separable_verbs_a2",
-    "level": "A2",
-    "title": "Separable verbs",
-    "goal": "Use opstaan, meenemen and terugbellen in main clauses and infinitives.",
-    "explanation": "In a main clause, the prefix usually moves to the end: Ik sta om zeven uur op. With an infinitive it stays together: Ik wil vroeg opstaan.",
-    "examples": [
-      {
-        "nl": "Ik bel je morgen terug.",
-        "en": "I will call you back tomorrow."
-      },
-      {
-        "nl": "Wij nemen onze spullen mee.",
-        "en": "We take our things with us."
-      }
-    ],
-    "checks": [
-      {
-        "prompt": "Complete: Ik ___ om zeven uur op. (opstaan)",
-        "answer": "sta"
-      },
-      {
-        "prompt": "Complete: Ik wil morgen vroeg ___. (opstaan)",
-        "answer": "opstaan"
-      }
-    ]
-  },
-  {
     "id": "negation_niet_geen",
     "level": "A2",
     "title": "Negation: niet and geen",
