@@ -10,19 +10,19 @@ const A2WordGuess = {
     {word:'knie',kind:'lichaamsdeel',hint:'Je buigt het als je loopt.'},
     {word:'banaan',kind:'fruit',hint:'Het is meestal geel en lang.'}
   ],
-  secret:null,history:[],questions:0,busy:false,finished:false,hints:0,
+  secret:null,history:[],questions:0,busy:false,finished:false,hints:0,hintText:'',
   esc(s){return A2Studio.esc(s);},
   open(){
     const previous=this.secret?.word;
     const options=this.bank.filter(x=>x.word!==previous);
     this.secret=options[Math.floor(Math.random()*options.length)];
-    this.history=[];this.questions=0;this.hints=0;this.busy=false;this.finished=false;
+    this.history=[];this.questions=0;this.hints=0;this.hintText='';this.busy=false;this.finished=false;
     A2Studio.open();this.render('Ik heb een woord gekozen. Stel ja/nee-vragen in het Nederlands om het te raden!');
   },
   render(reply='',error=''){
     const root=document.getElementById('a2StudioContent');
     const transcript=this.history.slice(-12).map(h=>'<p><strong>'+this.esc(h.role==='learner'?'Jij':'Spelleider')+':</strong> '+this.esc(h.text)+'</p>').join('');
-    root.innerHTML='<button id="wordBack">← A2 Learning Studio</button><div class="skill-label">A2 · SPREEKSPEL</div><h1>Raad het woord</h1><div class="card curriculum-panel"><p>Stel vragen zoals: Is het een dier? Kun je het eten? Gebruik je het thuis?</p><p><strong>Vragen: '+this.questions+'</strong></p><p lang="nl" class="a2-dialogue">'+this.esc(reply)+'</p><button id="wordListen">🔊 Listen</button><div>'+transcript+'</div>'+(this.finished?'':'<label for="wordInput">Jouw vraag of gok in het Nederlands</label><textarea id="wordInput" rows="3" style="display:block;width:100%;box-sizing:border-box;margin:12px 0"></textarea><div class="a2-actions"><button id="wordSend" class="primary">Vraag stellen →</button><button id="wordMic">🎤 Record</button><button id="wordHint">Hint</button><button id="wordGiveUp">Give up</button></div>')+'<p id="wordError" role="status">'+this.esc(error)+'</p>'+(this.finished?'<button id="wordFeedback" class="primary">Get A2 speaking feedback →</button><button id="wordAgain">Play again</button>':'')+'</div>';
+    root.innerHTML='<button id="wordBack">← A2 Learning Studio</button><div class="skill-label">A2 · SPREEKSPEL</div><h1>Raad het woord</h1><div class="card curriculum-panel"><p>Stel vragen zoals: Is het een dier? Kun je het eten? Gebruik je het thuis?</p><p><strong>Vragen: '+this.questions+'</strong></p><p lang="nl" class="a2-dialogue">'+this.esc(reply)+'</p><button id="wordListen">🔊 Listen</button><div>'+transcript+'</div>'+(this.finished?'':'<label for="wordInput">Jouw vraag of gok in het Nederlands</label><textarea id="wordInput" rows="3" style="display:block;width:100%;box-sizing:border-box;margin:12px 0"></textarea><div class="a2-actions"><button id="wordSend" class="primary">Vraag stellen →</button><button id="wordMic">🎤 Record</button><button id="wordHint">Hint</button><button id="wordGiveUp">Give up</button></div><p id="wordHintText" role="status" lang="nl"'+(this.hintText?'':' hidden')+'>'+this.esc(this.hintText)+'</p>')+'<p id="wordError" role="status">'+this.esc(error)+'</p>'+(this.finished?'<button id="wordFeedback" class="primary">Get A2 speaking feedback →</button><button id="wordAgain">Play again</button>':'')+'</div>';
     root.querySelector('#wordBack').onclick=()=>A2Studio.render();
     root.querySelector('#wordListen').onclick=()=>A2Conversation.say(reply);
     if(this.finished){
@@ -31,7 +31,7 @@ const A2WordGuess = {
       return;
     }
     root.querySelector('#wordSend').onclick=()=>this.ask(root.querySelector('#wordInput').value.trim());
-    root.querySelector('#wordHint').onclick=()=>{this.hints++;this.render(this.hints===1?'Hint: '+this.secret.hint:'Categorie: '+this.secret.kind);};
+    root.querySelector('#wordHint').onclick=()=>this.showHint();
     root.querySelector('#wordGiveUp').onclick=()=>this.end(false);
     root.querySelector('#wordMic').onclick=async()=>{
       const error=root.querySelector('#wordError');
@@ -55,6 +55,13 @@ const A2WordGuess = {
         const btn=root.querySelector('#wordMic');btn.textContent='⏹ Stop';btn.onclick=()=>rec.stop();
       }catch(e){error.textContent=e.message;}
     };
+  },
+  showHint(){
+    if(this.finished||!this.secret)return;
+    this.hints=Math.min(this.hints+1,2);
+    this.hintText='Hint: '+this.secret.hint+(this.hints>1?' Categorie: '+this.secret.kind+'.':'');
+    const panel=document.getElementById('wordHintText');
+    if(panel){panel.hidden=false;panel.textContent=this.hintText;panel.scrollIntoView({block:'nearest',behavior:'smooth'});}
   },
   async ask(question){
     if(this.busy||this.finished)return;
