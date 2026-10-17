@@ -68,6 +68,13 @@ async startFromActivity(activity) {
   }
 
 
+  // Keep detailed AI instructions as the concept, but use a short learner-facing title.
+  if (activity.source === "a2_speaking_followup") {
+    session.title = activity.title || "Your A2 grammar review";
+    session.followupTopics = Array.isArray(activity.followupTopics)
+      ? activity.followupTopics.slice(0, 3) : [];
+  }
+
   console.log(
     "Starting practice from activity:",
     activity
