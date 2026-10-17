@@ -143,3 +143,10 @@ User reports cleanup utility moved six historical folders and two ZIPs to `.loca
 - Verified supplied Worker uses gpt-4o-transcribe, language nl, existing Dutch learner prompt. Last Worker patch left transcription unchanged.
 - Game frontend now places recognized text in the editable question field, shows a review message and waits for explicit send. Discards late transcription when original input is detached, preventing contamination after a view/round change. Cache version refreshed. No Worker redeployment needed for this frontend change.
 - PASS local syntax/static wiring check only; no live microphone testing or measured transcription accuracy improvement. No progress resets. User must safely sync Codespaces after checking local Git status, then hard refresh.
+
+
+## 2026-10-17: Visible persistent word-game hints
+- User reports Hint button appears not to work. Code previously rerendered hint above the full transcript; screenshot is scrolled to bottom. Likely visibility issue; browser click failure not independently reproduced.
+- Hint now updates an inline status panel beside controls, scrolls into view, persists across subsequent renders, preserves question draft and does not detach the recording input. First click clue, second adds category; further clicks keep both. Round start clears hint state. Existing transcript-review change retained.
+- PASS node word-game-hint-test.cjs with DOM stub: clue/category, no rerender/draft loss, no question/history changes, finished-round guard. Syntax parsed by VM. Live browser untested. Cache query refreshed; no Worker redeployment/progress reset.
+- User clarified earlier intended voice inputs: 'is het een fruit' and 'is het een groen'. Prior handoff uncertainty about intended phrases is superseded by this report. Raw recognition accuracy improvement remains pending.
