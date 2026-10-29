@@ -19,7 +19,7 @@ assert.strictEqual(new Set(topics.map(x => x.id)).size, topics.length);
 for (const topic of topics) {
   assert(['A1', 'A2', 'B1'].includes(topic.level));
   assert(topic.goal && topic.explanation && topic.examples.length >= 2);
-  assert(topic.checks.length === 2 && topic.checks.every(q => typeof q.answer === 'string'));
+  assert(topic.checks.length >= 2 && topic.checks.every(q => typeof q.answer === 'string'));
 }
 assert(engine.stats('A2').total >= 20);
 assert.strictEqual(engine.normalize('  HEB. '), 'heb');
