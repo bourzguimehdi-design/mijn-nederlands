@@ -405,6 +405,11 @@ renderStartButton() {
       let subtitle =
         activity.subtitle || "";
 
+      // Presentation only: old completed plans keep their original stored data.
+      if (activity.studioKind === 'vocabulary' && typeof A2VocabularyEngine !== 'undefined' && typeof A2VocabularyEngine.planSubtitle === 'function') {
+        subtitle = A2VocabularyEngine.planSubtitle(this.isActivityComplete(activity));
+      }
+
 
       if (
         options.focus
