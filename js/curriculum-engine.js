@@ -104,9 +104,11 @@ const CurriculumEngine = {
     if (!item || !root) return;
     this.currentId = id;
     const progress = this.load()[id];
+    const previousTotal=progress?.lastCheckTotal ?? (['reflexive_verbs','relative_clauses'].includes(id) && progress?.lastScore<=2 ? 2 : item.checks.length);
     const examples = item.examples.map(pair => `<div class="curriculum-example"><strong lang="nl">${this.escape(pair.nl)}</strong><span>${this.escape(pair.en)}</span></div>`).join('');
     const extra = (typeof DutchLessonGuides !== 'undefined' && DutchLessonGuides[item.id]) || {};
     const guide = extra.rules?.length ? `<div class="card curriculum-panel"><h2>Step by step</h2><ol class="curriculum-rules">${extra.rules.map(rule => `<li>${this.escape(rule)}</li>`).join('')}</ol></div>` : '';
+    const table = extra.table ? `<div class="card curriculum-panel" style="overflow-x:auto"><h2>Forms at a glance</h2><table><thead><tr>${extra.table.headers.map(h=>`<th scope="col">${this.escape(h)}</th>`).join('')}</tr></thead><tbody>${extra.table.rows.map(row=>`<tr>${row.map(cell=>`<td style="padding:8px;border-bottom:1px solid #ddd">${this.escape(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '';
     const pitfalls = extra.mistakes?.length ? `<div class="card curriculum-panel"><h2>Common mistakes</h2>${extra.mistakes.map(m => `<p class="curriculum-mistake"><strong>✗ ${this.escape(m.wrong)}</strong><br><span>✓ ${this.escape(m.right)}</span><br>${this.escape(m.why)}</p>`).join('')}</div>` : '';
     const practicePrompt = `<div class="card curriculum-panel"><h2>Use it yourself</h2><p>Before the check, say or write two new Dutch sentences using this topic. Compare them with the examples above. For personalized corrections, choose AI practice below.</p>${extra.task ? `<p><strong>Challenge:</strong> ${this.escape(extra.task)}</p>` : ''}</div>`;
     const depth = item.level === 'A2' && typeof A2Depth !== 'undefined' ? A2Depth[item.id] : null;
@@ -118,12 +120,12 @@ const CurriculumEngine = {
       <h1>${this.escape(item.title)}</h1><p class="subtitle">${this.escape(item.goal)}</p>
       <div class="card curriculum-panel"><h2>Understand</h2><p>${this.escape(item.explanation)}</p></div>
       <div class="card curriculum-panel"><h2>Examples</h2>${examples}</div>
-      ${guide}${pitfalls}${deeper}${practicePrompt}
+      ${guide}${table}${pitfalls}${deeper}${practicePrompt}
       <div class="card curriculum-panel"><h2>Quick understanding check</h2>
-      <p class="small">Enter the missing word for blanks (___), or a complete sentence. Aim for both correct. Capitalization and final punctuation are ignored.</p>
+      <p class="small">Enter the missing word for blanks (___), or a complete sentence. Aim for all answers correct. Capitalization and final punctuation are ignored.</p>
       ${checks}<button type="button" class="primary" id="curriculumCheck">Check answers</button>
       <div id="curriculumFeedback" aria-live="polite"></div></div>
-      ${progress ? `<p class="small">Previous check: ${progress.lastScore}/${item.checks.length} correct${progress.passed ? ' · passed' : ''}</p>` : ''}
+      ${progress ? `<p class="small">Previous check: ${progress.lastScore}/${previousTotal} correct${progress.passed ? ' · passed' : ''}</p>` : ''}
       <button type="button" class="primary" id="curriculumPractice">Guided AI practice →</button>
       <button type="button" class="primary" id="curriculumMastery">Finish lesson: AI assessment →</button>
       <p class="small">The Daily Plan lesson completes after you finish the AI assessment, even if you do not pass. Your quick-check result is kept separately from mastery.</p>
@@ -150,6 +152,7 @@ const CurriculumEngine = {
     progress[id] = {
       ...previous,
       lastScore: score,
+      lastCheckTotal: item.checks.length,
       passed: previous.passed === true || score === item.checks.length,
       attempts: (Number(previous.attempts) || 0) + 1,
       lastCheckedAt: new Date().toISOString()
