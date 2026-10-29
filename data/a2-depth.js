@@ -1,4 +1,3 @@
-/* All 22 A2 topics: supplementary guided steps and recall tasks. */
 const A2Depth = {
   "perfect_tense": {
     "objective": "Describe completed events in the past.",
@@ -211,46 +210,59 @@ const A2Depth = {
     "challenge": "Use future plans in three original Dutch sentences about your own experience."
   },
   "reflexive_verbs": {
-    "objective": "Talk about routines and feelings.",
     "steps": [
-      "Goal: Talk about routines and feelings.",
-      "Notice the pattern in this example: Ik voel me goed.",
-      "Compare the second example: Zij vergist zich.",
-      "Say both examples aloud. Then create a similar sentence about your own life.",
-      "Complete the two knowledge checks without looking at the examples; revisit the lesson if you miss one."
+      "Step 1: decide whether you need a reflexive phrase. Zich voelen and zich vergissen need the pronoun; eten normally does not.",
+      "Step 2: match the pronoun to the subject, using the table below. The plural subject jullie still uses je.",
+      "Step 3: conjugate the finite verb normally: ik voel, jij voelt, wij voelen. The pronoun is a separate word.",
+      "Step 4: in a simple statement, put the pronoun early: Ik voel me vandaag goed. In a question: Voel jij je goed?",
+      "With a modal: Ik wil me inschrijven. With perfect tense: Ik heb me ingeschreven. Keep the reflexive pronoun even when the main verb moves to the end."
     ],
     "translationDrills": [
       {
-        "prompt": "I feel good.",
-        "answer": "Ik voel me goed."
+        "prompt": "We feel tired.",
+        "answer": "Wij voelen ons moe."
       },
       {
-        "prompt": "She is mistaken.",
-        "answer": "Zij vergist zich."
+        "prompt": "You (plural) must get dressed.",
+        "answer": "Jullie moeten je aankleden."
+      },
+      {
+        "prompt": "Do you feel well?",
+        "answer": "Voel je je goed?"
+      },
+      {
+        "prompt": "I made a mistake.",
+        "answer": "Ik heb me vergist."
+      },
+      {
+        "prompt": "She stays home because she does not feel well.",
+        "answer": "Zij blijft thuis omdat zij zich niet goed voelt."
       }
     ],
-    "challenge": "Use reflexive verbs in three original Dutch sentences about your own experience."
+    "challenge": "Describe how you feel, one morning routine and something you must do. Use three different subjects and one modal verb."
   },
   "relative_clauses": {
-    "objective": "Describe people and objects in more detail.",
     "steps": [
-      "Goal: Describe people and objects in more detail.",
-      "Notice the pattern in this example: De man die hier werkt.",
-      "Compare the second example: Het boek dat ik lees.",
-      "Say both examples aloud. Then create a similar sentence about your own life.",
-      "Complete the two knowledge checks without looking at the examples; revisit the lesson if you miss one."
+      "Find the noun being described, not a different noun elsewhere in the sentence.",
+      "For de fiets, choose die. For het boek, choose dat. For de boeken, choose die.",
+      "Build the clause: de fiets + die + ik + gebruik. Then add the main-clause verb: De fiets die ik gebruik, is nieuw.",
+      "Avoid replacing die with wie simply because the noun is a person: de man die hier woont. Preposition + wie is a different construction."
     ],
     "translationDrills": [
       {
-        "prompt": "The man who works here.",
-        "answer": "De man die hier werkt."
+        "prompt": "The bicycle that I use is new.",
+        "answer": "De fiets die ik gebruik, is nieuw."
       },
       {
-        "prompt": "The book that I read.",
-        "answer": "Het boek dat ik lees."
+        "prompt": "The book that I read is old.",
+        "answer": "Het boek dat ik lees, is oud."
+      },
+      {
+        "prompt": "The houses that are here are expensive.",
+        "answer": "De huizen die hier staan, zijn duur."
       }
     ],
-    "challenge": "Use relative clauses in three original Dutch sentences about your own experience."
+    "challenge": "Describe an object, a person and several things at home. Include one dat clause and two die clauses."
   },
   "imperatives": {
     "objective": "Give polite and clear instructions.",
