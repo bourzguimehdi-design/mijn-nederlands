@@ -33,7 +33,7 @@ const A2AdaptivePhase5 = {
       if (next && !seenKinds.has('lesson') && (skill === 'grammar' || skill === 'writing')) {
         candidate = {studioKind:'lesson',studioId:next.id,title:`A2 lesson: ${next.title}`,subtitle:'Next structured A2 topic',icon:'📘'};
       } else if (due > 0 && skill === 'vocabulary' && !seenKinds.has('vocabulary')) {
-        candidate = {studioKind:'vocabulary',studioId:'due',title:'A2 vocabulary review',subtitle:`${due} words due`,icon:'🧠'};
+        candidate = {studioKind:'vocabulary',studioId:'due',title:'A2 vocabulary review',subtitle:'Daily vocabulary target · continue your saved reviews',icon:'🧠'};
       } else if (skill === 'speaking' && conversations.length && !seenKinds.has('conversation')) {
         const scenario = conversations[day % conversations.length];
         candidate = {studioKind:'conversation',studioId:scenario.id,title:`A2 conversation: ${scenario.title}`,subtitle:'Guided A2 roleplay',icon:'💬'};
@@ -91,9 +91,12 @@ const A2AdaptivePhase5 = {
     summary.replaceChildren();
     const heading = document.createElement('h3'); heading.textContent = 'Your A2 learning focus';
     const progress = document.createElement('p'); progress.textContent = `${done}/${activities.length} daily activities completed · ${status.passed}/${status.total} A2 checks passed`;
-    const next = document.createElement('p'); next.textContent = `Next topic: ${nextTitle} · Vocabulary due: ${due}`;
+    const next = document.createElement('p'); next.textContent = `Next topic: ${nextTitle}`;
+    const vocab = document.createElement('p');
+    const stats = typeof A2VocabularyEngine !== 'undefined' && typeof A2VocabularyEngine.stats === 'function' ? A2VocabularyEngine.stats() : null;
+    vocab.textContent = stats ? `Vocabulary: ${stats.reviewedToday} reviewed today · ${stats.reviewsDue} reviews due · ${stats.newWords} new words` : `Vocabulary due: ${due}`;
 
-    summary.append(heading,progress,next);
+    summary.append(heading,progress,next,vocab);
   },
   install() {
     if (this.installed) return;
@@ -136,8 +139,8 @@ const A2AdaptivePhase5 = {
     A2VocabularyEngine.grade = function(id,correct,now) {
       const result = originalGrade.call(this,id,correct,now);
       if (A2AdaptivePhase5.currentTask?.kind === 'vocabulary') {
-        A2AdaptivePhase5.vocabularyCount++;
-        if (A2AdaptivePhase5.vocabularyCount >= 3 || this.due().length === 0) A2AdaptivePhase5.finish('vocabulary','due');
+        A2AdaptivePhase5.vocabularyCount = typeof this.stats === 'function' ? this.stats(now).reviewedToday : A2AdaptivePhase5.vocabularyCount+1;
+        if (A2AdaptivePhase5.vocabularyCount >= (this.dailyTarget || 3) || this.due(now).length === 0) A2AdaptivePhase5.finish('vocabulary','due');
       }
       return result;
     };
@@ -162,7 +165,7 @@ const A2AdaptivePhase5 = {
   vocabularyCount:0,
   launch(activity) {
     this.currentTask = {date:this.dateKey(),id:activity.id,kind:activity.studioKind,studioId:activity.studioId};
-    this.vocabularyCount = 0;
+    this.vocabularyCount = typeof A2VocabularyEngine.stats === 'function' ? A2VocabularyEngine.stats().reviewedToday : 0;
     if (activity.studioKind === 'lesson') {CurriculumEngine.open('A2');CurriculumEngine.openLesson(activity.studioId);}
     else if (activity.studioKind === 'vocabulary') A2VocabularyEngine.open();
     else if (activity.studioKind === 'conversation') A2Conversation.open(activity.studioId);
