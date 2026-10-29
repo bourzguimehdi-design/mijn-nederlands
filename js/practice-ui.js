@@ -856,6 +856,7 @@ renderQuestion(
   }
 
 
+  if (typeof PracticeQuality !== "undefined" && PracticeQuality.block(this, exercise)) return;
   this.stopListeningAudio();
 
 
@@ -1257,6 +1258,7 @@ ${skill === "speaking" ? `
 
 
   this.showScreen();
+  if (typeof PracticeQuality !== "undefined") PracticeQuality.mount(this);
 
 },  /*
   ==================================================
@@ -1410,6 +1412,8 @@ async stopSpeakingAnswer() {
   */
 
   async submitCurrentAnswer() {
+    const questionIndexAtSubmit=this.currentQuestionIndex,stageAtSubmit=this.currentStage;
+    if (typeof PracticeQuality !== "undefined" && PracticeQuality.block(this, this.getCurrentExercise())) return;
 
   const exercise =
     this.getCurrentExercise();
@@ -1534,6 +1538,7 @@ if (hasOptions) {
 
 
     this.answers.push({
+      qualityQuestionIndex: this.currentQuestionIndex,
 
       exerciseId:
         exercise.id,
@@ -1663,6 +1668,8 @@ if (hasOptions) {
         );
 
 
+    // A report/skip may have moved on while the API was evaluating the old item.
+    if (this.getCurrentExercise() !== exercise || this.currentQuestionIndex !== questionIndexAtSubmit || this.currentStage !== stageAtSubmit) return;
     const evaluation =
       result?.evaluation ||
       {};
@@ -1743,6 +1750,7 @@ if (hasOptions) {
     */
 
     this.answers.push({
+      qualityQuestionIndex: this.currentQuestionIndex,
 
       exerciseId:
         exercise.id,
@@ -2007,6 +2015,7 @@ if (hasOptions) {
           false;
       }
     }
+    if (typeof PracticeQuality !== "undefined") PracticeQuality.mount(this);
   },
 
 
@@ -2343,6 +2352,7 @@ if (hasOptions) {
 
   }
 
+  if (typeof PracticeQuality !== "undefined") PracticeQuality.mount(this);
 },
 
 
