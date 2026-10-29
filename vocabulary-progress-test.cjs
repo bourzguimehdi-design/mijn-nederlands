@@ -14,17 +14,17 @@ function setup(db={},record=null){
   for(const p of ['data/a2-vocabulary.js','js/a2-vocabulary-engine.js'])vm.runInContext(fs.readFileSync(p,'utf8'),ctx);
   return {ctx,db,nodes,root,get:e=>vm.runInContext(e,ctx)};
 }
-const a=setup(),e=a.get('A2VocabularyEngine'),words=a.get('A2Vocabulary');
-assert.equal(e.stats().total,70);
-assert.equal(e.stats().newWords,70);assert.equal(e.stats().reviewsDue,0);
+const a=setup(),e=a.get('A2VocabularyEngine'),words=a.get('A2Vocabulary'),total=words.length;
+assert.equal(e.stats().total,97);
+assert.equal(e.stats().newWords,total);assert.equal(e.stats().reviewsDue,0);
 for(const w of words.slice(0,9))e.grade(w.id,true);
-assert.equal(e.due().length,61);assert.equal(e.stats().reviewedToday,9);assert.equal(e.stats().scheduled,9);
+assert.equal(e.due().length,total-9);assert.equal(e.stats().reviewedToday,9);assert.equal(e.stats().scheduled,9);
 const snapshot=JSON.stringify(a.db);
 const reloaded=setup(a.db).get('A2VocabularyEngine');
-assert.equal(reloaded.due().length,61);assert.equal(reloaded.stats().reviewedToday,9);
+assert.equal(reloaded.due().length,total-9);assert.equal(reloaded.stats().reviewedToday,9);
 assert.equal(JSON.stringify(a.db),snapshot,'reading/reloading must not rewrite saved progress');
 assert(reloaded.planSubtitle(true).includes('Daily activity completed'));
-assert(reloaded.planSubtitle(true).includes('61 available now (0 reviews + 61 new)'));
+assert(reloaded.planSubtitle(true).includes(`${total-9} available now (0 reviews + ${total-9} new)`));
 const future=new Date(2026,10,1,12);assert.equal(reloaded.stats(future).reviewsDue,9);
 assert.equal(reloaded.stats(future).reviewedToday,0);assert.equal(reloaded.due(future)[0].id,words[0].id);
 const overdue=setup();const oe=overdue.get('A2VocabularyEngine');
@@ -48,9 +48,9 @@ assert.equal(JSON.stringify(record.completed.old),oldBefore);
 assert.equal(be.stats().reviewedToday,3);
 // Review UI records the actual schedule and moves forward after confirmation.
 const ui=setup(),ue=ui.get('A2VocabularyEngine');ue.open();
-assert(ui.root.innerHTML.includes('0 reviews due · 70 new words'));
+assert(ui.root.innerHTML.includes(`0 reviews due · ${total} new words`));
 ui.nodes['#vReveal'].onclick();ui.nodes['#vGood'].onclick();
 assert(ui.root.innerHTML.includes('review saved. Next review: 2026-11-01.'));
 assert(ui.root.innerHTML.includes('1 words reviewed today'));
-assert.equal(ue.due().length,69);
-console.log('PASS: 70→61 counts, reload persistence, new/due split, scheduled returns, overdue priority, resume 2+1 daily target, unchanged plan/history, saved-review UI.');
+assert.equal(ue.due().length,total-1);
+console.log('PASS: expanded bank remaining counts, reload persistence, new/due split, scheduled returns, overdue priority, resume 2+1 daily target, unchanged plan/history, saved-review UI.');
