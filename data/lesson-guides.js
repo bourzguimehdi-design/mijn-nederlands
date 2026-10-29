@@ -41,3 +41,127 @@ const DutchLessonGuides = {
     task:'Describe where you are and where you are going today.'
   }
 };
+
+// Expanded A2 teaching, 2026-10-29. Stable topic IDs preserve earlier progress.
+DutchLessonGuides["reflexive_verbs"] = {
+  "rules": [
+    "Step 1: decide whether you need a reflexive phrase. Zich voelen and zich vergissen need the pronoun; eten normally does not.",
+    "Step 2: match the pronoun to the subject, using the table below. The plural subject jullie still uses je.",
+    "Step 3: conjugate the finite verb normally: ik voel, jij voelt, wij voelen. The pronoun is a separate word.",
+    "Step 4: in a simple statement, put the pronoun early: Ik voel me vandaag goed. In a question: Voel jij je goed?",
+    "With a modal: Ik wil me inschrijven. With perfect tense: Ik heb me ingeschreven. Keep the reflexive pronoun even when the main verb moves to the end.",
+    "In a subordinate clause: omdat ik me goed voel. With formal u, zich is a common choice; u is also possible in many constructions."
+  ],
+  "table": {
+    "headers": [
+      "Subject",
+      "Reflexive pronoun",
+      "Example"
+    ],
+    "rows": [
+      [
+        "ik",
+        "me",
+        "Ik voel me goed."
+      ],
+      [
+        "jij / je",
+        "je",
+        "Jij voelt je goed."
+      ],
+      [
+        "hij / zij / het",
+        "zich",
+        "Zij voelt zich goed."
+      ],
+      [
+        "wij / we",
+        "ons",
+        "Wij voelen ons goed."
+      ],
+      [
+        "jullie",
+        "je",
+        "Jullie voelen je goed."
+      ],
+      [
+        "zij / ze (plural)",
+        "zich",
+        "Zij voelen zich goed."
+      ],
+      [
+        "u",
+        "zich (also u)",
+        "U voelt zich goed."
+      ]
+    ]
+  },
+  "mistakes": [
+    {
+      "wrong": "Ik voel goed.",
+      "right": "Ik voel me goed.",
+      "why": "To say how you feel, use zich voelen."
+    },
+    {
+      "wrong": "Wij voelen zich goed.",
+      "right": "Wij voelen ons goed.",
+      "why": "Wij takes ons."
+    },
+    {
+      "wrong": "Jullie voelen jullie moe.",
+      "right": "Jullie voelen je moe.",
+      "why": "The unstressed reflexive form for jullie is je."
+    }
+  ],
+  "task": "Describe how you feel, one morning routine and something you must do. Use three different subjects and one modal verb."
+};
+DutchLessonGuides["relative_clauses"] = {
+  "rules": [
+    "Find the noun being described, not a different noun elsewhere in the sentence.",
+    "For de fiets, choose die. For het boek, choose dat. For de boeken, choose die.",
+    "Build the clause: de fiets + die + ik + gebruik. Then add the main-clause verb: De fiets die ik gebruik, is nieuw.",
+    "Avoid replacing die with wie simply because the noun is a person: de man die hier woont. Preposition + wie is a different construction."
+  ],
+  "table": {
+    "headers": [
+      "Noun type",
+      "Pronoun",
+      "Example"
+    ],
+    "rows": [
+      [
+        "de-word (singular)",
+        "die",
+        "de fiets die ik gebruik"
+      ],
+      [
+        "het-word (singular)",
+        "dat",
+        "het boek dat ik lees"
+      ],
+      [
+        "plural",
+        "die",
+        "de boeken die ik lees"
+      ]
+    ]
+  },
+  "mistakes": [
+    {
+      "wrong": "De fiets dat ik gebruik.",
+      "right": "De fiets die ik gebruik.",
+      "why": "Fiets takes de."
+    },
+    {
+      "wrong": "De boeken dat ik lees.",
+      "right": "De boeken die ik lees.",
+      "why": "Plural nouns take die."
+    },
+    {
+      "wrong": "Het boek dat ik lees het.",
+      "right": "Het boek dat ik lees.",
+      "why": "Dat already connects the noun to the object position; do not add another het."
+    }
+  ],
+  "task": "Describe an object, a person and several things at home. Include one dat clause and two die clauses."
+};
