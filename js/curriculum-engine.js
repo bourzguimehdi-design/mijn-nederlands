@@ -36,12 +36,12 @@ const CurriculumEngine = {
   },
   isCorrectAnswer(question, input) {
     const given = this.normalize(input);
-    const expected = this.normalize(question.answer);
-    if (given === expected) return true;
+    const expected=[question.answer,...(Array.isArray(question.acceptedAnswers)?question.acceptedAnswers:[])];
+    if (expected.some(value=>given===this.normalize(value))) return true;
     if (!given || !question.prompt.includes('___')) return false;
     const template = question.prompt.replace(/^Complete:\s*/i, '')
       .replace(/\s*\([^)]*\)\s*$/g, '').trim();
-    return given === this.normalize(template.replace('___', question.answer));
+    return expected.some(value=>given===this.normalize(template.replace('___',value)));
   },
   getLearningStatus(level = 'A2') {
     const stats = this.stats(level);
@@ -104,7 +104,7 @@ const CurriculumEngine = {
     if (!item || !root) return;
     this.currentId = id;
     const progress = this.load()[id];
-    const previousTotal=progress?.lastCheckTotal ?? (['reflexive_verbs','relative_clauses'].includes(id) && progress?.lastScore<=2 ? 2 : item.checks.length);
+    const previousTotal=progress?.lastCheckTotal ?? item.legacyCheckCount ?? (['reflexive_verbs','relative_clauses'].includes(id) && progress?.lastScore<=2 ? 2 : item.checks.length);
     const examples = item.examples.map(pair => `<div class="curriculum-example"><strong lang="nl">${this.escape(pair.nl)}</strong><span>${this.escape(pair.en)}</span></div>`).join('');
     const extra = (typeof DutchLessonGuides !== 'undefined' && DutchLessonGuides[item.id]) || {};
     const guide = extra.rules?.length ? `<div class="card curriculum-panel"><h2>Step by step</h2><ol class="curriculum-rules">${extra.rules.map(rule => `<li>${this.escape(rule)}</li>`).join('')}</ol></div>` : '';
@@ -112,12 +112,13 @@ const CurriculumEngine = {
     const pitfalls = extra.mistakes?.length ? `<div class="card curriculum-panel"><h2>Common mistakes</h2>${extra.mistakes.map(m => `<p class="curriculum-mistake"><strong>✗ ${this.escape(m.wrong)}</strong><br><span>✓ ${this.escape(m.right)}</span><br>${this.escape(m.why)}</p>`).join('')}</div>` : '';
     const practicePrompt = `<div class="card curriculum-panel"><h2>Use it yourself</h2><p>Before the check, say or write two new Dutch sentences using this topic. Compare them with the examples above. For personalized corrections, choose AI practice below.</p>${extra.task ? `<p><strong>Challenge:</strong> ${this.escape(extra.task)}</p>` : ''}</div>`;
     const depth = item.level === 'A2' && typeof A2Depth !== 'undefined' ? A2Depth[item.id] : null;
-    const deeper = depth ? `<div class="card curriculum-panel"><h2>Guided learning steps</h2><ol class="curriculum-rules">${depth.steps.map(step => `<li>${this.escape(step)}</li>`).join('')}</ol><h3>Translate into Dutch</h3><p>Try these without looking at the examples, then reveal the model answers.</p>${depth.translationDrills.map(drill => `<details class="curriculum-mistake"><summary>${this.escape(drill.prompt)}</summary><p lang="nl">${this.escape(drill.answer)}</p></details>`).join('')}<p><strong>Independent challenge:</strong> ${this.escape(depth.challenge)}</p></div>` : '';
+    const deeper = depth ? `<div class="card curriculum-panel"><h2>Guided practice</h2>${depth.steps.length ? `<ol class="curriculum-rules">${depth.steps.map(step => `<li>${this.escape(step)}</li>`).join('')}</ol>` : ''}<h3>Translate into Dutch</h3><p>Try these without looking at the examples, then reveal the model answers.</p>${depth.translationDrills.map(drill => `<details class="curriculum-mistake"><summary>${this.escape(drill.prompt)}</summary><p lang="nl">${this.escape(drill.answer)}</p></details>`).join('')}<p><strong>Independent challenge:</strong> ${this.escape(depth.challenge)}</p></div>` : '';
     const checks = item.checks.map((q, index) => `<label class="curriculum-question"><strong>${index + 1}. ${this.escape(q.prompt)}</strong><input type="text" autocomplete="off" data-answer="${index}" placeholder="Your answer" aria-label="Answer ${index + 1}" /></label>`).join('');
     root.innerHTML = `<div class="curriculum-lesson">
       <button type="button" class="curriculum-back" id="curriculumToCatalog">← ${item.level} topics</button>
       <div class="skill-label">${item.level} · GUIDED LESSON</div>
       <h1>${this.escape(item.title)}</h1><p class="subtitle">${this.escape(item.goal)}</p>
+      ${item.teachingRevision ? '<p class="small">Expanded lesson: earlier passes are retained. The additional checks offer fresh practice without resetting your progress.</p>' : ''}
       <div class="card curriculum-panel"><h2>Understand</h2><p>${this.escape(item.explanation)}</p></div>
       <div class="card curriculum-panel"><h2>Examples</h2>${examples}</div>
       ${guide}${table}${pitfalls}${deeper}${practicePrompt}
@@ -129,7 +130,7 @@ const CurriculumEngine = {
       <button type="button" class="primary" id="curriculumPractice">Guided AI practice →</button>
       <button type="button" class="primary" id="curriculumMastery">Finish lesson: AI assessment →</button>
       <p class="small">The Daily Plan lesson completes after you finish the AI assessment, even if you do not pass. Your quick-check result is kept separately from mastery.</p>
-      <p class="small">AI practice requires your existing Worker connection. A quick check is not mastery. Use generated AI practice to apply the topic; a verified mastery assessment is a separate future step.</p>
+      <p class="small">AI practice requires your existing Worker connection. A quick check is not mastery. Use generated AI practice to apply the topic; use Finish lesson: AI assessment to attempt initial mastery.</p>
     </div>`;
     root.querySelector('#curriculumToCatalog').onclick = () => this.renderCatalog(item.level);
     root.querySelector('#curriculumCheck').onclick = () => this.check(id);
