@@ -3,6 +3,7 @@
 const A2VocabularyEngine = {
   KEY: 'mijn_nederlands_a2_vocab_v1',
   intervals: [1, 3, 7, 14, 30],
+  dailyTarget: 3,
   load() {
     try { const x=JSON.parse(localStorage.getItem(this.KEY)||'{}'); return x&&typeof x==='object'?x:{}; }
     catch { return {}; }
@@ -12,7 +13,30 @@ const A2VocabularyEngine = {
   nextDate(days,now=new Date()) { const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+days);return this.date(d); },
   due(now=new Date()) {
     const records=this.load(),today=this.date(now);
-    return A2Vocabulary.filter(w=>!records[w.id]||records[w.id].due<=today);
+    // Revisit overdue learned words before introducing new ones. Keep IDs and schedules intact.
+    return A2Vocabulary.filter(w=>!records[w.id]||records[w.id].due<=today)
+      .sort((a,b)=>{
+        const x=records[a.id],y=records[b.id];
+        if(!x||!y)return x?-1:y?1:0;
+        return String(x.due).localeCompare(String(y.due));
+      });
+  },
+  stats(now=new Date()) {
+    const records=this.load(),today=this.date(now);
+    let newWords=0,reviewsDue=0,reviewedToday=0,scheduled=0,nextDue=null;
+    for(const word of A2Vocabulary){
+      const record=records[word.id];
+      if(!record){newWords++;continue;}
+      if(record.lastReviewed===today)reviewedToday++;
+      if(record.due<=today)reviewsDue++;
+      else if(record.due){scheduled++;if(!nextDue||record.due<nextDue)nextDue=record.due;}
+    }
+    return {total:A2Vocabulary.length,newWords,reviewsDue,reviewedToday,scheduled,nextDue,due:newWords+reviewsDue};
+  },
+  planSubtitle(completed=false,now=new Date()) {
+    const s=this.stats(now);
+    return (completed?'Daily activity completed':`Daily target: ${Math.min(s.reviewedToday,this.dailyTarget)}/${this.dailyTarget} words reviewed`)+
+      ` · ${s.due} available now (${s.reviewsDue} reviews + ${s.newWords} new)`;
   },
   grade(id,correct,now=new Date()) {
     if(!A2Vocabulary.some(w=>w.id===id)) throw new Error('Unknown word');
@@ -23,20 +47,28 @@ const A2VocabularyEngine = {
     this.save(records);return records[id];
   },
   current:null,
-  open() { A2Studio.open();this.render(); },
+  notice:'',
+  open() { this.notice='';A2Studio.open();this.render(); },
   render() {
     const root=document.getElementById('a2StudioContent');
     const due=this.due(),total=A2Vocabulary.length;
-    if(!due.length) { root.innerHTML='<h2>Vocabulary review</h2><p>All '+total+' words reviewed for now. Come back when they are due.</p><button id="vBack">Back to A2 Studio</button>';root.querySelector('#vBack').onclick=()=>A2Studio.render();return; }
+    const s=this.stats();
+    const summary='<p>'+s.reviewedToday+' words reviewed today · Daily target: '+this.dailyTarget+'</p><p>'+s.reviewsDue+' reviews due · '+s.newWords+' new words · '+s.scheduled+' scheduled for later</p><p>Daily completion is a small practice target, not completion of the whole word bank. Previously reviewed words return on their scheduled dates.</p>'+(this.notice?'<p role="status">'+A2Studio.esc(this.notice)+'</p>':'');
+    if(!due.length) { root.innerHTML='<h2>Vocabulary review</h2>'+summary+'<p>All '+total+' words reviewed for now.'+(s.nextDue?' Next review: '+A2Studio.esc(s.nextDue)+'.':'')+'</p><button id="vBack">Back to A2 Studio</button>';root.querySelector('#vBack').onclick=()=>A2Studio.render();return; }
     const word=due[0];this.current=word.id;
-    root.innerHTML='<button id="vBack">← A2 Studio</button><h2>Vocabulary review</h2><p>'+due.length+' due of '+total+' words</p><div class="card curriculum-panel"><div class="skill-label">'+A2Studio.esc(word.group)+'</div><h2 lang="nl">'+A2Studio.esc(word.nl)+'</h2><p>What does this mean in English?</p><input id="vAnswer" autocomplete="off" placeholder="Your answer"><button class="primary" id="vReveal">Reveal answer</button><div id="vFeedback" aria-live="polite"></div></div>';
+    root.innerHTML='<button id="vBack">← A2 Studio</button><h2>Vocabulary review</h2>'+summary+'<p>'+due.length+' available now of '+total+' words</p><div class="card curriculum-panel"><div class="skill-label">'+A2Studio.esc(word.group)+'</div><h2 lang="nl">'+A2Studio.esc(word.nl)+'</h2><p>What does this mean in English?</p><input id="vAnswer" autocomplete="off" placeholder="Your answer"><button class="primary" id="vReveal">Reveal answer</button><div id="vFeedback" aria-live="polite"></div></div>';
     root.querySelector('#vBack').onclick=()=>A2Studio.render();
     root.querySelector('#vReveal').onclick=()=>{
       const given=root.querySelector('#vAnswer').value.trim().toLowerCase().replace(/[.!?]+$/,'');
       const exact=given===word.en.toLowerCase();
       root.querySelector('#vFeedback').innerHTML='<p><strong>'+A2Studio.esc(word.en)+'</strong></p><p lang="nl">'+A2Studio.esc(word.example)+'</p><p>'+(exact?'Your typed answer matches. Confirm below.':'Decide whether you recalled the meaning correctly.')+'</p><button id="vAgain">Again</button> <button class="primary" id="vGood">Remembered</button>';
-      root.querySelector('#vAgain').onclick=()=>{this.grade(word.id,false);this.render();};
-      root.querySelector('#vGood').onclick=()=>{this.grade(word.id,true);this.render();};
+      const recordReview=correct=>{
+        const saved=this.grade(word.id,correct);
+        this.notice=word.nl+' — review saved. Next review: '+saved.due+'.';
+        this.render();
+      };
+      root.querySelector('#vAgain').onclick=()=>recordReview(false);
+      root.querySelector('#vGood').onclick=()=>recordReview(true);
     };
   }
 };
