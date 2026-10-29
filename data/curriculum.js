@@ -1,4 +1,3 @@
-/* Curated learning objectives and introductory lessons. */
 const DutchCurriculum = [
   {
     "id": "introductions",
@@ -545,25 +544,73 @@ const DutchCurriculum = [
     "level": "A2",
     "title": "Reflexive verbs",
     "goal": "Talk about routines and feelings.",
-    "explanation": "Some Dutch verbs use a reflexive pronoun: me, je, zich, ons.",
+    "explanation": "A reflexive pronoun refers back to the subject: Ik was me means I wash myself. Some Dutch verbs also need this pronoun where English does not: ik vergis me (I am mistaken), ik voel me goed (I feel well). Learn the verb as a phrase, such as zich vergissen, and change zich to match the subject. Do not add a reflexive pronoun to every verb.",
     "examples": [
       {
-        "nl": "Ik voel me goed.",
-        "en": "I feel good."
+        "nl": "Ik was me.",
+        "en": "I wash myself. Me refers to ik."
       },
       {
-        "nl": "Zij vergist zich.",
-        "en": "She is mistaken."
+        "nl": "Ik was de auto.",
+        "en": "I wash the car. The object is the car, so there is no reflexive pronoun."
+      },
+      {
+        "nl": "Jij voelt je moe.",
+        "en": "You feel tired. Jij takes je."
+      },
+      {
+        "nl": "Hij vergist zich.",
+        "en": "He is mistaken. Hij takes zich."
+      },
+      {
+        "nl": "Wij haasten ons.",
+        "en": "We hurry. Wij takes ons."
+      },
+      {
+        "nl": "Jullie voelen je beter.",
+        "en": "You (plural) feel better. Jullie takes je, not jullie."
+      },
+      {
+        "nl": "Voel je je goed?",
+        "en": "Do you feel well? The first je is the subject; the second is reflexive."
+      },
+      {
+        "nl": "Ik moet me aankleden.",
+        "en": "I must get dressed. Moet is finite; aankleden is the infinitive at the end."
+      },
+      {
+        "nl": "Ik heb me vergist.",
+        "en": "I made a mistake. Heb is finite; vergist is the participle."
+      },
+      {
+        "nl": "Omdat ik me niet goed voel, blijf ik thuis.",
+        "en": "Because I do not feel well, I stay home. In the omdat clause voel comes at the end."
       }
     ],
     "checks": [
       {
-        "prompt": "Complete: Ik voel ___ goed.",
+        "prompt": "Complete: Ik voel ___ vandaag moe.",
         "answer": "me"
       },
       {
-        "prompt": "Complete: Hij vergist ___.",
+        "prompt": "Complete: Wij haasten ___ naar de trein.",
+        "answer": "ons"
+      },
+      {
+        "prompt": "Complete: Jullie vergissen ___.",
+        "answer": "je"
+      },
+      {
+        "prompt": "Complete: Zij (plural) voelen ___ beter.",
         "answer": "zich"
+      },
+      {
+        "prompt": "Complete: Ik moet ___ aankleden.",
+        "answer": "me"
+      },
+      {
+        "prompt": "Put in order: je / Voel / goed / je",
+        "answer": "Voel je je goed?"
       }
     ]
   },
@@ -572,25 +619,49 @@ const DutchCurriculum = [
     "level": "A2",
     "title": "Relative clauses",
     "goal": "Describe people and objects in more detail.",
-    "explanation": "Use die for de-words and plurals, dat for singular het-words. The verb usually goes to the end of the relative clause.",
+    "explanation": "A relative clause adds information about a noun: de fiets die ik gebruik (the bicycle that I use). First identify that noun and its article. Use die for de-words and all plural nouns; use dat for singular het-words. This is a different job from the conjunction dat in Ik denk dat hij komt. In a simple relative clause, put the finite verb after the other information.",
     "examples": [
       {
-        "nl": "De man die hier werkt.",
-        "en": "The man who works here."
+        "nl": "De fiets die ik gebruik, is nieuw.",
+        "en": "The bicycle that I use is new. Fiets is a de-word, so use die."
       },
       {
-        "nl": "Het boek dat ik lees.",
-        "en": "The book that I read."
+        "nl": "Het boek dat ik lees, is interessant.",
+        "en": "The book that I read is interesting. Boek is singular and takes het, so use dat."
+      },
+      {
+        "nl": "De boeken die ik lees, zijn interessant.",
+        "en": "The books that I read are interesting. Plural nouns take die, even when the singular uses het."
+      },
+      {
+        "nl": "De buurman die naast mij woont, is aardig.",
+        "en": "The neighbour who lives next to me is kind. Woont ends the relative clause."
+      },
+      {
+        "nl": "Dat is het huis dat ik wil kopen.",
+        "en": "That is the house that I want to buy. The relative clause ends with the verb group wil kopen."
       }
     ],
     "checks": [
       {
-        "prompt": "Complete: het huis ___ ik koop",
+        "prompt": "Complete: De fiets ___ ik gebruik, is nieuw.",
+        "answer": "die"
+      },
+      {
+        "prompt": "Complete: Het boek ___ ik lees, is oud.",
         "answer": "dat"
       },
       {
-        "prompt": "Complete: de vrouw ___ hier woont",
+        "prompt": "Complete: De huizen ___ hier staan, zijn duur.",
         "answer": "die"
+      },
+      {
+        "prompt": "Complete: Het meisje ___ hier woont, heet Sara.",
+        "answer": "dat"
+      },
+      {
+        "prompt": "Put in order: de man / Dat is / hier werkt / die",
+        "answer": "Dat is de man die hier werkt."
       }
     ]
   },
@@ -998,11 +1069,7 @@ const DutchCurriculum = [
         "answer": "boodschap"
       }
     ]
-  }
-];
-
-// Phase 6 additional A2 coverage: additive IDs, existing progress is retained.
-DutchCurriculum.push(...[
+  },
   {
     "id": "negation_niet_geen",
     "level": "A2",
@@ -1623,219 +1690,218 @@ DutchCurriculum.push(...[
         "answer": "bellen"
       }
     ]
+  },
+  {
+    "id": "colours_and_descriptions",
+    "level": "A2",
+    "title": "Colours and describing things",
+    "goal": "Describe colours, sizes and patterns when shopping or talking about everyday objects.",
+    "explanation": "Colour adjectives: rood, blauw, groen, geel, zwart, wit, grijs, bruin, roze and paars. Before a de-noun, adjectives usually add -e: de rode jas. After een with a het-noun, the basic form is common: een blauw shirt. Compare: het blauwe shirt.",
+    "examples": [
+      {
+        "nl": "De rode jas is duur.",
+        "en": "The red coat is expensive."
+      },
+      {
+        "nl": "Ik zoek een blauw shirt.",
+        "en": "I am looking for a blue shirt."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik draag een ___ shirt. (blue)",
+        "answer": "blauw"
+      },
+      {
+        "prompt": "Complete: De ___ broek is nieuw. (black)",
+        "answer": "zwarte"
+      }
+    ]
+  },
+  {
+    "id": "clothing_and_getting_dressed",
+    "level": "A2",
+    "title": "Clothes and getting dressed",
+    "goal": "Name common clothes and describe what you wear, buy or put on.",
+    "explanation": "Useful words: de broek, de jas, de jurk, het shirt, de schoenen, de sokken, de trui. Aankleden is separable: ik kleed me aan; in the perfect tense: ik heb me aangekleed. Aantrekken means to put on an item: ik trek mijn jas aan. Dragen means to wear.",
+    "examples": [
+      {
+        "nl": "Ik trek mijn schoenen aan.",
+        "en": "I put on my shoes."
+      },
+      {
+        "nl": "Zij draagt een warme trui.",
+        "en": "She is wearing a warm sweater."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik trek mijn jas ___.",
+        "answer": "aan"
+      },
+      {
+        "prompt": "Complete: Zij draagt een warme ___. (sweater)",
+        "answer": "trui"
+      }
+    ]
+  },
+  {
+    "id": "locations_and_position",
+    "level": "A2",
+    "title": "Locations and position",
+    "goal": "Say where objects and people are using spatial words and prepositions.",
+    "explanation": "Place words: binnen (inside), buiten (outside), op (on), onder (under), in (in), naast (next to), tussen (between), voor (in front of), achter (behind), boven (above/upstairs), beneden (below/downstairs), tegenover (opposite). Use liggen for objects lying somewhere, staan for standing objects, and zitten for some contained locations.",
+    "examples": [
+      {
+        "nl": "De sleutels liggen op de tafel.",
+        "en": "The keys are on the table."
+      },
+      {
+        "nl": "De fiets staat naast het huis.",
+        "en": "The bicycle is next to the house."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: De kat zit ___ de tafel. (under)",
+        "answer": "onder"
+      },
+      {
+        "prompt": "Complete: De winkel is ___ het station. (opposite)",
+        "answer": "tegenover"
+      }
+    ]
+  },
+  {
+    "id": "food_meals_cooking",
+    "level": "A2",
+    "title": "Food, meals and cooking",
+    "goal": "Describe daily meals, groceries, ingredients, quantities and simple cooking steps.",
+    "explanation": "Use ontbijt, lunch and avondeten for meals; een kilo, een liter, een beetje and genoeg for quantities. Describe cooking with eerst, daarna and ten slotte. For example: Eerst snijd ik de groenten, daarna kook ik de rijst.",
+    "examples": [
+      {
+        "nl": "Ik eet meestal brood met kaas als ontbijt.",
+        "en": "I usually eat bread with cheese for breakfast."
+      },
+      {
+        "nl": "Eerst snijd ik de groenten, daarna maak ik de soep.",
+        "en": "First I chop the vegetables, then I make the soup."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik eet brood als ___. (breakfast)",
+        "answer": "ontbijt"
+      },
+      {
+        "prompt": "Complete: Eerst snijd ik de groenten, ___ kook ik de soep.",
+        "answer": "daarna"
+      }
+    ]
+  },
+  {
+    "id": "furniture_home_rooms",
+    "level": "A2",
+    "title": "Furniture, rooms and the home",
+    "goal": "Describe rooms, furniture, where objects are placed and everyday household needs.",
+    "explanation": "Use de woonkamer, de slaapkamer, de keuken and de badkamer for rooms. Describe furniture with er staat (singular) and er staan (plural): In de woonkamer staat een bank. Er staan twee stoelen naast de tafel.",
+    "examples": [
+      {
+        "nl": "In mijn slaapkamer staat een bed naast de kast.",
+        "en": "There is a bed next to the wardrobe in my bedroom."
+      },
+      {
+        "nl": "We zetten de tafel bij het raam.",
+        "en": "We put the table by the window."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: In de woonkamer ___ een bank. (stands)",
+        "answer": "staat"
+      },
+      {
+        "prompt": "Complete: De kleding ligt in de ___. (wardrobe)",
+        "answer": "kast"
+      }
+    ]
+  },
+  {
+    "id": "separable_verbs_a2",
+    "level": "A2",
+    "title": "Separable verbs (scheidbare werkwoorden)",
+    "goal": "Use common separable verbs in main clauses, subordinate clauses, with modal verbs and in the perfect tense.",
+    "explanation": "Some Dutch verbs combine a prefix with a verb: binnenkomen (enter), aankomen (arrive), opstaan (get up), meenemen (take along), uitgaan (go out). In a normal main clause, the prefix moves to the end: Ik sta om zeven uur op. With a modal verb, keep the infinitive together: Ik wil vroeg opstaan. In a subordinate clause, the conjugated verb stays together at the end: Ik denk dat hij morgen aankomt. In the perfect tense, ge often comes between prefix and verb: Ik ben aangekomen; ik ben opgestaan. Watch meaning: aankomen means arrive, but binnenkomen means enter a room.",
+    "examples": [
+      {
+        "nl": "Mag ik binnenkomen?",
+        "en": "May I come in?"
+      },
+      {
+        "nl": "De trein komt om acht uur aan.",
+        "en": "The train arrives at eight."
+      },
+      {
+        "nl": "Ik neem mijn jas mee.",
+        "en": "I take my coat along."
+      },
+      {
+        "nl": "Ik denk dat zij vroeg opstaat.",
+        "en": "I think she gets up early."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: De trein komt om negen uur ___. (arrives)",
+        "answer": "aan"
+      },
+      {
+        "prompt": "Complete: Mag ik ___? (enter the room)",
+        "answer": "binnenkomen"
+      },
+      {
+        "prompt": "Complete: Ik sta elke ochtend om zeven uur ___.",
+        "answer": "op"
+      }
+    ]
+  },
+  {
+    "id": "fixed_preposition_verbs_a2",
+    "level": "A2",
+    "title": "Verbs with fixed prepositions",
+    "goal": "Choose the correct preposition after common verbs and ask simple questions using er + preposition.",
+    "explanation": "Some verbs require a particular preposition: wachten op (wait for), denken aan (think about), praten over (talk about), luisteren naar (listen to), zoeken naar (look for), beginnen met (start with), zorgen voor (take care of), geloven in (believe in). The preposition is part of the expression, not a separable verb prefix. Compare: Ik wacht op de bus; Ik denk aan mijn familie. With things, Dutch often uses er + preposition: Ik wacht erop. For people, use preposition + pronoun: Ik wacht op hem. Practise these as complete combinations.",
+    "examples": [
+      {
+        "nl": "Ik wacht op de bus.",
+        "en": "I am waiting for the bus."
+      },
+      {
+        "nl": "Wij praten over ons werk.",
+        "en": "We talk about our work."
+      },
+      {
+        "nl": "Zij luistert naar muziek.",
+        "en": "She listens to music."
+      },
+      {
+        "nl": "Ik begin met koken.",
+        "en": "I start cooking."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik wacht ___ de trein.",
+        "answer": "op"
+      },
+      {
+        "prompt": "Complete: We praten ___ onze vakantie.",
+        "answer": "over"
+      },
+      {
+        "prompt": "Complete: Hij luistert ___ de radio.",
+        "answer": "naar"
+      }
+    ]
   }
-,
-{
-  "id": "colours_and_descriptions",
-  "level": "A2",
-  "title": "Colours and describing things",
-  "goal": "Describe colours, sizes and patterns when shopping or talking about everyday objects.",
-  "explanation": "Colour adjectives: rood, blauw, groen, geel, zwart, wit, grijs, bruin, roze and paars. Before a de-noun, adjectives usually add -e: de rode jas. After een with a het-noun, the basic form is common: een blauw shirt. Compare: het blauwe shirt.",
-  "examples": [
-    {
-      "nl": "De rode jas is duur.",
-      "en": "The red coat is expensive."
-    },
-    {
-      "nl": "Ik zoek een blauw shirt.",
-      "en": "I am looking for a blue shirt."
-    }
-  ],
-  "checks": [
-    {
-      "prompt": "Complete: Ik draag een ___ shirt. (blue)",
-      "answer": "blauw"
-    },
-    {
-      "prompt": "Complete: De ___ broek is nieuw. (black)",
-      "answer": "zwarte"
-    }
-  ]
-},
-{
-  "id": "clothing_and_getting_dressed",
-  "level": "A2",
-  "title": "Clothes and getting dressed",
-  "goal": "Name common clothes and describe what you wear, buy or put on.",
-  "explanation": "Useful words: de broek, de jas, de jurk, het shirt, de schoenen, de sokken, de trui. Aankleden is separable: ik kleed me aan; in the perfect tense: ik heb me aangekleed. Aantrekken means to put on an item: ik trek mijn jas aan. Dragen means to wear.",
-  "examples": [
-    {
-      "nl": "Ik trek mijn schoenen aan.",
-      "en": "I put on my shoes."
-    },
-    {
-      "nl": "Zij draagt een warme trui.",
-      "en": "She is wearing a warm sweater."
-    }
-  ],
-  "checks": [
-    {
-      "prompt": "Complete: Ik trek mijn jas ___.",
-      "answer": "aan"
-    },
-    {
-      "prompt": "Complete: Zij draagt een warme ___. (sweater)",
-      "answer": "trui"
-    }
-  ]
-},
-{
-  "id": "locations_and_position",
-  "level": "A2",
-  "title": "Locations and position",
-  "goal": "Say where objects and people are using spatial words and prepositions.",
-  "explanation": "Place words: binnen (inside), buiten (outside), op (on), onder (under), in (in), naast (next to), tussen (between), voor (in front of), achter (behind), boven (above/upstairs), beneden (below/downstairs), tegenover (opposite). Use liggen for objects lying somewhere, staan for standing objects, and zitten for some contained locations.",
-  "examples": [
-    {
-      "nl": "De sleutels liggen op de tafel.",
-      "en": "The keys are on the table."
-    },
-    {
-      "nl": "De fiets staat naast het huis.",
-      "en": "The bicycle is next to the house."
-    }
-  ],
-  "checks": [
-    {
-      "prompt": "Complete: De kat zit ___ de tafel. (under)",
-      "answer": "onder"
-    },
-    {
-      "prompt": "Complete: De winkel is ___ het station. (opposite)",
-      "answer": "tegenover"
-    }
-  ]
-},
-{
-  "id": "food_meals_cooking",
-  "level": "A2",
-  "title": "Food, meals and cooking",
-  "goal": "Describe daily meals, groceries, ingredients, quantities and simple cooking steps.",
-  "explanation": "Use ontbijt, lunch and avondeten for meals; een kilo, een liter, een beetje and genoeg for quantities. Describe cooking with eerst, daarna and ten slotte. For example: Eerst snijd ik de groenten, daarna kook ik de rijst.",
-  "examples": [
-    {
-      "nl": "Ik eet meestal brood met kaas als ontbijt.",
-      "en": "I usually eat bread with cheese for breakfast."
-    },
-    {
-      "nl": "Eerst snijd ik de groenten, daarna maak ik de soep.",
-      "en": "First I chop the vegetables, then I make the soup."
-    }
-  ],
-  "checks": [
-    {
-      "prompt": "Complete: Ik eet brood als ___. (breakfast)",
-      "answer": "ontbijt"
-    },
-    {
-      "prompt": "Complete: Eerst snijd ik de groenten, ___ kook ik de soep.",
-      "answer": "daarna"
-    }
-  ]
-},
-{
-  "id": "furniture_home_rooms",
-  "level": "A2",
-  "title": "Furniture, rooms and the home",
-  "goal": "Describe rooms, furniture, where objects are placed and everyday household needs.",
-  "explanation": "Use de woonkamer, de slaapkamer, de keuken and de badkamer for rooms. Describe furniture with er staat (singular) and er staan (plural): In de woonkamer staat een bank. Er staan twee stoelen naast de tafel.",
-  "examples": [
-    {
-      "nl": "In mijn slaapkamer staat een bed naast de kast.",
-      "en": "There is a bed next to the wardrobe in my bedroom."
-    },
-    {
-      "nl": "We zetten de tafel bij het raam.",
-      "en": "We put the table by the window."
-    }
-  ],
-  "checks": [
-    {
-      "prompt": "Complete: In de woonkamer ___ een bank. (stands)",
-      "answer": "staat"
-    },
-    {
-      "prompt": "Complete: De kleding ligt in de ___. (wardrobe)",
-      "answer": "kast"
-    }
-  ]
-},
-{
-  "id": "separable_verbs_a2",
-  "level": "A2",
-  "title": "Separable verbs (scheidbare werkwoorden)",
-  "goal": "Use common separable verbs in main clauses, subordinate clauses, with modal verbs and in the perfect tense.",
-  "explanation": "Some Dutch verbs combine a prefix with a verb: binnenkomen (enter), aankomen (arrive), opstaan (get up), meenemen (take along), uitgaan (go out). In a normal main clause, the prefix moves to the end: Ik sta om zeven uur op. With a modal verb, keep the infinitive together: Ik wil vroeg opstaan. In a subordinate clause, the conjugated verb stays together at the end: Ik denk dat hij morgen aankomt. In the perfect tense, ge often comes between prefix and verb: Ik ben aangekomen; ik ben opgestaan. Watch meaning: aankomen means arrive, but binnenkomen means enter a room.",
-  "examples": [
-    {
-      "nl": "Mag ik binnenkomen?",
-      "en": "May I come in?"
-    },
-    {
-      "nl": "De trein komt om acht uur aan.",
-      "en": "The train arrives at eight."
-    },
-    {
-      "nl": "Ik neem mijn jas mee.",
-      "en": "I take my coat along."
-    },
-    {
-      "nl": "Ik denk dat zij vroeg opstaat.",
-      "en": "I think she gets up early."
-    }
-  ],
-  "checks": [
-    {
-      "prompt": "Complete: De trein komt om negen uur ___. (arrives)",
-      "answer": "aan"
-    },
-    {
-      "prompt": "Complete: Mag ik ___? (enter the room)",
-      "answer": "binnenkomen"
-    },
-    {
-      "prompt": "Complete: Ik sta elke ochtend om zeven uur ___.",
-      "answer": "op"
-    }
-  ]
-},
-{
-  "id": "fixed_preposition_verbs_a2",
-  "level": "A2",
-  "title": "Verbs with fixed prepositions",
-  "goal": "Choose the correct preposition after common verbs and ask simple questions using er + preposition.",
-  "explanation": "Some verbs require a particular preposition: wachten op (wait for), denken aan (think about), praten over (talk about), luisteren naar (listen to), zoeken naar (look for), beginnen met (start with), zorgen voor (take care of), geloven in (believe in). The preposition is part of the expression, not a separable verb prefix. Compare: Ik wacht op de bus; Ik denk aan mijn familie. With things, Dutch often uses er + preposition: Ik wacht erop. For people, use preposition + pronoun: Ik wacht op hem. Practise these as complete combinations.",
-  "examples": [
-    {
-      "nl": "Ik wacht op de bus.",
-      "en": "I am waiting for the bus."
-    },
-    {
-      "nl": "Wij praten over ons werk.",
-      "en": "We talk about our work."
-    },
-    {
-      "nl": "Zij luistert naar muziek.",
-      "en": "She listens to music."
-    },
-    {
-      "nl": "Ik begin met koken.",
-      "en": "I start cooking."
-    }
-  ],
-  "checks": [
-    {
-      "prompt": "Complete: Ik wacht ___ de trein.",
-      "answer": "op"
-    },
-    {
-      "prompt": "Complete: We praten ___ onze vakantie.",
-      "answer": "over"
-    },
-    {
-      "prompt": "Complete: Hij luistert ___ de radio.",
-      "answer": "naar"
-    }
-  ]
-}
-]);
+];
