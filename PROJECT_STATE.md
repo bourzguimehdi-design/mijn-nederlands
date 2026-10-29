@@ -1,9 +1,9 @@
 # Mijn Nederlands — Project State / Source of Truth
 Last updated: 2026-10-29
-Status: Learning quality release committed; user Codespaces sync and live browser validation pending.
+Status: Learning quality and all52 lesson releases installed; checks passed and user confirmed working. Next development deferred.
 
 ## Mission
-Build a maintainable Dutch-learning application centered on a **52-topic A2 curriculum** with lesson depth improvements in progress. B1 is deferred. Teach each topic thoroughly (rules, exceptions, realistic examples, guided practice, meaningful independent checks). Use AI for genuinely fresh reading, listening, writing, speaking, and targeted remediation. Track exact mistakes and map them to relevant lessons and spaced reviews. Build a Daily Plan from curriculum progress, review due dates, weaknesses, skill balance and available time. Keep lesson completion, check passing, retention/mastery and CEFR skill assessments distinct.
+Build a maintainable Dutch-learning application centered on a **52-topic A2 curriculum** with expanded lesson content. B1 is deferred. Teach each topic thoroughly (rules, exceptions, realistic examples, guided practice, meaningful independent checks). Use AI for genuinely fresh reading, listening, writing, speaking, and targeted remediation. Track exact mistakes and map them to relevant lessons and spaced reviews. Build a Daily Plan from curriculum progress, review due dates, weaknesses, skill balance and available time. Keep lesson completion, check passing, retention/mastery and CEFR skill assessments distinct.
 
 ## Non-negotiables
 - **Never delete/reset localStorage or historical learning progress**. Keep completed Daily Plan activity IDs, assessment history, vocabulary, mistake journal and spaced-review history.
@@ -206,3 +206,20 @@ User reports cleanup utility moved six historical folders and two ZIPs to `.loca
 - Audit: docs/A2_LESSON_DEPTH_AUDIT_2026-10-29.md has per-topic counts and validation/install guidance. Feature commits through ac703b3526ee7789aba4768411649c2304aebe23; documentation follows. Source/cache version 20261029-all-a2-depth for curriculum/guides/depth/engine.
 - User install: check Git status, preserve local files, safe fetch/rebase, run node a2-lesson-depth-test.cjs plus curriculum/mastery/smoke, Ctrl+Shift+R. Sample one grammar topic, one practical topic and one previously passed lesson; no need to redo all earlier work. No Cloudflare update.
 - Remaining roadmap: broader AI semantic verification, richer/full-length exam banks and complete KNM coverage, optional cloud/automatic backup (manual backup exists), further vocabulary growth and game/recording improvements. Do not conflate this completed all-topic teaching expansion with completion of all roadmap items.
+
+
+## Session close — confirmed status and deferred priorities
+SESSION CLOSE — 29 OCTOBER 2026
+User ran a2-lesson-depth-test.cjs, curriculum-test.js, a2-mastery-test.js and smoke-test.js: all PASS; branch reported up to date. Untracked files remain untouched. Dashboard-section messages came from the smoke-test stub and did not fail it. User reviewed the expanded Housing and repairs lesson and subsequently confirmed: 'i think everything is good'. Treat latest lesson release as user-confirmed working; do not imply assistant browser verification or exhaustive checks of all52 topics.
+
+NEXT SESSION — AGREED PRIORITIES, DEFERRED
+User requested recording these plans and doing development later. No app changes now.
+1. Expand varied A2 reading/listening question banks, useful explanations and mistake-targeted practice.
+2. Broaden KNM beyond the existing five themes with practical Dutch society situations.
+3. Then build longer mock exams and results by skill. Verify current official DUO formats/sources before implementation; current short mocks are not calibrated official replicas.
+4. Later improve writing/speaking assessment guidance; current model answers/AI text feedback are practice tools, not pronunciation assessment or official pass prediction.
+Minor cleanup: Housing and repairs repeats its independent challenge in two sections. Review this later; no fix applied today.
+Preserve existing dashboard, navigation, Daily Plan, A2 focus and all progress/history. No Worker deployment needed for the lesson release.
+
+--- HISTORICAL SESSION NOTES BELOW; latest status above supersedes pending-test statements ---
+
