@@ -1,9 +1,9 @@
 # Mijn Nederlands — Project State / Source of Truth
-Last updated: 2026-10-29
-Status: Learning quality and all52 lesson releases installed; checks passed and user confirmed working. Next development deferred.
+Last updated: 2026-11-06
+Status: Previous release user-confirmed working. Two new A2 description lessons committed; user sync/browser check pending.
 
 ## Mission
-Build a maintainable Dutch-learning application centered on a **52-topic A2 curriculum** with expanded lesson content. B1 is deferred. Teach each topic thoroughly (rules, exceptions, realistic examples, guided practice, meaningful independent checks). Use AI for genuinely fresh reading, listening, writing, speaking, and targeted remediation. Track exact mistakes and map them to relevant lessons and spaced reviews. Build a Daily Plan from curriculum progress, review due dates, weaknesses, skill balance and available time. Keep lesson completion, check passing, retention/mastery and CEFR skill assessments distinct.
+Build a maintainable Dutch-learning application centered on a **54-topic A2 curriculum** with expanded lesson content. B1 is deferred. Teach each topic thoroughly (rules, exceptions, realistic examples, guided practice, meaningful independent checks). Use AI for genuinely fresh reading, listening, writing, speaking, and targeted remediation. Track exact mistakes and map them to relevant lessons and spaced reviews. Build a Daily Plan from curriculum progress, review due dates, weaknesses, skill balance and available time. Keep lesson completion, check passing, retention/mastery and CEFR skill assessments distinct.
 
 ## Non-negotiables
 - **Never delete/reset localStorage or historical learning progress**. Keep completed Daily Plan activity IDs, assessment history, vocabulary, mistake journal and spaced-review history.
@@ -222,4 +222,13 @@ Minor cleanup: Housing and repairs repeats its independent challenge in two sect
 Preserve existing dashboard, navigation, Daily Plan, A2 focus and all progress/history. No Worker deployment needed for the lesson release.
 
 --- HISTORICAL SESSION NOTES BELOW; latest status above supersedes pending-test statements ---
+
+
+
+## 2026-11-06: feelings and people descriptions
+6 NOVEMBER 2026 — FEELINGS AND DESCRIBING PEOPLE
+User reports happy with app and requested feelings (happy/sad/crazy) and describing people (tall/fat/etc.). Added feelings_emotions_a2 and describing_people_a2 to canonical curriculum, guides and depth; now69 structured lessons /54 A2. Each new topic has8 worked examples,8 checks,4 guided translations, detailed rules, mistakes, vocabulary table and independent task. Teaches zijn/zich voelen, reflexive forms, intensity, omdat/want, bang voor/trots op/gek op; appearance versus personality, zijn/hebben/dragen, adjective endings, hair/eyes/glasses. Explains gek's meanings and potentially insulting person/body descriptions without omitting requested vocabulary.
+Existing lesson IDs/content/history and97 vocabulary cards unchanged. New words are in lesson tables, NOT added to spaced vocabulary bank. Existing catalog/planner discovers curriculum topics; saved daily plans not rewritten. No Worker changes. Earlier exam/KNM roadmap remains deferred.
+Committed source through e32ed06885c6824522526740337ab4cedf7020be on feature/a2-integrated-upgrade. Cache20261106-feelings-people. Tests updated for54/69; eight automated checks pass: lesson-depth, curriculum, mastery, learning-update, integrated, smoke, targeting, phase5. DOM-stub rendering only; new lesson live browser/AI testing pending user sync.
+Install: check git status --short, preserve tracked/untracked work; git fetch origin then git rebase origin/feature/a2-integrated-upgrade; node a2-lesson-depth-test.cjs; node curriculum-test.js; Ctrl+Shift+R. Open both new topics from A2 lessons, check model reveals/quick checks/save persistence. No data clearing or Worker deployment.
 
