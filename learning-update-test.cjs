@@ -30,7 +30,7 @@ quality.report(ui);assert.equal(ui.answers.length,1);assert.equal(advanced,1);as
 assert(!db.has('mijn_nederlands_a2_mastery_v1'));assert(!db.has('mijn_nederlands_spaced_reviews_v1'));
 // Content structure, stable learning IDs, expanded checks and Dutch forms.
 const lessons=get('DutchCurriculum'),vocab=get('A2Vocabulary'),guides=get('DutchLessonGuides');
-assert.equal(lessons.length,67);assert.equal(lessons.filter(x=>x.level==='A2').length,52);assert.equal(new Set(lessons.map(x=>x.id)).size,67);
+assert.equal(lessons.length,69);assert.equal(lessons.filter(x=>x.level==='A2').length,54);assert.equal(new Set(lessons.map(x=>x.id)).size,69);
 assert.equal(vocab.length,97);assert.equal(new Set(vocab.map(x=>x.id)).size,97);assert.equal(vocab[0].id,'0-0');
 assert(lessons.find(l=>l.id==='reflexive_verbs').checks.length>=5);assert(guides.reflexive_verbs.table.rows.some(r=>r[0]==='jullie'&&r[1]==='je'));
 const relative=lessons.find(l=>l.id==='relative_clauses');assert.equal(relative.checks.find(q=>q.prompt.includes('De fiets')).answer,'die');
