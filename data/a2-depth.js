@@ -1003,5 +1003,51 @@ const A2Depth = {
       }
     ],
     "challenge": "Make five personal sentences with five different verb/preposition pairs; replace one thing with er + preposition and one person with a personal pronoun."
+  },
+  "feelings_emotions_a2": {
+    "objective": "Describe how you feel, ask about feelings and explain why.",
+    "steps": [],
+    "translationDrills": [
+      {
+        "prompt": "Today I feel a little sad.",
+        "answer": "Vandaag voel ik me een beetje verdrietig."
+      },
+      {
+        "prompt": "She is happy because her friend is coming.",
+        "answer": "Zij is blij omdat haar vriend komt."
+      },
+      {
+        "prompt": "Are you afraid of dogs?",
+        "answer": "Ben je bang voor honden?"
+      },
+      {
+        "prompt": "I love music.",
+        "answer": "Ik ben gek op muziek."
+      }
+    ],
+    "challenge": "Describe three feelings you have at different moments. Give one reason with omdat, use one intensity phrase and ask a friend how they feel."
+  },
+  "describing_people_a2": {
+    "objective": "Describe appearance and personality using respectful everyday Dutch.",
+    "steps": [],
+    "translationDrills": [
+      {
+        "prompt": "My brother is tall and friendly.",
+        "answer": "Mijn broer is lang en vriendelijk."
+      },
+      {
+        "prompt": "She has short hair and blue eyes.",
+        "answer": "Zij heeft kort haar en blauwe ogen."
+      },
+      {
+        "prompt": "The tall man wears glasses.",
+        "answer": "De lange man draagt een bril."
+      },
+      {
+        "prompt": "He is a patient colleague.",
+        "answer": "Hij is een geduldige collega."
+      }
+    ],
+    "challenge": "Describe a fictional friend in five sentences: two useful appearance features, two personality traits and one identifying detail. Use both zijn and hebben; avoid unwanted body judgments."
   }
 };
