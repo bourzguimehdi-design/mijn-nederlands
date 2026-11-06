@@ -5,7 +5,7 @@ vm.createContext(ctx);
 for(const file of ['data/curriculum.js','data/lesson-guides.js','data/a2-depth.js','js/curriculum-engine.js'])vm.runInContext(fs.readFileSync(file,'utf8'),ctx,{filename:file});
 const get=e=>vm.runInContext(e,ctx),lessons=get('DutchCurriculum'),guides=get('DutchLessonGuides'),depth=get('A2Depth'),engine=get('CurriculumEngine');
 const a2=lessons.filter(l=>l.level==='A2');
-assert.equal(a2.length,52);assert.equal(lessons.length,67);assert.equal(new Set(lessons.map(l=>l.id)).size,67);
+assert.equal(a2.length,54);assert.equal(lessons.length,69);assert.equal(new Set(lessons.map(l=>l.id)).size,69);
 for(const l of a2){
   assert(l.explanation.length>=140,l.id+' substantive overview');
   assert(l.examples.length>=5,l.id+' worked examples');assert(l.examples.every(e=>e.nl&&e.en),l.id);
@@ -22,7 +22,7 @@ const records={};for(const l of a2)records[l.id]={passed:true,lastScore:l.legacy
 records.unrelated={passed:true,lastScore:2};engine.save(records);
 const old=JSON.stringify(engine.load());
 for(const l of a2){engine.openLesson(l.id);const n=records[l.id].lastScore;assert(root.innerHTML.includes('Previous check: '+n+'/'+n+' correct'),l.id+' original denominator');}
-assert.equal(JSON.stringify(engine.load()),old);assert.equal(engine.stats('A2').passed,52);
+assert.equal(JSON.stringify(engine.load()),old);assert.equal(engine.stats('A2').passed,54);
 // Newly completed checks store the new denominator, retain an older pass even on failure.
 const l=a2.find(x=>x.id==='separable_verbs_a2');
 for(let i=0;i<l.checks.length;i++)fields.set('[data-answer="'+i+'"]',{value:'wrong'});
@@ -42,4 +42,13 @@ assert(engine.isCorrectAnswer(q('reading_notices','alleen op afspraak'),'only by
 assert(!engine.isCorrectAnswer(q('appointments','reschedule'),'annuleren'),'cancel is not reschedule');
 assert(!engine.isCorrectAnswer(q('adjective_endings','een ___ huis'),''),'blank is not a correct uninflected adjective');
 assert(engine.isCorrectAnswer(q('prepositions','De tas'),'De tas ligt op de tafel.'));
-console.log('PASS: all 52 A2 lessons meet depth checks and render, historic scores/passes retained, failed retries preserve history, new totals saved, key grammar forms/valid alternatives/blank rejection.');
+// New descriptive vocabulary: explicit forms, curated alternatives and negative controls.
+assert.equal(q('feelings_emotions_a2','Zij voelt').answer,'zich');
+assert.equal(q('feelings_emotions_a2','trots').answer,'op');
+assert(engine.isCorrectAnswer(q('feelings_emotions_a2','Ik voel'),'mij'));
+assert(!engine.isCorrectAnswer(q('feelings_emotions_a2','Zij voelt'),'haar'));
+assert.equal(q('describing_people_a2','Een ___ man').answer,'lange');
+assert.equal(q('describing_people_a2','___ ogen. (blauw)').answer,'blauwe');
+assert(!engine.isCorrectAnswer(q('describing_people_a2','___ ogen. (blauw)'),'blauw'));
+assert(guides.describing_people_a2.rules.some(r=>r.includes('insulting')));
+console.log('PASS: all 54 A2 lessons meet depth checks and render, historic scores/passes retained, failed retries preserve history, new totals saved, key grammar forms/valid alternatives/blank rejection.');
