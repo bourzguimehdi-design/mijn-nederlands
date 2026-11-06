@@ -1484,5 +1484,184 @@ const DutchLessonGuides = {
       }
     ],
     "task": "Make five personal sentences with five different verb/preposition pairs; replace one thing with er + preposition and one person with a personal pronoun."
+  },
+  "feelings_emotions_a2": {
+    "rules": [
+      "Use zijn + adjective or zich voelen + adjective: ik ben blij; ik voel me blij. Do not add an -e after ben or voel me.",
+      "Change the reflexive pronoun: ik voel me, jij voelt je, hij/zij voelt zich, wij voelen ons, jullie voelen je, zij voelen zich. Ask: hoe voel je je?",
+      "Describe intensity: een beetje verdrietig, erg boos, heel blij. Negate with niet: ik ben niet boos. Contrast with maar: moe, maar tevreden.",
+      "Use omdat + subject + rest + verb: ik ben blij omdat mijn vriend komt. With want: ik ben blij, want mijn vriend komt.",
+      "Learn prepositions in phrases: bang voor, boos op iemand, trots op, blij met. Gek op means very fond of; dat is gek means strange. Calling someone gek can offend and does not describe a diagnosis."
+    ],
+    "mistakes": [
+      {
+        "wrong": "Ik voel blij.",
+        "right": "Ik voel me blij.",
+        "why": "Zich voelen needs a reflexive pronoun."
+      },
+      {
+        "wrong": "Ik ben blij omdat mijn vriend komt vandaag.",
+        "right": "Ik ben blij omdat mijn vriend vandaag komt.",
+        "why": "In this omdat clause, komt goes last."
+      },
+      {
+        "wrong": "Zij voelt haar verdrietig.",
+        "right": "Zij voelt zich verdrietig.",
+        "why": "Use reflexive zich when she describes her own feeling."
+      }
+    ],
+    "table": {
+      "headers": [
+        "Dutch",
+        "English / use"
+      ],
+      "rows": [
+        [
+          "blij / gelukkig",
+          "happy / happy, fortunate"
+        ],
+        [
+          "verdrietig / triest",
+          "sad"
+        ],
+        [
+          "boos",
+          "angry"
+        ],
+        [
+          "bang",
+          "afraid"
+        ],
+        [
+          "zenuwachtig",
+          "nervous"
+        ],
+        [
+          "rustig",
+          "calm"
+        ],
+        [
+          "opgelucht",
+          "relieved"
+        ],
+        [
+          "teleurgesteld",
+          "disappointed"
+        ],
+        [
+          "trots",
+          "proud"
+        ],
+        [
+          "eenzaam",
+          "lonely"
+        ],
+        [
+          "moe",
+          "tired"
+        ],
+        [
+          "tevreden",
+          "satisfied, content"
+        ],
+        [
+          "enthousiast",
+          "enthusiastic"
+        ],
+        [
+          "gek / gek op",
+          "strange or crazy / very fond of"
+        ]
+      ]
+    },
+    "task": "Describe three feelings you have at different moments. Give one reason with omdat, use one intensity phrase and ask a friend how they feel."
+  },
+  "describing_people_a2": {
+    "rules": [
+      "Use hij/zij is for height, build or personality; hij/zij heeft for hair, eyes or a beard; hij/zij draagt for glasses and clothes.",
+      "After zijn, keep the base adjective: hij is lang, zij is vriendelijk. Before a person noun, usually add -e: een lange man, een vriendelijke vrouw.",
+      "For hair and eyes, compare kort haar, donker haar, krullend haar and blauwe ogen. Het haar is singular; de ogen is plural. Do not translate English hair as haren when describing a hairstyle.",
+      "Describe personality with vriendelijk/aardig, rustig, grappig, geduldig or verlegen. A quiet person is rustig or stil; verlegen specifically means shy.",
+      "Lang means tall for people; klein means short/small. Oud and jong describe age; ouder and jonger compare ages. Avoid guessing age or personality from appearance.",
+      "Dik means fat, dun means thin and slank means slim; dik can sound blunt or insulting about a person. Stevig gebouwd means solidly built, but is still a body comment. For identification, prefer relevant neutral features such as hair, glasses and clothes."
+    ],
+    "mistakes": [
+      {
+        "wrong": "Hij heeft lang.",
+        "right": "Hij is lang.",
+        "why": "Use zijn for height, not hebben."
+      },
+      {
+        "wrong": "Zij is een vriendelijk vrouw.",
+        "right": "Zij is een vriendelijke vrouw.",
+        "why": "Before vrouw the adjective takes -e."
+      },
+      {
+        "wrong": "Zij heeft blauw ogen.",
+        "right": "Zij heeft blauwe ogen.",
+        "why": "Plural ogen requires blauwe."
+      }
+    ],
+    "table": {
+      "headers": [
+        "Dutch",
+        "English / use"
+      ],
+      "rows": [
+        [
+          "lang / klein",
+          "tall / short, small"
+        ],
+        [
+          "jong / oud",
+          "young / old"
+        ],
+        [
+          "slank / dik / dun",
+          "slim / fat (can offend) / thin"
+        ],
+        [
+          "gespierd",
+          "muscular"
+        ],
+        [
+          "kort / lang haar",
+          "short / long hair"
+        ],
+        [
+          "steil / krullend haar",
+          "straight / curly hair"
+        ],
+        [
+          "blond / donker / grijs haar",
+          "blond / dark / grey hair"
+        ],
+        [
+          "de bril / de baard / de snor",
+          "glasses / beard / moustache"
+        ],
+        [
+          "vriendelijk / aardig",
+          "friendly / nice"
+        ],
+        [
+          "rustig / stil",
+          "calm / quiet"
+        ],
+        [
+          "grappig",
+          "funny"
+        ],
+        [
+          "geduldig",
+          "patient"
+        ],
+        [
+          "verlegen",
+          "shy"
+        ]
+      ]
+    },
+    "task": "Describe a fictional friend in five sentences: two useful appearance features, two personality traits and one identifying detail. Use both zijn and hebben; avoid unwanted body judgments."
   }
 };
