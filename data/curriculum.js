@@ -3232,5 +3232,166 @@ const DutchCurriculum = [
     ],
     "legacyCheckCount": 3,
     "teachingRevision": "2026-10-29-depth"
+  },
+  {
+    "id": "feelings_emotions_a2",
+    "level": "A2",
+    "title": "Feelings and emotions",
+    "goal": "Describe how you feel, ask about feelings and explain why.",
+    "explanation": "Use zijn or zich voelen with an adjective: ik ben blij; ik voel me verdrietig. Feelings can change, so add vandaag, een beetje or heel. Give a reason with omdat and put the verb at the end of that clause. Gek has several meanings: dat is gek means that is strange, while ik ben gek op muziek means I love music. Calling a person gek can be insulting; it is not a useful substitute for describing their actual feelings.",
+    "examples": [
+      {
+        "nl": "Ik ben blij, want mijn vriend komt op bezoek.",
+        "en": "I am happy because my friend is coming to visit. Want keeps normal subject–verb order."
+      },
+      {
+        "nl": "Vandaag voel ik me een beetje verdrietig.",
+        "en": "Today I feel a little sad. After vandaag, the verb comes before ik; me belongs to voel."
+      },
+      {
+        "nl": "Zij is boos omdat de bus te laat is.",
+        "en": "She is angry because the bus is late. Is goes at the end of the omdat clause."
+      },
+      {
+        "nl": "Ben je bang voor honden?",
+        "en": "Are you afraid of dogs? Learn bang voor as a phrase."
+      },
+      {
+        "nl": "Hij is zenuwachtig voor het examen, maar daarna voelt hij zich opgelucht.",
+        "en": "He is nervous before the exam, but afterwards he feels relieved. Hij takes zich."
+      },
+      {
+        "nl": "Ik ben trots op mijn zus.",
+        "en": "I am proud of my sister. Learn trots op together."
+      },
+      {
+        "nl": "Hoe voel je je vandaag?",
+        "en": "How do you feel today? The first je is the subject; the second is reflexive."
+      },
+      {
+        "nl": "Dat is gek! Ik ben gek op deze muziek.",
+        "en": "That is strange! I love this music. Gek and gek op do different jobs."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Ik voel ___ blij. (reflexive pronoun)",
+        "answer": "me",
+        "acceptedAnswers": [
+          "mij"
+        ]
+      },
+      {
+        "prompt": "Complete: Zij voelt ___ verdrietig. (reflexive pronoun)",
+        "answer": "zich"
+      },
+      {
+        "prompt": "Complete: Ik ben ___ voor honden. (afraid)",
+        "answer": "bang"
+      },
+      {
+        "prompt": "Complete: Hij is boos ___ de bus te laat is. (because; verb-last connector)",
+        "answer": "omdat"
+      },
+      {
+        "prompt": "Complete: Ik ben trots ___ mijn zus. (fixed preposition)",
+        "answer": "op"
+      },
+      {
+        "prompt": "Complete: Ik ben gek ___ muziek. (I love music)",
+        "answer": "op"
+      },
+      {
+        "prompt": "Translate the adjective: relieved",
+        "answer": "opgelucht"
+      },
+      {
+        "prompt": "Translate the adjective: sad",
+        "answer": "verdrietig",
+        "acceptedAnswers": [
+          "triest"
+        ]
+      }
+    ],
+    "teachingRevision": "2026-11-06-descriptions"
+  },
+  {
+    "id": "describing_people_a2",
+    "level": "A2",
+    "title": "Describing people",
+    "goal": "Describe appearance and personality using respectful everyday Dutch.",
+    "explanation": "Use zijn for a characteristic and hebben for features: hij is lang; hij heeft kort haar. Separate appearance from personality: vriendelijk describes how someone behaves, not their height or body. After zijn, the adjective has no added -e; before a person noun it usually does: hij is lang; een lange man. Body words such as dik and dun exist, but commenting on weight may hurt. Describe relevant visible features neutrally, especially when identifying someone.",
+    "examples": [
+      {
+        "nl": "Mijn broer is lang en mijn zus is klein.",
+        "en": "My brother is tall and my sister is short. For a person, lang means tall; klein can mean short or small."
+      },
+      {
+        "nl": "De lange man heeft kort, donker haar.",
+        "en": "The tall man has short, dark hair. Lange describes de man; kort and donker describe haar, an indefinite het-word here."
+      },
+      {
+        "nl": "Zij heeft blauwe ogen en draagt een bril.",
+        "en": "She has blue eyes and wears glasses. Ogen is plural, so blauw becomes blauwe."
+      },
+      {
+        "nl": "Mijn buurvrouw is vriendelijk en geduldig.",
+        "en": "My neighbour is friendly and patient. These are personality traits; no added -e after is."
+      },
+      {
+        "nl": "Hij is een rustige, grappige collega.",
+        "en": "He is a calm, funny colleague. Before collega, the adjectives take -e."
+      },
+      {
+        "nl": "Zij heeft krullend haar en een rond gezicht.",
+        "en": "She has curly hair and a round face. Haar and gezicht are het-words; these indefinite phrases keep the base adjective."
+      },
+      {
+        "nl": "Wie bedoel je? De vrouw met de bril en de rode jas.",
+        "en": "Who do you mean? The woman with the glasses and the red coat. Relevant features help identify a person."
+      },
+      {
+        "nl": "Hij is gespierd. Zij heeft een slank postuur.",
+        "en": "He is muscular. She has a slim build. Body descriptions need context; they are not personality traits."
+      }
+    ],
+    "checks": [
+      {
+        "prompt": "Complete: Hij is twee meter lang. Hij is erg ___. (tall)",
+        "answer": "lang"
+      },
+      {
+        "prompt": "Complete: Een ___ man. (lang)",
+        "answer": "lange"
+      },
+      {
+        "prompt": "Complete: Zij ___ blauwe ogen. (has)",
+        "answer": "heeft"
+      },
+      {
+        "prompt": "Complete: Hij heeft ___ haar. (kort; short)",
+        "answer": "kort"
+      },
+      {
+        "prompt": "Complete: Zij draagt een ___. (glasses)",
+        "answer": "bril"
+      },
+      {
+        "prompt": "Complete: Mijn buurvrouw is ___. (friendly)",
+        "answer": "vriendelijk",
+        "acceptedAnswers": [
+          "aardig"
+        ]
+      },
+      {
+        "prompt": "Complete: Zij heeft ___ ogen. (blauw)",
+        "answer": "blauwe"
+      },
+      {
+        "prompt": "Translate the adjective: patient",
+        "answer": "geduldig"
+      }
+    ],
+    "teachingRevision": "2026-11-06-descriptions"
   }
 ];
