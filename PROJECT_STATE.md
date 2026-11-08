@@ -1,5 +1,5 @@
 # Mijn Nederlands — Project State / Source of Truth
-Last updated: 2026-11-06
+Last updated: 2026-11-08
 Status: Previous release user-confirmed working. Two new A2 description lessons committed; user sync/browser check pending.
 
 ## Mission
@@ -232,3 +232,8 @@ Existing lesson IDs/content/history and97 vocabulary cards unchanged. New words 
 Committed source through e32ed06885c6824522526740337ab4cedf7020be on feature/a2-integrated-upgrade. Cache20261106-feelings-people. Tests updated for54/69; eight automated checks pass: lesson-depth, curriculum, mastery, learning-update, integrated, smoke, targeting, phase5. DOM-stub rendering only; new lesson live browser/AI testing pending user sync.
 Install: check git status --short, preserve tracked/untracked work; git fetch origin then git rebase origin/feature/a2-integrated-upgrade; node a2-lesson-depth-test.cjs; node curriculum-test.js; Ctrl+Shift+R. Open both new topics from A2 lessons, check model reveals/quick checks/save persistence. No data clearing or Worker deployment.
 
+
+
+## iPhone backup restore access
+8 NOVEMBER 2026 — IPHONE RESTORE ACCESS
+User copied app URL to iPhone; first-use placement screen blocked reaching A2 Studio backup. Added an intro card/button Restore my progress calling existing ProgressBackup.open(), available before any assessment. Existing preview/validation/confirmation/missing-only default/safety export behavior unchanged. After import user must reload to apply restored assessment/profile. No progress reset, new keys or Worker change. index.html commit72791405d8a221de03678859c925aa237572e7b4. learning-update and smoke tests pass; live iPhone check pending. User URL cuddly-doodle-p7wjqprp4jqr2r9v-8000.app.github.dev. Phone storage separate; no automatic sync. User reported done installing6Nov lessons.
