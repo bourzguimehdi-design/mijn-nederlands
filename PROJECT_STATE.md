@@ -237,3 +237,27 @@ Install: check git status --short, preserve tracked/untracked work; git fetch or
 ## iPhone backup restore access
 8 NOVEMBER 2026 — IPHONE RESTORE ACCESS
 User copied app URL to iPhone; first-use placement screen blocked reaching A2 Studio backup. Added an intro card/button Restore my progress calling existing ProgressBackup.open(), available before any assessment. Existing preview/validation/confirmation/missing-only default/safety export behavior unchanged. After import user must reload to apply restored assessment/profile. No progress reset, new keys or Worker change. index.html commit72791405d8a221de03678859c925aa237572e7b4. learning-update and smoke tests pass; live iPhone check pending. User URL cuddly-doodle-p7wjqprp4jqr2r9v-8000.app.github.dev. Phone storage separate; no automatic sync. User reported done installing6Nov lessons.
+
+
+## 2026-11-08 Permanent hosting
+8 NOVEMBER 2026 — PERMANENT HOSTING
+User authorized permanent website after iPhone Safari and Chrome repeatedly downloaded zero-byte Codespaces responses. Actual local Python server works200/text-html; laptop forwarded link works; phone attempts create no new server log. HTTP protocol/private visibility confirmed; GitHub sign-in, fresh queries, forwarding restart and alternate browser did not resolve. Do NOT claim exact cause proven; blockage appears before app server. Existing Codespaces/untracked files/progress left untouched.
+
+DEPLOYED via Sites (owner-private, ChatGPT sign-in; no GitHub needed): https://mijn-nederlands-mehdi.azurehare18.chatgpt.site
+Site project_id appgprj_6af0eccc941c81919854468cc197b65c
+Saved version appgprj_6af0eccc941c81919854468cc197b65c~appgver_6120ab2223188191a478523a44f00897
+Deployment appgdep_6af0ed684d3c8191812c6b8065fcdff8 SUCCEEDED.
+Hosted source commit b56cafe10966719ce417df35681f3828712ab208 (Sites source repository, NOT original GitHub repo).
+Local checkout /workspace/sites/mijn-nederlands-phone; hosting manifest .openai/hosting.json static.directory dist. Use Sites get_site + credential + site-workflow helper for future updates; reuse site ID, never create duplicate. Current audience owner-private; do not expand without user request.
+
+SOURCE/PACKAGING
+Exact48 frontend files (index.html, placement.js, css/js/data) taken from GitHub branch feature/a2-integrated-upgrade commitba7347ec88904cc183e28ca1df08c1b169d6040e. Local matching files verified by Git blob hashes; differing files fetched at pinned commit. Only dist packaged; excludes Worker source, ZIPs, recap, tests, exports and runtime progress. No frontend feature changes. Snapshot includes54A2/69total lessons,97vocab, first-use Restore my progress button. Future original GitHub pushes do NOT automatically redeploy Site; deliberately sync updated frontend and publish through Sites. Read SOURCE.md in hosted repo.
+
+VALIDATION
+All HTML local asset references resolve. Secret-pattern scan passed. Five checks passed against packaged source: learning-update, lesson-depth, curriculum, mastery, smoke. Desktop cloud-browser preview showed first-use screen; Restore my progress opened backup UI correctly. External Worker /health returnedstatusok/AIenabled; OPTIONS from newSiteOrigin returned204 and Access-Control-Allow-Origin*. No AI generation/microphone/iPhone end-to-end testing performed. Native deployment success verified; actual deployed browser showed ChatGPT login gate. Do not claim signed-in live app/iPhone restore verified yet.
+
+USER NEXT
+Open permanent link in Safari, Continue with ChatGPT using SAME account as this chat; Restore my progress -> choose desktopJSONbackup -> preview -> Restore selected backup -> reload. New origin starts empty; no automatic cross-origin/device progress transfer or cloud sync. Original browserprogress untouched. User should use same permanent origin on laptop too and backup/import intentionally; daily work on devices does not merge automatically. Keep backup file. Codespaces need not remain running for hosted app. No Cloudflare Worker redeployment.
+
+--- PREVIOUS HISTORY BELOW ---
+
