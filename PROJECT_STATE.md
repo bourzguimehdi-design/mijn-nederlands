@@ -1,6 +1,6 @@
 # Mijn Nederlands — Project State / Source of Truth
 Last updated: 2026-11-08
-Status: Previous release user-confirmed working. Two new A2 description lessons committed; user sync/browser check pending.
+Status: Permanent owner-private hosted app deployed and user reports working. 54 A2 lessons implemented; manual progress import remains browser-specific. Future work deferred.
 
 ## Mission
 Build a maintainable Dutch-learning application centered on a **54-topic A2 curriculum** with expanded lesson content. B1 is deferred. Teach each topic thoroughly (rules, exceptions, realistic examples, guided practice, meaningful independent checks). Use AI for genuinely fresh reading, listening, writing, speaking, and targeted remediation. Track exact mistakes and map them to relevant lessons and spaced reviews. Build a Daily Plan from curriculum progress, review due dates, weaknesses, skill balance and available time. Keep lesson completion, check passing, retention/mastery and CEFR skill assessments distinct.
@@ -261,3 +261,60 @@ Open permanent link in Safari, Continue with ChatGPT using SAME account as this 
 
 --- PREVIOUS HISTORY BELOW ---
 
+
+
+## Session close: current status and future roadmap (2026-11-08)
+SESSION CLOSE — 8 NOVEMBER 2026
+AUTHORITATIVE CURRENT STATUS AND FUTURE ROADMAP
+This section supersedes older pending-install/status statements below. Historical notes remain for provenance. User asked to stop development for today, receive status/roadmap and save everything. No new features authorized for immediate implementation by this roadmap.
+
+USER CONFIRMATION
+User says permanent hosted link "looks like its working" after phone access troubleshooting and deployment. Record user-confirmed hosted access; do not infer exhaustive iPhone microphone, AI or restore validation. Whether the progress JSON was fully imported and matches laptop totals was not explicitly confirmed.
+6 November user said "done" after lesson sync instructions; installation reported complete, exhaustive live tests of those two topics not claimed.
+29 October user explicitly passed backup, lessons, vocabulary, reading mock, speaking+AI feedback and KNM; later confirmed all-topic lesson upgrade looked good. Those confirmations apply to their respective releases.
+
+CURRENT APP
+- A2 citizenship-preparation focus; B1 deferred. Existing dashboard/navigation/Daily Plan retained.
+- 69 structured lessons, including54 A2 topics. All54 have expanded teaching, worked examples, checks, common mistakes, guided model translations and an independent task. The latest feelings/emotions and describing-people topics each have8 examples/8checks/4translation models plus vocabulary tables and polite-use notes. Total279 A2 quick checks. Structural coverage, not an independent pedagogical certification.
+- Daily Plan completion, lesson checks and initial AI mastery are distinct. Existing AI mastery gate uses >=5 graded answers and>=80%, retaining historical passes; not certified CEFR proficiency or an official exam pass predictor.
+- 97 vocabulary cards with stable IDs, due/new/scheduled counts, overdue priority, daily target3 and same-day resume. Meaning, production and context modes use self-confirmed recall. New feelings/people words appear in lesson tables; NOT yet added to spaced vocabulary bank.
+- Writing/speaking AI practice, conversations, transcription editable before send, visible word-game hints; correction/journal/spaced-review integration exists. AI "next practice" free text is not automatically scheduled. Raad het woord still uses eight client-held secrets and literal guess matching.
+- Narrow invalid-question guard/report-and-skip available; not universal AI semantic verification. Historical erroneous grading not automatically repaired.
+- Manual JSON backup/export/import with preview, missing-only default and explicit replacement with safety export. Restore now reachable before placement on a fresh browser.
+- Original short timed exam practice: reading6, listening6, writing4, speaking6, KNM15 items. Reading/listening/KNM objective scoring; writing/speaking model/checklist and optional AI text feedback, no calibrated production pass/fail or pronunciation assessment from text. Not full official replicas.
+- KNM currently five introductory themes, three checks each; incomplete coverage.
+
+PERMANENT ACCESS
+https://mijn-nederlands-mehdi.azurehare18.chatgpt.site
+Owner-private; same ChatGPT account required, no GitHub/Codespaces needed. Hosted access confirmed by user. Progress remains per browser/device AND origin, not account-synced. Import desktop JSON into permanent origin on each device as needed. Export before intentional replacement. Retain original browser data and backup. No need to clear storage.
+App/code updates on GitHub are NOT automatically deployed to this link. The next development session must update BOTH original source and hosted snapshot when publishing changes, preserve the same URL/site ID, and state committed versus deployed versus user-tested distinctly.
+Codespaces phone issue: private forwarded URL returned zero-byte download on Safari and Chrome; no request reached Python log; local200/text-html and laptop worked. Exact cause not proven. Do not resume fruitless browser resets or make repository-root server public.
+
+HOSTING CONTINUITY
+project_id appgprj_6af0eccc941c81919854468cc197b65c
+version_id appgprj_6af0eccc941c81919854468cc197b65c~appgver_6120ab2223188191a478523a44f00897
+deployment_id appgdep_6af0ed684d3c8191812c6b8065fcdff8 SUCCEEDED
+Site source commit b56cafe10966719ce417df35681f3828712ab208
+Original source snapshot ba7347ec88904cc183e28ca1df08c1b169d6040e on feature/a2-integrated-upgrade. Subsequent original GitHub commits update notes only, including74a1d08121353261b90e83a1ee0117ff7328221e.
+Local /workspace/sites/mijn-nederlands-phone; manifest .openai/hosting.json; static.directory dist; only48frontend files published, no Worker/ZIP/backups/progress exports. Same existing external Worker preserved; health and CORS preflight passed. Five regression checks passed against actual packaged frontend; preview restored UI accessible. Live deployment login gate verified by assistant; user confirmed access. No assistant iPhone/audio/AI-generation test.
+Use Sites skill/source helper and fresh source credential for SAME site next time. Never create duplicate or widen audience without request. Original GitHub repo remains development source; hosted repo is deployment snapshot.
+
+PRIORITIZED ROADMAP — FUTURE SESSIONS, NO DATES PROMISED
+1. Reliable phone/laptop use and release workflow.
+   First confirm backup import and matching key totals on phone/permanent laptop URL, then saved progress after reload; test AI, microphone/transcription, audio and mobile form layout. Add clearer "reload/open app" after restore and useful errors if needed. Maintain manual backup safety. Establish a documented single source-to-hosting release process, then consider automated deployment. Acceptance: updated feature appears at SAME hosted URL, old progress survives, rollback source/version known.
+   Cross-device cloud sync is a separate designed upgrade, NOT supplied by ChatGPT sign-in. Design owner-scoped storage, conflicts/offline edits, backup and migration/restore before implementing. Never replace newer device data silently. Keep manual export available. This is a usability priority to discuss, not an automatic promise or immediate build request.
+2. Expand A2 reading and listening banks (previously agreed learning-content priority).
+   Add varied realistic notices/messages/short passages and spoken dialogues across daily-life themes, explanations tied to source evidence and relevant lessons. Rotate sets to reduce repetition; review mistakes with fresh questions. Listening should test listening rather than reveal transcripts before answering; accessible transcript/replay after attempt, compatible audio. Track skill history without treating a single short result as level certification. Acceptance: reviewed answer keys, no repeated item in same attempt, unanswered handling, saved results and useful remediation.
+3. Broader KNM / Dutch society path.
+   Start by checking current official DUO scope and credible primary sources. Expand beyond five themes to mapped coverage such as living/neighbours, work/income, education/parenting, healthcare, authorities/politics, rights/responsibilities and everyday social situations, checking the actual official objectives rather than assuming this provisional list is complete. Short A2 explanations, vocabulary, scenarios and reviewed checks; show sources/check dates and avoid stereotypes. Acceptance: coverage map and source-backed question review, respectful varied examples, results retained. Do not claim complete syllabus until mapped/audited.
+4. Longer mock exams and skill-by-skill feedback.
+   After sufficient reviewed banks, implement selectable lengths/timers, realistic task mixes and skill summaries linked to practice. Recheck official format/timing first; keep originals clearly labelled unofficial. Handle interruption, unanswered items and duplicate submissions. Writing/speaking need explicit task criteria and actionable feedback, distinguish text content from pronunciation. Acceptance: tested scoring/session persistence, clear limitations, no invented official passing calibration.
+5. Improve teaching and grading quality continuously.
+   Broaden semantic checks for AI questions/key/explanation agreement, robust skip/report and reviewed invalid-item handling without penalties. Remove duplicate independent challenge rendering (observed Housing and repairs); clarify ambiguous accepted alternatives with meaningful negative controls. Add contextual feelings/personality/appearance cards to vocabulary using NEW stable IDs, then grow other high-use vocabulary. Acceptance: old IDs/results retained, valid variants accepted, wrong meanings rejected, no unwarranted mastery.
+6. Later conversation/game polish.
+   Improve recording/request lifecycle and mobile audio, robust guesses, larger word bank, and server-owned game round secret with explicit Worker deployment/rollback. Assess automatic scheduling of supported AI practice suggestions with stable IDs/deduplication. Friend sharing requires explicit audience/access and AI-usage controls; do not simply expose repository-root server or assume site/account sync.
+
+NEXT SESSION START
+Read this recap and current PROJECT_STATE.md, get current original branch files and hosted Site/source state. Check exact user priorities before building a large phase. Preserve all old learning IDs/history and local/untracked Worker variants; no reset/force pull/clear browser data. Use safe sync and appropriate focused checks. Finish by updating original project notes, hosted deployment if code changed and publication intended, and this SAME recap identity. Keep structure user likes. A2 only.
+
+--- HISTORICAL NOTES BELOW ---
