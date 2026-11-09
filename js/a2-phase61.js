@@ -13,7 +13,7 @@ const A2Phase61 = {
         skill:'grammar',title:`New lesson: ${next.title}`,subtitle:'A2 curriculum · guided explanation and topic check',level:'A2'});
     }
     for (const a of open) {
-      if (a.type === 'concept') continue; // retain personal weakness / spaced review routing
+      if (a.type === 'concept') { a.level = 'A2'; continue; } // retain topic and review routing
       if (a.studioKind === 'assessment') {
         // The legacy three-question sampler must not masquerade as fresh AI practice.
         delete a.studioKind; delete a.studioId;
@@ -49,6 +49,11 @@ const A2Phase61 = {
     // Force A2 for every unfinished skill activity, including plans saved before Phase 6.1.
     const priorStart = Dashboard.startActivity;
     Dashboard.startActivity = function(activity,index) {
+      if (activity?.type === 'concept') {
+        // Normalize at launch too: old saved plans may predate reconciliation.
+        // Use a copy so saved IDs, completion and historical activity data stay intact.
+        return priorStart.call(this, {...activity, level:'A2'}, index);
+      }
       if (activity?.type !== 'concept' && activity?.skill && activity?.studioKind !== 'lesson' && activity?.studioKind !== 'vocabulary' && activity?.studioKind !== 'conversation') {
         const normalized = {...activity,type:'skill',level:'A2',source:'phase61'};
         this.activeActivity = activity; // preserve original daily-plan ID for completion
