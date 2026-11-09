@@ -1,5 +1,5 @@
 # Mijn Nederlands — Project State / Source of Truth
-Last updated: 2026-11-08
+Last updated: 2026-11-09
 Status: Permanent owner-private hosted app deployed and user reports working. 54 A2 lessons implemented; manual progress import remains browser-specific. Future work deferred.
 
 ## Mission
@@ -318,3 +318,25 @@ NEXT SESSION START
 Read this recap and current PROJECT_STATE.md, get current original branch files and hosted Site/source state. Check exact user priorities before building a large phase. Preserve all old learning IDs/history and local/untracked Worker variants; no reset/force pull/clear browser data. Use safe sync and appropriate focused checks. Finish by updating original project notes, hosted deployment if code changed and publication intended, and this SAME recap identity. Keep structure user likes. A2 only.
 
 --- HISTORICAL NOTES BELOW ---
+
+
+## 2026-11-09 A2 concept target fix (deployed)
+9 NOVEMBER 2026 — A1 SPELLING / CONCEPT REVIEW FIX
+User screenshot showed Personalized Practice > Spelling > A1,10min with a short/long-vowel explanation. Root source gap reproduced: skill activities already honored explicitA2, but ordinary concept practice could deriveA1 from assessed writing/grammar. Phase61 skipped concept slots; PracticeUI ignored explicit levels for ordinary concept activities. Error remediation separately derived level from historical mistake evidence. Exact clicked entry point not observed; fix covers both daily/spaced concept and error-remediation routes.
+
+CHANGES
+PracticeEngine.createConceptSession accepts validated options.level before constructing stage metadata. PracticeUI passes explicit activity target, defaultA2 for personal concept practice; explicitA1/B1 curriculum study remains possible. Phase61 sets unfinished concept slots toA2 and normalizes copies at launch too (older saved plans). Existing activity IDs/topic/source and completed plans preserved. ErrorLessonEngine generates new remediation atA2 while retaining each historical evidence item's original level. No storage migration, deletion, history/assessment relabelling, Worker changes or feature expansion. Spelling fundamentals may still be relevant atA2; the change fixes target selection, not a guarantee of every model-generated lesson's pedagogical quality.
+
+VERIFICATION
+New a2-concept-level-test.cjs reproduces profile-derivedA1 and validates actual session/stageA2, spaced review target, legacy launch/IDs, unchanged completed activities, explicitA1 curriculum support, A2 remediation request and unchangedA1 historical evidence/profile. Also PASS learning-update, mastery, smoke; syntax4JS. No live AI-generated lesson/phone inspection performed by assistant.
+Original feature branch source/tests through a7ca2b493a0e62f4c61b520e69aa0eed5e64cd7a; docs follow.
+Hosted snapshot updated/deployed SAME privateURL:
+https://mijn-nederlands-mehdi.azurehare18.chatgpt.site
+project_id appgprj_6af0eccc941c81919854468cc197b65c (reuse)
+Site source commit246168cfc0ddd9b82b5eb864710fb1fc21dd2241
+version_id appgprj_6af0eccc941c81919854468cc197b65c~appgver_15d641aaa64c81918874fa2b3636fadf
+deployment_id appgdep_6af216c0855481918bf7a7fcc333459d SUCCEEDED
+Cache20261109-a2-concept-target for4edited scripts. Current checkout/workflow root /workspace/sites/mijn-nederlands-phone/.sites-checkout (recovered from existing hosted source after workspace maintenance); source manifest/dist format retained. Use Sites skill and fresh credential next time.
+User next: refresh permanentURL then leave/reopen spelling task to generate a NEW session (existing open session isn't rewritten). No backup reimport, Codespaces sync or Worker deployment needed for hosted use. For Codespaces later safe fetch/rebase and node a2-concept-level-test.cjs after status. Ask for fresh screenshot if new session stillA1. Existing manual per-browser progress remains; no sync added. Update roadmap unchanged.
+
+--- PREVIOUS STATUS / ROADMAP BELOW ---
