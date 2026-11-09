@@ -650,6 +650,10 @@ const ErrorLessonEngine = {
     }
 
 
+    // Mistake levels describe past evidence, not today's practice target.
+    // Keep each evidence item intact, while generating fresh A2 remediation.
+    context.level = "A2";
+
     const session =
       this.createSession(
         context
