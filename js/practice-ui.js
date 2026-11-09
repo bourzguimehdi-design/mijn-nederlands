@@ -40,7 +40,11 @@ async startFromActivity(activity) {
         profile,
         {
           minutes:
-            activity.minutes || 10
+            activity.minutes || 10,
+          // This app's personal concept practice targets A2. Explicit curriculum
+          // levels still support intentional A1/B1 study from the lesson catalog.
+          level: ["A1", "A2", "B1"].includes(activity.level)
+            ? activity.level : "A2"
         }
       );
 
