@@ -54,11 +54,11 @@ const PracticeEngine = {
         : 10;
 
 
-    const level =
-      this.getPracticeLevel(
-        profile,
-        normalizedConcept
-      );
+    // A declared practice target controls both the request and its stage metadata.
+    // Assessment/profile levels remain evidence and are not rewritten.
+    const level = ["A1", "A2", "B1"].includes(options.level)
+      ? options.level
+      : this.getPracticeLevel(profile, normalizedConcept);
 
 
     const weakness =
