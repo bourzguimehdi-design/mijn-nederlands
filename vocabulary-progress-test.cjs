@@ -15,7 +15,7 @@ function setup(db={},record=null){
   return {ctx,db,nodes,root,get:e=>vm.runInContext(e,ctx)};
 }
 const a=setup(),e=a.get('A2VocabularyEngine'),words=a.get('A2Vocabulary'),total=words.length;
-assert.equal(e.stats().total,97);
+assert.equal(e.stats().total,358);
 assert.equal(e.stats().newWords,total);assert.equal(e.stats().reviewsDue,0);
 for(const w of words.slice(0,9))e.grade(w.id,true);
 assert.equal(e.due().length,total-9);assert.equal(e.stats().reviewedToday,9);assert.equal(e.stats().scheduled,9);
