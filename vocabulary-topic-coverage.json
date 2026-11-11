@@ -1,0 +1,596 @@
+{
+  "perfect_tense": {
+    "title": "Perfect tense",
+    "targeted": [
+      "a2-topic-e62e8aa7681c",
+      "a2-topic-ce2b248cf578",
+      "a2-topic-72043a708353",
+      "a2-topic-f80356517b54",
+      "a2-topic-493d6fda8bcc"
+    ],
+    "total": 7
+  },
+  "past_participle": {
+    "title": "Past participles",
+    "targeted": [
+      "a2-topic-4bf21fac14ba",
+      "a2-topic-0c8fccb21269",
+      "a2-topic-227f6179277a",
+      "a2-topic-29db46515bf0",
+      "a2-topic-d505abf912ee"
+    ],
+    "total": 5
+  },
+  "imperfect_tense": {
+    "title": "Simple past",
+    "targeted": [
+      "a2-topic-485dede55996",
+      "a2-topic-eb3cfbce291d",
+      "a2-topic-2667e37cc94d",
+      "a2-topic-f5e06955c9b9",
+      "a2-topic-5fba34308dfd"
+    ],
+    "total": 5
+  },
+  "subordinate_clauses": {
+    "title": "Because and that",
+    "targeted": [
+      "4-3",
+      "a2-topic-bc5b4af69c37",
+      "a2-topic-6b84afaea95d",
+      "a2-topic-28753be8fd21",
+      "4-4"
+    ],
+    "total": 5
+  },
+  "inversion": {
+    "title": "Inversion",
+    "targeted": [
+      "a2-topic-2f13938011e1",
+      "a2-topic-b471f78cda68",
+      "a2-topic-6638f1fae21a",
+      "a2-topic-8fbbc60c9839",
+      "a2-topic-1a959463810b"
+    ],
+    "total": 6
+  },
+  "adjective_endings": {
+    "title": "Adjective endings",
+    "targeted": [
+      "a2-topic-19e12c30dfd4",
+      "a2-topic-46b88a30c59a",
+      "a2-topic-5e4417f917c3",
+      "a2-topic-c30c16f884f9",
+      "a2-topic-0d1f6fbf8bb0"
+    ],
+    "total": 5
+  },
+  "comparatives": {
+    "title": "Comparisons",
+    "targeted": [
+      "a2-topic-91a30b21096c",
+      "a2-topic-0b1a170a18b7",
+      "a2-topic-e1ccc0fd8f44",
+      "a2-topic-3bafee4ba8e0",
+      "a2-topic-10fe6fc84cd3"
+    ],
+    "total": 5
+  },
+  "prepositions": {
+    "title": "Place and direction",
+    "targeted": [
+      "a2-topic-2543626434e4",
+      "a2-topic-6bc0ff010c11",
+      "a2-topic-8f754cf29d6c",
+      "a2-topic-7629af331266",
+      "a2-topic-7edcf729c249"
+    ],
+    "total": 11
+  },
+  "time_expressions": {
+    "title": "Time expressions",
+    "targeted": [
+      "a2-topic-87e4ec62c370",
+      "a2-topic-96747c934461",
+      "a2-topic-840ea9129b9b",
+      "a2-topic-c3d3b13719ff",
+      "a2-topic-f08105cfc1fd"
+    ],
+    "total": 6
+  },
+  "future_plans": {
+    "title": "Future plans",
+    "targeted": [
+      "a2-topic-dbcbf932ef4c",
+      "a2-topic-f3abbaba383e",
+      "a2-topic-5c7176e60fd7",
+      "a2-topic-0de60a97e4a2",
+      "a2-topic-cd1db0ea05b0"
+    ],
+    "total": 5
+  },
+  "reflexive_verbs": {
+    "title": "Reflexive verbs",
+    "targeted": [
+      "a2-topic-14a63aa77996",
+      "a2-topic-10d96dbe27db",
+      "a2-topic-1c29d6a4f8c6",
+      "a2-topic-fe4ef415ea13",
+      "a2-topic-eea5402b84c7"
+    ],
+    "total": 5
+  },
+  "relative_clauses": {
+    "title": "Relative clauses",
+    "targeted": [
+      "a2-topic-f2005ca6755f",
+      "a2-topic-bc5b4af69c37",
+      "a2-topic-e28a14a78e6e",
+      "a2-topic-9b27066b3193",
+      "a2-topic-f9b85b84653d"
+    ],
+    "total": 5
+  },
+  "imperatives": {
+    "title": "Instructions and requests",
+    "targeted": [
+      "a2-topic-2e605053910c",
+      "a2-topic-943ad198055b",
+      "a2-topic-628d6d14600a",
+      "a2-topic-0878fd24757b",
+      "a2-topic-d031db19ff35"
+    ],
+    "total": 5
+  },
+  "appointments": {
+    "title": "Making appointments",
+    "targeted": [
+      "a2-topic-cc78342cb1ca",
+      "a2-topic-6d220d30cdaa",
+      "a2-topic-2480403c244c",
+      "a2-topic-d974e1544172",
+      "a2-topic-e4bebbb47589"
+    ],
+    "total": 5
+  },
+  "shopping": {
+    "title": "Shopping and returns",
+    "targeted": [
+      "a2-topic-ac5ec672e2ec",
+      "a2-topic-9fae49bf9dd5",
+      "a2-topic-5fc60ae5aac2",
+      "a2-topic-95b016603d2b",
+      "a2-topic-828de36182f5"
+    ],
+    "total": 7
+  },
+  "healthcare": {
+    "title": "At the doctor",
+    "targeted": [
+      "0-0",
+      "a2-topic-9a4e0fa6491a",
+      "a2-topic-1ade61ae293b",
+      "a2-topic-e262a5d300cc",
+      "a2-topic-4a3b61ab72e1"
+    ],
+    "total": 16
+  },
+  "housing": {
+    "title": "Housing and repairs",
+    "targeted": [
+      "a2-topic-450fe6bdf614",
+      "a2-topic-53a4b34dc208",
+      "a2-topic-db1d572a6eca",
+      "a2-topic-c22d92cf2d6f",
+      "a2-topic-d48a8652f85f"
+    ],
+    "total": 21
+  },
+  "workplace": {
+    "title": "Work communication",
+    "targeted": [
+      "a2-topic-22d41adc409f",
+      "a2-topic-877de955879c",
+      "a2-topic-7580b70934f1",
+      "a2-topic-6a6c265cdc9f",
+      "a2-topic-ee2800e672ff"
+    ],
+    "total": 16
+  },
+  "email_messages": {
+    "title": "Emails and messages",
+    "targeted": [
+      "a2-topic-3bafee4ba8e0",
+      "a2-topic-e839d09e801c",
+      "a2-topic-55a3230ef9e5",
+      "a2-topic-a0ab0a4a32a3",
+      "a2-topic-f8cdb6d3c909"
+    ],
+    "total": 5
+  },
+  "giving_opinions": {
+    "title": "Opinions and reasons",
+    "targeted": [
+      "a2-topic-c30b031f055e",
+      "a2-topic-a2394f7040cc",
+      "a2-topic-f5515d8942b1",
+      "a2-topic-9bd8ba9fb08e",
+      "a2-topic-585de41d89b5"
+    ],
+    "total": 7
+  },
+  "reading_notices": {
+    "title": "Reading notices",
+    "targeted": [
+      "a2-topic-0d808a130694",
+      "a2-topic-6e192c579970",
+      "a2-topic-33d9a399108f",
+      "a2-topic-71ae69e3dd46",
+      "a2-topic-aaa50e932ba6"
+    ],
+    "total": 5
+  },
+  "listening_details": {
+    "title": "Listening for details",
+    "targeted": [
+      "a2-topic-e51ac0efe36e",
+      "a2-topic-8658abb2e1e6",
+      "a2-topic-bd3a9ecaf18e",
+      "a2-topic-eaedf4850acc",
+      "a2-topic-519571d00fe4"
+    ],
+    "total": 5
+  },
+  "negation_niet_geen": {
+    "title": "Negation: niet and geen",
+    "targeted": [
+      "a2-topic-fd9806fff4b8",
+      "a2-topic-ee30bda9a4a7",
+      "a2-topic-4bfbd6ba517b",
+      "a2-topic-29296b43c289",
+      "a2-topic-a6b0bc5eb135"
+    ],
+    "total": 5
+  },
+  "object_pronouns": {
+    "title": "Object pronouns",
+    "targeted": [
+      "a2-topic-dc78d2a2530a",
+      "a2-topic-5c6119a04c0f",
+      "a2-topic-8c29deb2e2e7",
+      "a2-topic-0868e648dc7a",
+      "a2-topic-10b004159884"
+    ],
+    "total": 5
+  },
+  "possessives": {
+    "title": "Possessive words",
+    "targeted": [
+      "a2-topic-b39f570c8c3d",
+      "a2-topic-63255f7f3298",
+      "a2-topic-ec30fbf43ffa",
+      "a2-topic-cbbb6f091470",
+      "a2-topic-b96fbd18a822"
+    ],
+    "total": 5
+  },
+  "question_words": {
+    "title": "Questions and clarification",
+    "targeted": [
+      "a2-topic-a1e2bac2bf68",
+      "a2-topic-c72bcbb55a1f",
+      "a2-topic-ba1c9a0747b7",
+      "a2-topic-90eb3a934f7a",
+      "a2-topic-e3df96bf54fa"
+    ],
+    "total": 12
+  },
+  "numbers_prices": {
+    "title": "Numbers, prices and quantities",
+    "targeted": [
+      "a2-topic-b1d56cdce86d",
+      "a2-topic-0da7d94aa860",
+      "a2-topic-1ed394982158",
+      "a2-topic-ca94472c7131",
+      "a2-topic-2e0be1c0ea8c"
+    ],
+    "total": 5
+  },
+  "transport_travel": {
+    "title": "Transport and travel",
+    "targeted": [
+      "a2-topic-6ffd42bb796e",
+      "a2-topic-ab9d46f8cc3f",
+      "a2-topic-470a02362be4",
+      "a2-topic-50a16b2f93fc",
+      "a2-topic-0ddb60d06c7f"
+    ],
+    "total": 14
+  },
+  "restaurant_food": {
+    "title": "Food, restaurants and ordering",
+    "targeted": [
+      "a2-topic-0ae30e50a87d",
+      "a2-topic-6ed5e5d11d96",
+      "a2-topic-9f8d9720382a",
+      "a2-topic-eb8daf34f907",
+      "a2-topic-14062914e6a9"
+    ],
+    "total": 12
+  },
+  "family_relationships": {
+    "title": "Family and relationships",
+    "targeted": [
+      "a2-topic-402ff408944e",
+      "a2-topic-fe8a432d9d04",
+      "a2-topic-acaf7bae98cb",
+      "a2-topic-293def29f9b5",
+      "a2-topic-4fbb28d0337c"
+    ],
+    "total": 6
+  },
+  "daily_routines": {
+    "title": "Daily routines and frequency",
+    "targeted": [
+      "a2-topic-65dddb97ca51",
+      "a2-topic-ba30762efc72",
+      "a2-topic-6bf7a720b825",
+      "a2-topic-25c0efc7ec79",
+      "a2-topic-d02bc6675e82"
+    ],
+    "total": 13
+  },
+  "weather_seasons": {
+    "title": "Weather and seasons",
+    "targeted": [
+      "a2-topic-389566084c35",
+      "a2-topic-74ee575c5d96",
+      "a2-topic-9223901f519f",
+      "a2-topic-c30fac3d3097",
+      "a2-topic-2be8ad00b4c0"
+    ],
+    "total": 5
+  },
+  "health_pharmacy": {
+    "title": "Health and pharmacy",
+    "targeted": [
+      "a2-topic-acb88923d5b3",
+      "a2-topic-9d00ab531b8d",
+      "a2-topic-3698d6d923c2",
+      "a2-topic-a52d173c7b0b",
+      "a2-topic-5117c985c198"
+    ],
+    "total": 16
+  },
+  "public_services": {
+    "title": "Municipality and public services",
+    "targeted": [
+      "a2-topic-41700fafbac0",
+      "a2-topic-e64a264eef8b",
+      "a2-topic-4413e6a98931",
+      "a2-topic-18b97ef9b31c",
+      "a2-topic-07ef9343ea00"
+    ],
+    "total": 11
+  },
+  "money_banking": {
+    "title": "Banking and payments",
+    "targeted": [
+      "a2-topic-b262e201d062",
+      "a2-topic-eb14f951d9d8",
+      "a2-topic-b16af4d9c234",
+      "a2-topic-6ac52e9c6398",
+      "a2-topic-bf854fc6774f"
+    ],
+    "total": 8
+  },
+  "job_search": {
+    "title": "Jobs and applications",
+    "targeted": [
+      "a2-topic-8bee52434246",
+      "a2-topic-2882bdd0159c",
+      "a2-topic-6d0d73ffb054",
+      "a2-topic-cb8162874623",
+      "a2-topic-64c4eb3d5235"
+    ],
+    "total": 6
+  },
+  "education_courses": {
+    "title": "Courses and learning",
+    "targeted": [
+      "a2-topic-8540ab37673f",
+      "a2-topic-e9412d252649",
+      "a2-topic-8261e195a103",
+      "a2-topic-1185f674a24d",
+      "a2-topic-4e52e4948907"
+    ],
+    "total": 11
+  },
+  "inviting_social": {
+    "title": "Invitations and social plans",
+    "targeted": [
+      "a2-topic-170cf9ab7e45",
+      "a2-topic-60b07a8f7bca",
+      "a2-topic-caaf46432f50",
+      "a2-topic-812a61ce4efc",
+      "a2-topic-9a7bc0ff93f2"
+    ],
+    "total": 5
+  },
+  "emergencies_safety": {
+    "title": "Emergencies and safety",
+    "targeted": [
+      "a2-topic-61cf34362d34",
+      "a2-topic-8f2d4f5a273d",
+      "a2-topic-c0eaec0211cd",
+      "a2-topic-6b867a44f824",
+      "a2-topic-d412c493c16a"
+    ],
+    "total": 5
+  },
+  "complaints_service": {
+    "title": "Complaints and customer service",
+    "targeted": [
+      "a2-topic-c618e994cd6d",
+      "a2-topic-34c07d644a8f",
+      "a2-topic-52200fa427aa",
+      "a2-topic-33c4049736e8",
+      "a2-topic-ae895dd247af"
+    ],
+    "total": 5
+  },
+  "sequence_storytelling": {
+    "title": "Telling events in order",
+    "targeted": [
+      "a2-topic-af0af871f5db",
+      "a2-topic-e18d306c23cd",
+      "a2-topic-888ec8729d8a",
+      "a2-topic-c04af2d3ce98",
+      "a2-topic-52fe4110e479"
+    ],
+    "total": 5
+  },
+  "obligation_permission": {
+    "title": "Obligation and permission",
+    "targeted": [
+      "a2-topic-e6bd84a4c38d",
+      "a2-topic-98ce01686451",
+      "a2-topic-20b3f29af7b7",
+      "a2-topic-fe7554a7df2d",
+      "a2-topic-95a34ddcba04"
+    ],
+    "total": 5
+  },
+  "conditional_als": {
+    "title": "Conditions with als",
+    "targeted": [
+      "a2-topic-6b84afaea95d",
+      "a2-topic-85089e69f31f",
+      "a2-topic-cc2ac45c52e6",
+      "a2-topic-423f81236890",
+      "a2-topic-0e5db056a5dd"
+    ],
+    "total": 5
+  },
+  "prepositions_time": {
+    "title": "Time prepositions",
+    "targeted": [
+      "a2-topic-4a3b61ab72e1",
+      "a2-topic-4598c9242cee",
+      "a2-topic-24152773f6c3",
+      "a2-topic-ddcc4734d12f",
+      "a2-topic-06b2e96365da"
+    ],
+    "total": 5
+  },
+  "phone_messages": {
+    "title": "Phone calls and messages",
+    "targeted": [
+      "a2-topic-29cb9942a3aa",
+      "a2-topic-1433f60f326e",
+      "a2-topic-14b22d6dd521",
+      "a2-topic-9e6934786a6b",
+      "a2-topic-c4223a7e663f"
+    ],
+    "total": 5
+  },
+  "colours_and_descriptions": {
+    "title": "Colours and describing things",
+    "targeted": [
+      "a2-topic-5e68be690f1f",
+      "a2-topic-5bc87ea466f2",
+      "a2-topic-313d7124566b",
+      "a2-topic-8010a89c9087",
+      "a2-topic-0111886548ad"
+    ],
+    "total": 9
+  },
+  "clothing_and_getting_dressed": {
+    "title": "Clothes and getting dressed",
+    "targeted": [
+      "a2-topic-d0461c6355e0",
+      "a2-topic-0bd7fcfd2a9e",
+      "a2-topic-ecbc87d340e6",
+      "a2-topic-951391cc7979",
+      "a2-topic-4d310553abc6"
+    ],
+    "total": 10
+  },
+  "locations_and_position": {
+    "title": "Locations and position",
+    "targeted": [
+      "a2-topic-607e270ea40f",
+      "a2-topic-9228043d4800",
+      "a2-topic-bee01dc8e2dc",
+      "a2-topic-2c4af65434a7",
+      "a2-topic-e501d60986d3"
+    ],
+    "total": 11
+  },
+  "food_meals_cooking": {
+    "title": "Food, meals and cooking",
+    "targeted": [
+      "a2-topic-20cf024f8698",
+      "a2-topic-e8df5ddda427",
+      "a2-topic-1605662aa912",
+      "a2-expansion-20261013-1",
+      "a2-topic-a76c3eb8cd50"
+    ],
+    "total": 10
+  },
+  "furniture_home_rooms": {
+    "title": "Furniture, rooms and the home",
+    "targeted": [
+      "a2-topic-ba230aa0f973",
+      "a2-topic-870dc3c93bb6",
+      "a2-topic-782d785eb109",
+      "a2-topic-f7529194ccca",
+      "a2-topic-8851e2462f99"
+    ],
+    "total": 11
+  },
+  "separable_verbs_a2": {
+    "title": "Separable verbs (scheidbare werkwoorden)",
+    "targeted": [
+      "a2-topic-d169d4ca7fa0",
+      "a2-topic-27df8ae35f0b",
+      "a2-topic-99b9072a205e",
+      "a2-topic-3649414b4965",
+      "a2-topic-170cf9ab7e45"
+    ],
+    "total": 5
+  },
+  "fixed_preposition_verbs_a2": {
+    "title": "Verbs with fixed prepositions",
+    "targeted": [
+      "a2-topic-6e23dca1d9be",
+      "a2-topic-798502be6282",
+      "a2-topic-c5ae02024054",
+      "a2-topic-6098547d91ad",
+      "a2-topic-16e7fe68d550"
+    ],
+    "total": 5
+  },
+  "feelings_emotions_a2": {
+    "title": "Feelings and emotions",
+    "targeted": [
+      "a2-topic-2b6df3df4ee9",
+      "a2-topic-71a06f78d288",
+      "a2-topic-ab7fe45d30ad",
+      "a2-topic-beecadbfb18f",
+      "a2-topic-fa45b1847c2a"
+    ],
+    "total": 5
+  },
+  "describing_people_a2": {
+    "title": "Describing people",
+    "targeted": [
+      "a2-topic-3a207665a6d5",
+      "a2-topic-2ca0dc2053ce",
+      "a2-topic-544199488a27",
+      "a2-topic-84dd68065eae",
+      "a2-topic-ccb6ee70290e"
+    ],
+    "total": 5
+  }
+}
