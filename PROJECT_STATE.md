@@ -1,5 +1,5 @@
 # Mijn Nederlands — Project State / Source of Truth
-Last updated: 2026-11-09
+Last updated: 2026-11-11
 Status: Permanent owner-private hosted app deployed and user reports working. 54 A2 lessons implemented; manual progress import remains browser-specific. Future work deferred.
 
 ## Mission
@@ -340,3 +340,41 @@ Cache20261109-a2-concept-target for4edited scripts. Current checkout/workflow ro
 User next: refresh permanentURL then leave/reopen spelling task to generate a NEW session (existing open session isn't rewritten). No backup reimport, Codespaces sync or Worker deployment needed for hosted use. For Codespaces later safe fetch/rebase and node a2-concept-level-test.cjs after status. Ask for fresh screenshot if new session stillA1. Existing manual per-browser progress remains; no sync added. Update roadmap unchanged.
 
 --- PREVIOUS STATUS / ROADMAP BELOW ---
+
+
+## 2026-11-11 Vocabulary expansion (deployed)
+11 NOVEMBER 2026 — VOCABULARY EXPANDED AND DEPLOYED
+User requested extending the90+word bank to cover all learning topics with sentence examples. User also previously confirmed new spelling session showsA2. Retain that as live user confirmation of9Nov target fix.
+
+IMPLEMENTED
+358 cards total: original97 retained +261 new words/useful phrases. All54 A2 curriculum topics mapped to >=5 targeted cards each; additional existing-card tags provide broader contextual coverage. This covers all app topics, NOT an exhaustive Dutch vocabulary or official CEFR list. Grammar topics include forms/phrases (participles, conjunctions, pronouns, fixed-preposition expressions). Practical topics cover appointments, housing, work, shopping, transport, food, family, weather, services, money, courses, safety, feelings and describing people.
+Every358card has Dutch example plus English translation (exampleEn); old examples/nl/en/group/id retained. Some multi-topic terms have extra contextual examples; dat/ons senses explained. Old duplicate terms remain separate stable IDs deliberately. NewIDs deterministic a2-topic-<hash>.
+New word-bank browser: A2 Studio -> Browse words by learning topic; topic dropdown54options+All; Dutch/English search; translated examples and usage notes visible without grading or writes. Review this topic button launches topic-filtered available queue; search is a browse-only search. Review UI has topic selection, browse entry and bilingual example on reveal. Modes retained; context blanks use full lexical boundaries to avoid malformed ___e for mooi/mooie, otherwise fallback reverse recall. Mobile controls styled block/fullwidth44px. Original dashboard/navigation structure retained.
+Storage KEY unchanged mijn_nederlands_a2_vocab_v1. Original97records/IDs, intervals and dailyTarget3 retained. No reset/migration/reimport needed. Browsing doesn't mark words reviewed. Existing learned-overdue priority retained, and filtering only affects in-memory selection. More new/available words is expected; daily completed state is separate. No cloud sync, Worker or AI changes.
+
+SOURCE
+Original GitHub branch feature/a2-integrated-upgrade source/tests/docs through cb690ea427afa8f9bf3ec39cdb36071ed74f0f61; subsequent project notes commit follows.
+Changed data/a2-vocabulary.js, js/a2-vocabulary-engine.js, js/a2-studio.js, css/styles.css,index.html. Cache20261111-topic-vocabulary.
+Updated learning-update-test.cjs, a2-integrated-test.js, vocabulary-progress-test.cjs.
+New vocabulary-expansion-test.cjs, vocabulary-expansion-baseline.json(original97content), vocabulary-topic-coverage.json and docs/VOCABULARY_EXPANSION_2026-11-11.md with topic counts. Fixtures/docs excluded from public dist.
+Original source/hosted file base hashes compared before edits to avoid overwrite of unseen changes.
+
+DEPLOYED SAME PRIVATE URL
+https://mijn-nederlands-mehdi.azurehare18.chatgpt.site
+project_id appgprj_6af0eccc941c81919854468cc197b65c
+Site source commit dedf1925b45a158644e9cde01595bd01dd9f7d8d
+version_id appgprj_6af0eccc941c81919854468cc197b65c~appgver_1ff12a42e2108191a5aefd998c246ef3
+deployment_id appgdep_6af47b01d78881919d1d2e6cc42cefed SUCCEEDED
+Latest local checkout /workspace/sites/mijn-nederlands-vocabulary/.sites-checkout/.sites-checkout. Existing source recovered after maintenance via Sites helper; same site identity. Current plugin scripts1.1.6 (read current skill/path next time). Source credential expired during authoring; refreshed same site, packaging succeeded. No new site/audience changes. Source is now at358cards; future fixes must retain expanded fields/IDs.
+GitHub still not auto-deployed; update original AND hosted source on future changes.
+
+VERIFICATION
+9 checks PASS: vocabulary-expansion, vocabulary-progress, learning-update, integrated, lesson-depth, curriculum, mastery, concept-level, smoke; modifiedJS syntax passes.
+New test verifies original97fields byte-equivalent by property, existing97seededreview records, 261new/96scheduled/1overdue split, overduefirst, unchanged unrelated progress, full-topiccoverage, bilingual examples, search/filter/reveal, no browsing writes, targeted-grade preservation and no partialword cloze.
+Desktop browser preview: first-useRestore -> Studio -> Browse,54topics dropdown, feelings5cards, searchrelieved1result, reviewtopic/reveal translatedexample; Housing21cards(before extraoriginaltag additions) and visual layout. Final controls phone-friendly; no actual iPhone browser test by assistant. No live AI needed. DeployedURL opens ChatGPT login gate in assistant browser; deploymentverified native tool. User phone check pending. Earlier user screenshotA1 fixed9Nov and user confirmedA2.
+
+USER NEXT
+Refresh current hostedURL. Open A2 Studio -> Browse words by learning topic; choose a topic or search; Review this topic to practise. No backup import/Codespaces command/Worker deployment required. Existing scheduled reviews continue and newwordcount rises. Ask screenshot if number/button missing after refresh, never clear browserdata.
+Roadmap priority vocabulary expansion now delivered for all54topics; bigger reading/listening banks, broaderKNM, fullermocks, safe sync and other prior tasks remain future scope.
+
+--- PREVIOUS CONTEXT / ROADMAP ---
