@@ -31,7 +31,7 @@ assert(!db.has('mijn_nederlands_a2_mastery_v1'));assert(!db.has('mijn_nederlands
 // Content structure, stable learning IDs, expanded checks and Dutch forms.
 const lessons=get('DutchCurriculum'),vocab=get('A2Vocabulary'),guides=get('DutchLessonGuides');
 assert.equal(lessons.length,69);assert.equal(lessons.filter(x=>x.level==='A2').length,54);assert.equal(new Set(lessons.map(x=>x.id)).size,69);
-assert.equal(vocab.length,97);assert.equal(new Set(vocab.map(x=>x.id)).size,97);assert.equal(vocab[0].id,'0-0');
+assert.equal(vocab.length,358);assert.equal(new Set(vocab.map(x=>x.id)).size,358);assert.equal(vocab[0].id,'0-0');
 assert(lessons.find(l=>l.id==='reflexive_verbs').checks.length>=5);assert(guides.reflexive_verbs.table.rows.some(r=>r[0]==='jullie'&&r[1]==='je'));
 const relative=lessons.find(l=>l.id==='relative_clauses');assert.equal(relative.checks.find(q=>q.prompt.includes('De fiets')).answer,'die');
 // Every objective mock question has a valid answer/explanation; open-ended tasks are unscored.
@@ -48,4 +48,4 @@ exam.run={id:'write-test',kind:'writing',items:exam.questions('writing'),started
 assert.equal(exam.read().length,2);assert(!db.has('mijn_nederlands_a2_mastery_v1'));
 // Original completed lesson check remains labelled with its historical denominator.
 root.querySelector=()=>({});get("CurriculumEngine.openLesson('reflexive_verbs')");assert(root.innerHTML.includes('Previous check: 2/2 correct'));assert(root.innerHTML.includes('Forms at a glance'));
-console.log('PASS: backup whitelist/preview data/default restore/explicit replacement/rollback, contradictory grading rejection and penalty-free reports, lesson IDs and historical checks, 97 vocabulary IDs, valid mock keys and single submission, unscored production tasks.');
+console.log('PASS: backup whitelist/preview data/default restore/explicit replacement/rollback, contradictory grading rejection and penalty-free reports, lesson IDs and historical checks, 358 vocabulary IDs, valid mock keys and single submission, unscored production tasks.');
