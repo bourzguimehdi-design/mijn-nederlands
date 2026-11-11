@@ -3500,3 +3500,28 @@ MOBILE
 .dashboard-history > summary { cursor:pointer; font-weight:700; }
 .dashboard-history[open] > summary { margin-bottom:12px; }
 @media (max-width:720px) { .a2-overview-grid { grid-template-columns:1fr; } }
+
+/* Vocabulary topic/search controls: readable and touch-friendly on phones. */
+#a2StudioContent label[for="vTopic"],
+#a2StudioContent label[for="vMode"],
+#a2StudioContent label[for="vSearch"] {
+  display: block;
+  margin: 16px 0 6px;
+  font-weight: 600;
+}
+#a2StudioContent #vTopic,
+#a2StudioContent #vMode,
+#a2StudioContent #vSearch {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid #d9dde3;
+  border-radius: 10px;
+  background: #fff;
+  color: #1b222c;
+  font: inherit;
+  box-sizing: border-box;
+}
